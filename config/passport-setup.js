@@ -27,7 +27,7 @@ passport.use(
         {
             clientID: GOOGLE_CLIENT_ID,
             clientSecret: GOOGLE_CLIENT_SECRET,
-            callbackURL: "http://localhost:3000/auth/google/callback",
+            callbackURL: "https://reviewphim.herokuapp.com/auth/google/callback",
         },
         async function (accessToken, refreshToken, profile, done) {
             try {
@@ -53,7 +53,7 @@ passport.use(
         {
             clientID: FACEBOOK_APP_ID,
             clientSecret: FACEBOOK_APP_SECRET,
-            callbackURL: "http://localhost:3000/auth/facebook/callback",
+            callbackURL: "https://reviewphim.herokuapp.com/auth/facebook/callback",
         },
         async function (accessToken, refreshToken, profile, done) {
             try {
