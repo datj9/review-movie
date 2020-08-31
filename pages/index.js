@@ -2,7 +2,7 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
 
-export default function Home() {
+export default function Home(props) {
     return (
         <div className={styles.container}>
             <Head>
@@ -19,6 +19,7 @@ export default function Home() {
                 </Link>
 
                 <a href='/logout'>Log Out</a>
+                <div>{props.user.name}</div>
                 <h1 className={styles.title}>
                     Welcome to <a href='https://nextjs.org'>Next.js!</a>
                 </h1>
@@ -66,10 +67,10 @@ export default function Home() {
     );
 }
 
-// export function getServerSideProps(context) {
-//     const user = JSON.stringify(context.req.user ? context.req.user : {});
+export function getServerSideProps(context) {
+    const user = JSON.stringify(context.req.user ? context.req.user : {});
 
-//     return {
-//         props: { user },
-//     };
-// }
+    return {
+        props: { user },
+    };
+}

@@ -61,7 +61,7 @@ passport.use(
                 const user = await User.findOne({ facebookId: profile.id });
 
                 if (user) return done(null, user);
-                console.log(profile);
+
                 const newUser = new User({
                     facebookId: profile.id,
                     name: profile.displayName,
