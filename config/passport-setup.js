@@ -27,19 +27,23 @@ passport.use(
         {
             clientID: GOOGLE_CLIENT_ID,
             clientSecret: GOOGLE_CLIENT_SECRET,
-            callbackURL: "http://localhost:3000/auth/google/callback",
+            callbackURL: "https://reviewphim.herokuapp.com/auth/google/callback",
         },
         async function (accessToken, refreshToken, profile, done) {
-            const user = await User.findOne({ googleId: profile.id });
+            try {
+                const user = await User.findOne({ googleId: profile.id });
 
-            if (user) return done(null, user);
-            const newUser = new User({
-                googleId: profile.id,
-                name: profile.displayName,
-                image: profile._json.picture,
-            });
-            await newUser.save();
-            return done(null, newUser);
+                if (user) return done(null, user);
+                const newUser = new User({
+                    googleId: profile.id,
+                    name: profile.displayName,
+                    image: profile._json.picture,
+                });
+                await newUser.save();
+                return done(null, newUser);
+            } catch (error) {
+                return done(error);
+            }
         }
     )
 );
@@ -49,20 +53,25 @@ passport.use(
         {
             clientID: FACEBOOK_APP_ID,
             clientSecret: FACEBOOK_APP_SECRET,
-            callbackURL: "http://localhost:3000/auth/facebook/callback",
+            callbackURL: "https://reviewphim.herokuapp.com/auth/facebook/callback",
+            profileFields: ["id", "displayName", "picture", "email"],
         },
         async function (accessToken, refreshToken, profile, done) {
-            const user = await User.findOne({ facebookId: profile.id });
+            try {
+                const user = await User.findOne({ facebookId: profile.id });
 
-            if (user) return done(null, user);
-
-            const newUser = new User({
-                facebookId: profile.id,
-                name: profile.displayName,
-                image: profile._json.picture,
-            });
-            await newUser.save();
-            return done(null, newUser);
+                if (user) return done(null, user);
+                console.log(profile);
+                const newUser = new User({
+                    facebookId: profile.id,
+                    name: profile.displayName,
+                    image: profile._json.picture ? profile._json.picture.data.url : null,
+                });
+                await newUser.save();
+                return done(null, newUser);
+            } catch (error) {
+                return done(error);
+            }
         }
     )
 );
