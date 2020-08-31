@@ -3,9 +3,9 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "node server.js",
-        "build": "next build && next export",
-        "start": "next start"
+        "dev": "node server.js -p $PORT",
+        "build": "next build",
+        "start": "NODE_ENV=production node server.js -p $PORT"
     },
     "dependencies": {
         "express": "^4.17.1",

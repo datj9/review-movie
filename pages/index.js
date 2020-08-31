@@ -61,10 +61,10 @@ export default function Home() {
     );
 }
 
-export async function getServerSideProps(context) {
+export function getServerSideProps(context) {
     const user = JSON.stringify(context.req.user ? context.req.user : {});
 
     return {
-        props: { user }, // will be passed to the page component as props
+        props: { user },
     };
 }
