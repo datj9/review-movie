@@ -54,17 +54,18 @@ passport.use(
             clientID: FACEBOOK_APP_ID,
             clientSecret: FACEBOOK_APP_SECRET,
             callbackURL: "https://reviewphim.herokuapp.com/auth/facebook/callback",
+            profileFields: ["id", "displayName", "picture", "email"],
         },
         async function (accessToken, refreshToken, profile, done) {
             try {
                 const user = await User.findOne({ facebookId: profile.id });
 
                 if (user) return done(null, user);
-
+                console.log(profile);
                 const newUser = new User({
                     facebookId: profile.id,
                     name: profile.displayName,
-                    image: profile._json.picture,
+                    image: profile.picture,
                 });
                 await newUser.save();
                 return done(null, newUser);
