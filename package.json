@@ -4,8 +4,8 @@
     "private": true,
     "scripts": {
         "dev": "node server.js",
-        "build": "next build",
-        "start": "NODE_ENV=production node server.js -p $PORT"
+        "build": "next build && node server.js",
+        "start": "next start && node server.js"
     },
     "dependencies": {
         "express": "^4.17.1",
