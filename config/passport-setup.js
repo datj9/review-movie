@@ -65,7 +65,7 @@ passport.use(
                 const newUser = new User({
                     facebookId: profile.id,
                     name: profile.displayName,
-                    image: profile.picture.data.url,
+                    image: profile._json.picture ? profile._json.picture.data.url : null,
                 });
                 await newUser.save();
                 return done(null, newUser);
