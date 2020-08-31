@@ -13,8 +13,6 @@ const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== "production";
 // const app = next({ dev });
 // const handle = app.getRequestHandler();
-const COOKIE_PASSWORD = process.env.COOKIE_PASSWORD;
-const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!dev && cluster.isMaster) {
     console.log(`Node cluster master ${process.pid} is running`);
@@ -30,6 +28,8 @@ if (!dev && cluster.isMaster) {
 } else {
     const nextApp = next({ dir: ".", dev });
     const nextHandler = nextApp.getRequestHandler();
+    const COOKIE_PASSWORD = process.env.COOKIE_PASSWORD;
+    const MONGODB_URI = process.env.MONGODB_URI;
 
     nextApp.prepare().then(() => {
         const server = express();
