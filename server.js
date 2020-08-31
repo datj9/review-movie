@@ -3,6 +3,7 @@ const next = require("next"); // Include module next
 const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
+const path = require("path");
 
 const port = parseInt(process.env.PORT, 10) || 3000; // Port để chạy app Nextjs, cũng là server nodejs
 const dev = process.env.NODE_ENV !== "production";
