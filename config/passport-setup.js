@@ -30,16 +30,20 @@ passport.use(
             callbackURL: "http://localhost:3000/auth/google/callback",
         },
         async function (accessToken, refreshToken, profile, done) {
-            const user = await User.findOne({ googleId: profile.id });
+            try {
+                const user = await User.findOne({ googleId: profile.id });
 
-            if (user) return done(null, user);
-            const newUser = new User({
-                googleId: profile.id,
-                name: profile.displayName,
-                image: profile._json.picture,
-            });
-            await newUser.save();
-            return done(null, newUser);
+                if (user) return done(null, user);
+                const newUser = new User({
+                    googleId: profile.id,
+                    name: profile.displayName,
+                    image: profile._json.picture,
+                });
+                await newUser.save();
+                return done(null, newUser);
+            } catch (error) {
+                return done(error);
+            }
         }
     )
 );
@@ -52,17 +56,21 @@ passport.use(
             callbackURL: "http://localhost:3000/auth/facebook/callback",
         },
         async function (accessToken, refreshToken, profile, done) {
-            const user = await User.findOne({ facebookId: profile.id });
+            try {
+                const user = await User.findOne({ facebookId: profile.id });
 
-            if (user) return done(null, user);
+                if (user) return done(null, user);
 
-            const newUser = new User({
-                facebookId: profile.id,
-                name: profile.displayName,
-                image: profile._json.picture,
-            });
-            await newUser.save();
-            return done(null, newUser);
+                const newUser = new User({
+                    facebookId: profile.id,
+                    name: profile.displayName,
+                    image: profile._json.picture,
+                });
+                await newUser.save();
+                return done(null, newUser);
+            } catch (error) {
+                return done(error);
+            }
         }
     )
 );
