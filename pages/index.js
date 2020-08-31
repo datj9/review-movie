@@ -61,10 +61,10 @@ export default function Home() {
     );
 }
 
-export function getServerSideProps(context) {
-    const user = JSON.stringify(context.req.user ? context.req.user : {});
+// export function getServerSideProps(context) {
+//     const user = JSON.stringify(context.req.user ? context.req.user : {});
 
-    return {
-        props: { user },
-    };
-}
+//     return {
+//         props: { user },
+//     };
+// }
