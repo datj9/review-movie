@@ -88,7 +88,7 @@ function Login() {
                                 <FontAwesomeIcon style={{ height: "1rem" }} icon={faUser} />
                             </span>
                         </div>
-                        {emailErrMsg ? <p className='is-danger'>{emailErrMsg}</p> : null}
+                        {emailErrMsg ? <p className='has-text-danger'>{emailErrMsg}</p> : null}
                     </div>
                     <div className='field mb-3'>
                         <label className='label'>Mật khẩu</label>
