@@ -1,11 +1,12 @@
 const passport = require("passport"),
-    { Strategy: GoogleStrategy } = require("passport-google-oauth20"),
+    LocalStrategy = require("passport-local").Strategy,
+    GoogleStrategy = require("passport-google-oauth20").Strategy,
     FacebookStrategy = require("passport-facebook").Strategy,
-    { User } = require("../models/User"),
     GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET,
     FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID,
-    FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
+    FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET,
+    { User } = require("../models/User");
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -23,11 +24,29 @@ passport.deserializeUser((id, done) => {
 });
 
 passport.use(
+    new LocalStrategy(function (username, password, done) {
+        User.findOne({ username: username }, function (err, user) {
+            if (err) {
+                return done(err);
+            }
+            if (!user) {
+                return done(null, false, { message: "Incorrect username." });
+            }
+            if (!user.validatePassword(password, user.password)) {
+                return done(null, false, { message: "Incorrect password." });
+            }
+            user.transform();
+            return done(null, user);
+        });
+    })
+);
+
+passport.use(
     new GoogleStrategy(
         {
             clientID: GOOGLE_CLIENT_ID,
             clientSecret: GOOGLE_CLIENT_SECRET,
-            callbackURL: "https://reviewphim.herokuapp.com/auth/google/callback",
+            callbackURL: "http://localhost:3000/auth/google/callback",
         },
         async function (accessToken, refreshToken, profile, done) {
             try {
@@ -53,7 +72,7 @@ passport.use(
         {
             clientID: FACEBOOK_APP_ID,
             clientSecret: FACEBOOK_APP_SECRET,
-            callbackURL: "https://reviewphim.herokuapp.com/auth/facebook/callback",
+            callbackURL: "http://localhost:3000/auth/facebook/callback",
             profileFields: ["id", "displayName", "picture", "email"],
         },
         async function (accessToken, refreshToken, profile, done) {

@@ -1,8 +1,25 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
+import { useRef } from "react";
+import fetch from "isomorphic-unfetch";
 
-export default function Home() {
+export default function Home(props) {
+    const user = JSON.parse(props.user);
+    const usernameRef = useRef();
+    const passwordRef = useRef();
+    console.log(user);
+    const submit = (e) => {
+        e.preventDefault();
+        const username = usernameRef.current.value;
+        const password = passwordRef.current.value;
+        fetch("/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+        }).then((res) => console.log(res));
+    };
+
     return (
         <div className={styles.container}>
             <Head>
@@ -19,6 +36,18 @@ export default function Home() {
                 </Link>
 
                 <a href='/logout'>Log Out</a>
+                <div>{user.name}</div>
+                <div>{user.username}</div>
+                <div style={{ height: "50px", width: "50px", overflow: "hidden" }}>
+                    <img style={{ width: "100%" }} src={user.image} />
+                </div>
+                <form>
+                    <input ref={usernameRef} />
+                    <input ref={passwordRef} />
+                    <button type='submit' onClick={submit}>
+                        Dang ky
+                    </button>
+                </form>
                 <h1 className={styles.title}>
                     Welcome to <a href='https://nextjs.org'>Next.js!</a>
                 </h1>
@@ -66,10 +95,10 @@ export default function Home() {
     );
 }
 
-// export function getServerSideProps(context) {
-//     const user = JSON.stringify(context.req.user ? context.req.user : {});
+export function getServerSideProps(context) {
+    const user = JSON.stringify(context.req.user ? context.req.user : {});
 
-//     return {
-//         props: { user },
-//     };
-// }
+    return {
+        props: { user },
+    };
+}
