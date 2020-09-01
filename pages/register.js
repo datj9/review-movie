@@ -133,18 +133,11 @@ function Register() {
                     </button>
                 </form>
 
-                <div className='register-and-forgot-pass-wp'>
-                    <div className='register-wp'>
-                        <span>Bạn chưa có tài khoản? </span>
-                        <Link href='/register'>
-                            <a>Đăng Ký</a>
-                        </Link>
-                    </div>
-                    <div className='forgot-pass-wp'>
-                        <Link href='/register'>
-                            <a>Quên Mật Khẩu</a>
-                        </Link>
-                    </div>
+                <div className='register-wp'>
+                    <span>Bạn đã có tài khoản? </span>
+                    <Link href='/register'>
+                        <a>Đăng Nhập</a>
+                    </Link>
                 </div>
             </div>
 
@@ -161,32 +154,17 @@ function Register() {
                     .title {
                         font-size: 1rem;
                     }
-                    .or-wrapper {
-                        position: relative;
-                    }
-                    .or {
-                        position: absolute;
-                        top: 0;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        background: #fff;
-                        display: inline-block;
-                        padding: 0.3rem;
-                        z-index: 2;
-                    }
                     .form-container {
                         margin: 0 auto;
                     }
                     hr {
                         margin: 1rem auto;
                     }
-
                     .icon {
                         display: flex;
                         align-items: center;
                         justify-content: center;
                     }
-
                     .input {
                         border: 0.5px solid #000;
                     }
@@ -194,31 +172,8 @@ function Register() {
                     .input:active {
                         border-color: #f69314;
                     }
-                    .google-icon-wp {
-                        width: 1.25rem;
-                        height: 1.25rem;
-                        display: flex;
-                        align-items: center;
-                    }
-                    .google-icon-wp img {
-                        width: 100%;
-                    }
-                    .fb-btn {
-                        background: #3b5998;
-                        display: flex;
-                        justify-content: center;
-                    }
-                    .register-and-forgot-pass-wp {
-                        display: flex;
-                        flex-direction: column;
-                    }
                     .register-wp {
                         width: 100%;
-                    }
-                    .forgot-pass-wp {
-                        width: 100%;
-                        display: flex;
-                        justify-content: flex-start;
                     }
                     @media only screen and (min-width: 576px) {
                         .title,
@@ -229,18 +184,6 @@ function Register() {
                         .title {
                             margin: 0 auto;
                             font-size: 1.4rem;
-                        }
-                        .register-and-forgot-pass-wp {
-                            flex-direction: row;
-                            justify-content: space-between;
-                        }
-                        .register-wp {
-                            width: 65%;
-                        }
-                        .forgot-pass-wp {
-                            width: 25%;
-                            display: flex;
-                            justify-content: flex-end;
                         }
                     }
                 `}
