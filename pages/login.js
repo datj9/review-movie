@@ -154,14 +154,13 @@ function Login() {
                     }
                     .register-and-forgot-pass-wp {
                         display: flex;
-                        justify-content: space-between;
                         flex-direction: column;
                     }
                     .register-wp {
                         width: 100%;
                     }
                     .forgot-pass-wp {
-                        width: 25%;
+                        width: 100%;
                         display: flex;
                         justify-content: flex-end;
                     }
@@ -177,9 +176,13 @@ function Login() {
                         }
                         .register-and-forgot-pass-wp {
                             flex-direction: row;
+                            justify-content: space-between;
                         }
                         .register-wp {
                             width: 65%;
+                        }
+                        .forgot-pass-wp {
+                            width: 25%;
                         }
                     }
                 `}
