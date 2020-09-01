@@ -198,6 +198,8 @@ function Login() {
                     }
                     .forgot-pass-wp {
                         width: 100%;
+                        display: flex;
+                        justify-content: flex-start;
                     }
                     @media only screen and (min-width: 576px) {
                         .title,
