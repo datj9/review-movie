@@ -14,22 +14,8 @@ function Home() {
                 <title>Đánh giá phim mới</title>
                 <link rel='icon' href='/favicon.ico' />
             </Head>
-            {/* <Header /> */}
-            <main>
-                {/* <a href='/api/auth/logout'>Log Out</a>
-                <div>{currentUser.name}</div>
-                <div>{currentUser.username}</div>
-                <div style={{ height: "50px", width: "50px", overflow: "hidden" }}>
-                    <img style={{ width: "100%" }} src={currentUser.image} />
-                </div>
-                <form>
-                    <input ref={usernameRef} />
-                    <input ref={passwordRef} />
-                    <button type='submit' onClick={submit}>
-                        Dang ky
-                    </button>
-                </form> */}
-            </main>
+
+            <main></main>
 
             {/* <footer className='has-background-info'>
                     <a

@@ -3,11 +3,6 @@ import BaseAPI from "../api";
 
 const api = new BaseAPI("auth");
 
-const setUser = (user) => ({
-    type: actionTypes.SET_USER,
-    payload: user,
-});
-
 const loginStart = (loginType) => ({
     type: actionTypes.LOGIN_START,
     payload: { loginType },
@@ -15,8 +10,9 @@ const loginStart = (loginType) => ({
 const loginSuccess = () => ({
     type: actionTypes.LOGIN_SUCCESS,
 });
-const loginFail = () => ({
+const loginFail = (errors) => ({
     type: actionTypes.LOGIN_FAILURE,
+    payload: errors,
 });
 
 export const login = (user, loginType) => async (dispatch) => {
@@ -28,9 +24,21 @@ export const login = (user, loginType) => async (dispatch) => {
         if (ok) {
             dispatch(loginSuccess());
         } else {
-            dispatch(loginFail());
+            dispatch(loginFail(data));
         }
     } else {
         dispatch(loginStart(loginType));
+    }
+};
+
+export const logout = () => async (dispatch) => {
+    dispatch({
+        type: actionTypes.LOGOUT_START,
+    });
+    const res = await api.get("logout");
+    if (res.ok) {
+        dispatch({
+            type: actionTypes.LOGOUT_SUCCESS,
+        });
     }
 };

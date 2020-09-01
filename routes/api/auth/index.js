@@ -12,11 +12,7 @@ router.get(
 );
 
 router.post("/register", authController.register);
-router.post("/login", passport.authenticate("local"), function (req, res) {
-    // If this function gets called, authentication was successful.
-    // `req.user` contains the authenticated user.
-    res.redirect("/");
-});
+router.post("/login", authController.login);
 
 router.get("/logout", authController.logOut);
 

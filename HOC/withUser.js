@@ -1,6 +1,5 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import Header from "../components/Header";
 import { SET_USER } from "../redux/user/action-types";
 
 export const withUserServerSideProps = () => {
@@ -25,11 +24,6 @@ export const withUser = (WrappedComponent) => {
             });
         }
 
-        return (
-            <>
-                <Header />
-                <WrappedComponent {...props} />
-            </>
-        );
+        return <WrappedComponent {...props} />;
     };
 };

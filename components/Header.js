@@ -1,8 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/user/actions";
 
 export default function Header() {
     const [isActiveNav, setIsActiveNav] = useState(false);
+    const currentUser = useSelector((state) => state.user.currentUser);
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const isLoggingOut = useSelector((state) => state.user.isLoading);
+    const dispatch = useDispatch();
     const navRef = useRef();
 
     const closeNav = () => {
@@ -12,6 +18,9 @@ export default function Header() {
         if (isActiveNav && !navRef.current?.contains(e.target)) {
             closeNav();
         }
+    };
+    const handleLogout = () => {
+        dispatch(logout());
     };
 
     useEffect(() => {
@@ -57,15 +66,27 @@ export default function Header() {
                 </div>
 
                 <div className='navbar-end'>
-                    <div className='navbar-item'>
-                        <div className='buttons'>
-                            <Link href='login'>
-                                <a onClick={closeNav} className='button is-primary'>
-                                    Đăng Nhập
-                                </a>
-                            </Link>
+                    {isAuthenticated ? (
+                        <div className='navbar-item'>
+                            <button
+                                onClick={handleLogout}
+                                type='button'
+                                className={`button is-primary is-outlined ${isLoggingOut ? "is-loading" : ""}`}
+                            >
+                                Đăng xuất
+                            </button>
                         </div>
-                    </div>
+                    ) : (
+                        <div className='navbar-item'>
+                            <div className='buttons'>
+                                <Link href='/login'>
+                                    <a onClick={closeNav} className='button is-primary'>
+                                        Đăng nhập
+                                    </a>
+                                </Link>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
             <style jsx>
