@@ -13,7 +13,7 @@ export default function Home(props) {
         e.preventDefault();
         const username = usernameRef.current.value;
         const password = passwordRef.current.value;
-        fetch("/register", {
+        fetch("/api/auth/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password }),
@@ -24,18 +24,18 @@ export default function Home(props) {
         <div className={styles.container}>
             <Head>
                 <title>Create Next App</title>
-                <link rel='icon' href='/favicon.ico' />
+                <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <main className={styles.main}>
-                <Link href='/auth/google'>
+                <Link href="/api/auth/google">
                     <a>Log In Google</a>
                 </Link>
-                <Link href='/auth/facebook'>
+                <Link href="/api/auth/facebook">
                     <a>Log In FB</a>
                 </Link>
 
-                <a href='/logout'>Log Out</a>
+                <a href="/api/auth/logout">Log Out</a>
                 <div>{user.name}</div>
                 <div>{user.username}</div>
                 <div style={{ height: "50px", width: "50px", overflow: "hidden" }}>
@@ -44,12 +44,12 @@ export default function Home(props) {
                 <form>
                     <input ref={usernameRef} />
                     <input ref={passwordRef} />
-                    <button type='submit' onClick={submit}>
+                    <button type="submit" onClick={submit}>
                         Dang ky
                     </button>
                 </form>
                 <h1 className={styles.title}>
-                    Welcome to <a href='https://nextjs.org'>Next.js!</a>
+                    Welcome to <a href="https://nextjs.org">Next.js!</a>
                 </h1>
 
                 <p className={styles.description}>
@@ -57,23 +57,23 @@ export default function Home(props) {
                 </p>
 
                 <div className={styles.grid}>
-                    <a href='https://nextjs.org/docs' className={styles.card}>
+                    <a href="https://nextjs.org/docs" className={styles.card}>
                         <h3>Documentation &rarr;</h3>
                         <p>Find in-depth information about Next.js features and API.</p>
                     </a>
 
-                    <a href='https://nextjs.org/learn' className={styles.card}>
+                    <a href="https://nextjs.org/learn" className={styles.card}>
                         <h3>Learn &rarr;</h3>
                         <p>Learn about Next.js in an interactive course with quizzes!</p>
                     </a>
 
-                    <a href='https://github.com/vercel/next.js/tree/master/examples' className={styles.card}>
+                    <a href="https://github.com/vercel/next.js/tree/master/examples" className={styles.card}>
                         <h3>Examples &rarr;</h3>
                         <p>Discover and deploy boilerplate example Next.js projects.</p>
                     </a>
 
                     <a
-                        href='https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app'
+                        href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
                         className={styles.card}
                     >
                         <h3>Deploy &rarr;</h3>
@@ -84,11 +84,11 @@ export default function Home(props) {
 
             <footer className={styles.footer}>
                 <a
-                    href='https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app'
-                    target='_blank'
-                    rel='noopener noreferrer'
+                    href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+                    target="_blank"
+                    rel="noopener noreferrer"
                 >
-                    Powered by <img src='/vercel.svg' alt='Vercel Logo' className={styles.logo} />
+                    Powered by <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
                 </a>
             </footer>
         </div>

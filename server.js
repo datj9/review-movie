@@ -38,40 +38,7 @@ nextApp.prepare().then(() => {
     // deserialize and serialize cookie from the browser
     server.use(passport.session());
 
-    server.get("/auth/google", passport.authenticate("google", { scope: ["profile"] }));
-    server.get(
-        "/auth/google/callback",
-        passport.authenticate("google", { failureRedirect: "/login", successRedirect: "/" })
-    );
-
-    server.get("/auth/facebook", passport.authenticate("facebook"));
-    server.get(
-        "/auth/facebook/callback",
-        passport.authenticate("facebook", { successRedirect: "/", failureRedirect: "/login" })
-    );
-
-    server.get("/logout", function (req, res) {
-        req.logout();
-        res.redirect("/");
-    });
-
-    server.post("/register", async (req, res) => {
-        const { username, password } = req.body;
-        console.log(req.body);
-        try {
-            const newUser = new User({
-                username,
-                password,
-            });
-            await newUser.save();
-
-            passport.authenticate("local")(req, res, function () {
-                return res.status(201).json({});
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    });
+    server.use("/api", require("./routes/api"));
 
     server.all("*", (req, res) => {
         return nextHandler(req, res);

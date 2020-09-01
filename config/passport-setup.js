@@ -6,6 +6,8 @@ const passport = require("passport"),
     GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET,
     FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID,
     FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET,
+    GG_CALLBACK_URL = process.env.GG_CALLBACK_URL,
+    FB_CALLBACK_URL = process.env.FB_CALLBACK_URL,
     { User } = require("../models/User");
 
 passport.serializeUser((user, done) => {
@@ -16,7 +18,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((id, done) => {
     User.findById(id)
         .then((user) => {
-            done(null, user);
+            done(null, user.transform());
         })
         .catch((e) => {
             done(new Error("Failed to deserialize an user"));
@@ -35,7 +37,7 @@ passport.use(
             if (!user.validatePassword(password, user.password)) {
                 return done(null, false, { message: "Incorrect password." });
             }
-            user.transform();
+
             return done(null, user);
         });
     })
@@ -46,7 +48,7 @@ passport.use(
         {
             clientID: GOOGLE_CLIENT_ID,
             clientSecret: GOOGLE_CLIENT_SECRET,
-            callbackURL: "http://localhost:3000/auth/google/callback",
+            callbackURL: GG_CALLBACK_URL,
         },
         async function (accessToken, refreshToken, profile, done) {
             try {
@@ -72,7 +74,7 @@ passport.use(
         {
             clientID: FACEBOOK_APP_ID,
             clientSecret: FACEBOOK_APP_SECRET,
-            callbackURL: "http://localhost:3000/auth/facebook/callback",
+            callbackURL: FB_CALLBACK_URL,
             profileFields: ["id", "displayName", "picture", "email"],
         },
         async function (accessToken, refreshToken, profile, done) {
