@@ -8,22 +8,26 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
 import { useRouter } from "next/dist/client/router";
+import { CLEAN_UP } from "../redux/user/action-types";
 
 function Login() {
-    const usernameRef = useRef();
+    const emailRef = useRef();
     const passwordRef = useRef();
     const dispatch = useDispatch();
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const isLoading = useSelector((state) => state.user.isLoading);
     const errors = useSelector((state) => state.user.errors);
     const [emailErrMsg, setEmailErrMsg] = useState("");
+    const [passwordErrMsg, setPasswordErrMsg] = useState("");
     const router = useRouter();
 
     const submitFormLogin = async (e) => {
         e.preventDefault();
-        const username = usernameRef.current.value;
+        const email = emailRef.current.value;
         const password = passwordRef.current.value;
-        dispatch(login({ email: username, password }, "local"));
+        dispatch(login({ email, password }, "local"));
+        setEmailErrMsg("");
+        setPasswordErrMsg("");
     };
 
     useEffect(() => {
@@ -31,7 +35,7 @@ function Login() {
             router.replace("/");
         }
     }, [isAuthenticated]);
-    console.log(errors);
+
     useEffect(() => {
         if (errors.email && errors.email.includes("required")) {
             setEmailErrMsg("Vui lòng nhập email");
@@ -43,6 +47,18 @@ function Login() {
             setEmailErrMsg("Email không tồn tại");
         }
     }, [errors.email]);
+
+    useEffect(() => {
+        if (errors.password && errors.password.includes("required")) {
+            setPasswordErrMsg("Vui lòng nhập mật khẩu");
+        } else if (errors.email && errors.email.includes("incorrect")) {
+            setEmailErrMsg("Mật khẩu không đúng");
+        }
+
+        return () => {
+            dispatch({ type: CLEAN_UP });
+        };
+    }, [errors.password]);
 
     return (
         <div className='login py-5 px-0 has-background-white'>
@@ -79,8 +95,8 @@ function Login() {
                         <label className='label'>Email</label>
                         <div className='control has-icons-left has-icons-right'>
                             <input
-                                ref={usernameRef}
-                                className={`input is-medium ${emailErrMsg ? "is-danger" : ""}`}
+                                ref={emailRef}
+                                className='input is-medium'
                                 type='email'
                                 placeholder='Địa chỉ email'
                             />
@@ -103,6 +119,7 @@ function Login() {
                                 <FontAwesomeIcon style={{ height: "1rem" }} icon={faLock} />
                             </span>
                         </div>
+                        {passwordErrMsg ? <p className='has-text-danger'>{passwordErrMsg}</p> : null}
                     </div>
                     <button
                         disabled={isLoading}
