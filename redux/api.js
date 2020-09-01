@@ -1,5 +1,3 @@
-import fetch from "isomorphic-unfetch";
-
 export default class BaseAPI {
     constructor(prefixOfEndpoint) {
         this.prefixOfEndpoint = prefixOfEndpoint;
@@ -7,29 +5,40 @@ export default class BaseAPI {
 
     async get(suffixOfEndpoint) {
         try {
-            const res = await fetch(`/api/${this.prefixOfEndpoint}/${suffixOfEndpoint}`, {
+            const url = `/api/${this.prefixOfEndpoint}/${suffixOfEndpoint}`;
+            const res = await fetch(url, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
             });
-            const data = await res.json();
 
-            return { data, ok: res.ok };
+            if (res.status === 200) {
+                const data = await res.json();
+
+                return { data, ok: res.ok };
+            } else {
+                throw res;
+            }
         } catch (error) {
-            console.log(error);
+            return { data: {}, ok: false };
         }
     }
     async post(suffixOfEndpoint, body, contentType = "application/json") {
         try {
-            const res = await fetch(`/api/${this.prefixOfEndpoint}/${suffixOfEndpoint}`, {
+            const url = `/api/${this.prefixOfEndpoint}/${suffixOfEndpoint}`;
+            const res = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": contentType },
                 body: JSON.stringify(body),
             });
+            if (res.status === 200 || res.status === 201 || res.status === 400 || res.status === 404) {
+                const data = await res.json();
 
-            const data = await res.json();
-            return { data, ok: res.ok };
+                return { data, ok: res.ok };
+            } else {
+                throw res;
+            }
         } catch (error) {
-            console.log(error);
+            return { data: {}, ok: false };
         }
     }
 }

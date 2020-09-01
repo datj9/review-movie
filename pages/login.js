@@ -1,28 +1,53 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { withUserServerSideProps, withUser } from "../HOC/withUser";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/user/actions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
+import { useRouter } from "next/dist/client/router";
 
 function Login() {
     const usernameRef = useRef();
     const passwordRef = useRef();
+    const dispatch = useDispatch();
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const isLoading = useSelector((state) => state.user.isLoading);
+    const errors = useSelector((state) => state.user.errors);
+    const [emailErrMsg, setEmailErrMsg] = useState("");
+    const router = useRouter();
 
     const submitFormLogin = async (e) => {
         e.preventDefault();
         const username = usernameRef.current.value;
         const password = passwordRef.current.value;
-        dispatch(login({ username, password }, "local"));
+        dispatch(login({ email: username, password }, "local"));
     };
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            router.replace("/");
+        }
+    }, [isAuthenticated]);
+    console.log(errors);
+    useEffect(() => {
+        if (errors.email && errors.email.includes("required")) {
+            setEmailErrMsg("Vui lòng nhập email");
+        }
+        if (errors.email && errors.email.includes("invalid")) {
+            setEmailErrMsg("Email không hợp lệ");
+        }
+        if (errors.email && errors.email.includes("not found")) {
+            setEmailErrMsg("Email không tồn tại");
+        }
+    }, [errors.email]);
 
     return (
         <div className='login py-5 px-0 has-background-white'>
             <Head>
-                <title>Đăng Nhập để dánh giá phim</title>
+                <title>Đăng nhập để dánh giá phim</title>
                 <link rel='icon' href='/favicon.ico' />
             </Head>
             <div className='title px-4'>Đăng Nhập vào Tài Khoản Của Bạn</div>
@@ -51,25 +76,37 @@ function Login() {
                 </div>
                 <form className='mb-3'>
                     <div className='field'>
-                        <label className='label'>Tên tải khoản</label>
+                        <label className='label'>Email</label>
                         <div className='control has-icons-left has-icons-right'>
-                            <input className='input is-medium' type='text' placeholder='Nhập tên tải khoản' />
+                            <input
+                                ref={usernameRef}
+                                className={`input is-medium ${emailErrMsg ? "is-danger" : ""}`}
+                                type='email'
+                                placeholder='Địa chỉ email'
+                            />
                             <span className='icon is-small is-left'>
                                 <FontAwesomeIcon style={{ height: "1rem" }} icon={faUser} />
                             </span>
                         </div>
+                        {emailErrMsg ? <p className='has-text-danger'>{emailErrMsg}</p> : null}
                     </div>
                     <div className='field mb-3'>
                         <label className='label'>Mật khẩu</label>
                         <div className='control has-icons-left has-icons-right'>
-                            <input className='input is-medium' type='password' placeholder='Nhập mật khẩu' />
+                            <input
+                                ref={passwordRef}
+                                className='input is-medium'
+                                type='password'
+                                placeholder='Mật khẩu'
+                            />
                             <span className='icon is-small is-left'>
                                 <FontAwesomeIcon style={{ height: "1rem" }} icon={faLock} />
                             </span>
                         </div>
                     </div>
                     <button
-                        className='button is-primary is-fullwidth is-medium'
+                        disabled={isLoading}
+                        className={`button is-primary is-fullwidth is-medium ${isLoading ? "is-loading" : ""}`}
                         type='submit'
                         onClick={submitFormLogin}
                     >
@@ -162,7 +199,7 @@ function Login() {
                     .forgot-pass-wp {
                         width: 100%;
                         display: flex;
-                        justify-content: flex-end;
+                        justify-content: flex-start;
                     }
                     @media only screen and (min-width: 576px) {
                         .title,
@@ -183,6 +220,8 @@ function Login() {
                         }
                         .forgot-pass-wp {
                             width: 25%;
+                            display: flex;
+                            justify-content: flex-end;
                         }
                     }
                 `}

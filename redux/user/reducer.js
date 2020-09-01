@@ -26,12 +26,14 @@ export default function userReducer(state = INITIAL_STATE, action) {
                 ...state,
                 isLoading: false,
                 loginType: "",
+                isAuthenticated: true,
             };
         case actionTypes.LOGIN_FAILURE:
             return {
                 ...state,
                 isLoading: false,
                 loginType: "",
+                errors: payload,
             };
         case actionTypes.REGISTER_START:
             return { ...state, isLoading: true };
@@ -44,6 +46,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
             return {
                 ...state,
                 isLoading: false,
+                errors: payload,
             };
         case actionTypes.LOGOUT_START:
             return {
@@ -55,6 +58,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
                 ...state,
                 isLoading: false,
                 isAuthenticated: false,
+                currentUser: {},
             };
         case actionTypes.LOGIN_FAILURE:
             return {
