@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
 const bodyParser = require("body-parser");
-const { User } = require("./models/User");
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== "production";
@@ -25,7 +24,6 @@ nextApp.prepare().then(() => {
 
     server.use(express.json({ extended: true, limit: "10mb" }));
     server.use(bodyParser.urlencoded({ extended: true }));
-
     server.use(
         session({
             secret: COOKIE_PASSWORD, //pick a random string to make the hash that is generated secure
@@ -33,6 +31,7 @@ nextApp.prepare().then(() => {
             saveUninitialized: false, //required
         })
     );
+
     // initalize passport
     server.use(passport.initialize());
     // deserialize and serialize cookie from the browser
