@@ -1,14 +1,32 @@
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useState } from "react";
 
 export default function Header() {
     const [isActiveNav, setIsActiveNav] = useState(false);
+    const navRef = useRef();
+
+    const closeNav = () => {
+        setIsActiveNav(false);
+    };
+    const handleClick = (e) => {
+        if (isActiveNav && !navRef.current?.contains(e.target)) {
+            closeNav();
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClick);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClick);
+        };
+    }, []);
 
     return (
-        <nav className='navbar' role='navigation' aria-label='main navigation'>
+        <nav ref={navRef} className='navbar' role='navigation' aria-label='main navigation'>
             <div className='navbar-brand'>
                 <Link href='/'>
-                    <a className='navbar-item logo-wrapper'>
+                    <a onClick={closeNav} className='navbar-item logo-wrapper'>
                         <img src='/logo.png' />
                     </a>
                 </Link>
@@ -29,16 +47,22 @@ export default function Header() {
 
             <div id='navbarBasicExample' className={isActiveNav ? "navbar-menu is-active" : "navbar-menu"}>
                 <div className='navbar-start'>
-                    <a className='navbar-item'>Đánh Giá Phim</a>
+                    <a onClick={closeNav} className='navbar-item'>
+                        Đánh Giá Phim
+                    </a>
 
-                    <a className='navbar-item'>Đánh Giá Rạp</a>
+                    <a onClick={closeNav} className='navbar-item'>
+                        Đánh Giá Rạp
+                    </a>
                 </div>
 
                 <div className='navbar-end'>
                     <div className='navbar-item'>
                         <div className='buttons'>
                             <Link href='login'>
-                                <a className='button is-primary'>Đăng Nhập</a>
+                                <a onClick={closeNav} className='button is-primary'>
+                                    Đăng Nhập
+                                </a>
                             </Link>
                         </div>
                     </div>

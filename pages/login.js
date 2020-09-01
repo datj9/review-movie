@@ -20,7 +20,7 @@ function Login() {
     };
 
     return (
-        <div className='login hero py-3 px-0 has-background-white'>
+        <div className='login py-5 px-0 has-background-white'>
             <Head>
                 <title>Đăng Nhập để dánh giá phim</title>
                 <link rel='icon' href='/favicon.ico' />
@@ -29,6 +29,26 @@ function Login() {
             <hr className='px-4' />
 
             <div className='form-container px-4'>
+                <div className='buttons are-medium'>
+                    <Link href='/api/auth/google'>
+                        <a className='button is-fullwidth has-text-black has-background-white mb-3'>
+                            <span className='google-icon-wp'>
+                                <img alt='google-icon' src='/google-icon.svg' />
+                            </span>
+                            <span className='ml-3 d-inline-block'>Đăng Nhập với Google</span>
+                        </a>
+                    </Link>
+                    <Link href='/api/auth/facebook'>
+                        <a className='fb-btn button is-fullwidth has-text-white'>
+                            <FontAwesomeIcon style={{ height: "1.25rem" }} icon={faFacebookF} />
+                            <span className='ml-3 d-inline-block'>Đăng Nhập với Facebook</span>
+                        </a>
+                    </Link>
+                </div>
+                <div className='has-text-centered my-3 or-wrapper'>
+                    <hr />
+                    <span className='or'>Hoặc</span>
+                </div>
                 <form className='mb-3'>
                     <div className='field'>
                         <label className='label'>Tên tải khoản</label>
@@ -56,23 +76,7 @@ function Login() {
                         Đăng Nhập
                     </button>
                 </form>
-                <div className='has-text-centered my-3'>Hoặc</div>
-                <div className='buttons are-medium'>
-                    <Link href='/api/auth/google'>
-                        <a className='button is-fullwidth has-text-black has-background-white mb-3'>
-                            <span className='google-icon-wp'>
-                                <img alt='google-icon' src='/google-icon.svg' />
-                            </span>
-                            <span className='ml-3 d-inline-block'>Đăng Nhập với Google</span>
-                        </a>
-                    </Link>
-                    <Link href='/api/auth/facebook'>
-                        <a className='fb-btn button is-fullwidth has-text-white'>
-                            <FontAwesomeIcon style={{ height: "1.25rem" }} icon={faFacebookF} />
-                            <span className='ml-3 d-inline-block'>Đăng Nhập với Facebook</span>
-                        </a>
-                    </Link>
-                </div>
+
                 <div className='register-and-forgot-pass-wp'>
                     <div className='register-wp'>
                         <span>Bạn chưa có tài khoản? </span>
@@ -93,16 +97,31 @@ function Login() {
                     .login {
                         min-height: calc(100vh - 3.25rem);
                     }
-                    .title {
-                        font-size: 1.4rem;
-                    }
                     .title,
+                    .form-container,
+                    hr {
+                        width: 100%;
+                    }
+                    .title {
+                        font-size: 1rem;
+                    }
+                    .or-wrapper {
+                        position: relative;
+                    }
+                    .or {
+                        position: absolute;
+                        top: 0;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: #fff;
+                        display: inline-block;
+                        padding: 0.3rem;
+                        z-index: 2;
+                    }
                     .form-container {
-                        width: 30rem;
                         margin: 0 auto;
                     }
                     hr {
-                        width: 30rem;
                         margin: 1rem auto;
                     }
 
@@ -144,6 +163,17 @@ function Login() {
                         width: 25%;
                         display: flex;
                         justify-content: flex-end;
+                    }
+                    @media only screen and (min-width: 576px) {
+                        .title,
+                        .form-container,
+                        hr {
+                            width: 30rem;
+                        }
+                        .title {
+                            margin: 0 auto;
+                            font-size: 1.4rem;
+                        }
                     }
                 `}
             </style>

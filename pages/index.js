@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { withUserServerSideProps, withUser } from "../HOC/withUser";
 import { useDispatch, useSelector } from "react-redux";
+import Header from "../components/Header";
 
 function Home() {
     const currentUser = useSelector((state) => state.user.currentUser);
@@ -13,7 +14,7 @@ function Home() {
                 <title>Đánh giá phim mới</title>
                 <link rel='icon' href='/favicon.ico' />
             </Head>
-
+            {/* <Header /> */}
             <main>
                 {/* <a href='/api/auth/logout'>Log Out</a>
                 <div>{currentUser.name}</div>

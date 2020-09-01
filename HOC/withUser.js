@@ -25,6 +25,11 @@ export const withUser = (WrappedComponent) => {
             });
         }
 
-        return <WrappedComponent {...props} />;
+        return (
+            <>
+                <Header />
+                <WrappedComponent {...props} />
+            </>
+        );
     };
 };
