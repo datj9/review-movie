@@ -10,6 +10,9 @@ const register = async (req, res) => {
     const { username, password } = req.body;
 
     try {
+        const foundUser = await User.findOne({ username });
+        if (foundUser) return res.status(400).json({ username: "username already exists" });
+
         const newUser = new User({
             username,
             password,
@@ -17,10 +20,10 @@ const register = async (req, res) => {
         await newUser.save();
 
         passport.authenticate("local")(req, res, function () {
-            return res.status(201).json({});
+            res.redirect("/");
         });
     } catch (error) {
-        console.log(error);
+        return res.status(500).json(error);
     }
 };
 

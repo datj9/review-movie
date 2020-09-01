@@ -15,7 +15,7 @@ router.post("/register", authController.register);
 router.post("/login", passport.authenticate("local"), function (req, res) {
     // If this function gets called, authentication was successful.
     // `req.user` contains the authenticated user.
-    return res.status(200).json({});
+    res.redirect("/");
 });
 
 router.get("/logout", authController.logOut);
