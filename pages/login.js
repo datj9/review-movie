@@ -158,7 +158,7 @@ function Login() {
                         flex-direction: column;
                     }
                     .register-wp {
-                        width: 65%;
+                        width: 100%;
                     }
                     .forgot-pass-wp {
                         width: 25%;
@@ -175,8 +175,11 @@ function Login() {
                             margin: 0 auto;
                             font-size: 1.4rem;
                         }
-                        register-and-forgot-pass-wp {
+                        .register-and-forgot-pass-wp {
                             flex-direction: row;
+                        }
+                        .register-wp {
+                            width: 65%;
                         }
                     }
                 `}
