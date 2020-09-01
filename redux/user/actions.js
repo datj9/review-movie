@@ -42,3 +42,20 @@ export const logout = () => async (dispatch) => {
         });
     }
 };
+
+export const register = (user) => async (dispatch) => {
+    dispatch({
+        type: actionTypes.REGISTER_START,
+    });
+    const { data, ok } = await api.post("register", user);
+    if (ok) {
+        dispatch({
+            type: actionTypes.REGISTER_SUCCESS,
+        });
+    } else {
+        dispatch({
+            type: actionTypes.REGISTER_FAILURE,
+            payload: data,
+        });
+    }
+};

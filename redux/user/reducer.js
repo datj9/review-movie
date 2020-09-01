@@ -20,7 +20,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
 
             return { ...state, ...action.payload, page: wasBumpedOnClient ? state.page : action.payload.page };
         case actionTypes.LOGIN_START:
-            return { ...state, isLoading: true, loginType: payload.loginType };
+            return { ...state, isLoading: true, loginType: payload.loginType, errors: {} };
         case actionTypes.LOGIN_SUCCESS:
             return {
                 ...state,
@@ -36,7 +36,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
                 errors: payload,
             };
         case actionTypes.REGISTER_START:
-            return { ...state, isLoading: true };
+            return { ...state, isLoading: true, errors: {} };
         case actionTypes.REGISTER_SUCCESS:
             return {
                 ...state,

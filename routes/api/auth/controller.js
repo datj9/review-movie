@@ -8,15 +8,17 @@ const logOut = (req, res) => {
 };
 
 const register = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, name } = req.body;
     const errors = {};
 
     if (!email) errors.email = "email is required";
     if (!password) errors.password = "password is required";
+    if (!name) errors.name = "name is required";
     if (Object.keys(errors).length > 0) return res.status(400).json(errors);
 
     if (typeof email != "string") errors.email = "email is invalid";
     if (typeof password != "string") errors.password = "password is invalid";
+    if (typeof name != "string") errors.password = "name is invalid";
     if (Object.keys(errors).length > 0) return res.status(400).json(errors);
 
     if (!isEmail(email + "")) errors.email = "email is invalid";
@@ -25,11 +27,12 @@ const register = async (req, res) => {
 
     try {
         const foundUser = await User.findOne({ email });
-        if (foundUser) return res.status(400).json({ password: "email already exists" });
+        if (foundUser) return res.status(400).json({ email: "email already exists" });
 
         const newUser = new User({
             email,
             password,
+            name,
         });
         await newUser.save();
 
