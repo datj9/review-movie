@@ -155,6 +155,7 @@ function Login() {
                     .register-and-forgot-pass-wp {
                         display: flex;
                         justify-content: space-between;
+                        flex-direction: column;
                     }
                     .register-wp {
                         width: 65%;
@@ -173,6 +174,9 @@ function Login() {
                         .title {
                             margin: 0 auto;
                             font-size: 1.4rem;
+                        }
+                        register-and-forgot-pass-wp {
+                            flex-direction: row;
                         }
                     }
                 `}
