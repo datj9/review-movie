@@ -3,15 +3,15 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { withUserServerSideProps, withUser } from "../HOC/withUser";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/user/actions";
+import { register } from "../redux/user/actions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
-import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
+import { faEnvelope, faLock, faAddressCard } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/dist/client/router";
 import { CLEAN_UP } from "../redux/user/action-types";
 
-function Login() {
+function Register() {
     const emailRef = useRef();
+    const nameRef = useRef();
     const passwordRef = useRef();
     const dispatch = useDispatch();
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
@@ -19,13 +19,17 @@ function Login() {
     const errors = useSelector((state) => state.user.errors);
     const [emailErrMsg, setEmailErrMsg] = useState("");
     const [passwordErrMsg, setPasswordErrMsg] = useState("");
+    const [nameErrMsg, setNameErrMsg] = useState("");
     const router = useRouter();
 
-    const submitFormLogin = async (e) => {
+    const submitFormRegister = async (e) => {
         e.preventDefault();
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
-        dispatch(login({ email, password }, "local"));
+        const name = nameRef.current.value;
+        dispatch(register({ email, password, name }, "local"));
+        setEmailErrMsg("");
+        setPasswordErrMsg("");
     };
 
     useEffect(() => {
@@ -42,53 +46,41 @@ function Login() {
             setEmailErrMsg("Vui lòng nhập email");
         } else if (errors.email && errors.email.includes("invalid")) {
             setEmailErrMsg("Email không hợp lệ");
-        } else if (errors.email && errors.email.includes("not found")) {
-            setEmailErrMsg("Email không tồn tại");
+        } else if (errors.email && errors.email.includes("exists")) {
+            setEmailErrMsg("Email này đã tồn tại");
         } else {
             setEmailErrMsg("");
         }
     }, [errors.email]);
 
     useEffect(() => {
+        if (errors.name && errors.name.includes("required")) {
+            setNameErrMsg("Vui lòng nhập họ tên");
+        } else {
+            setNameErrMsg("");
+        }
+    }, [errors.name]);
+
+    useEffect(() => {
         if (errors.password && errors.password.includes("required")) {
             setPasswordErrMsg("Vui lòng nhập mật khẩu");
-        } else if (errors.email && errors.email.includes("incorrect")) {
-            setPasswordErrMsg("Mật khẩu không đúng");
+        } else if (errors.password && errors.password.includes("weak")) {
+            setPasswordErrMsg("Mật khẩu phải có ít nhất 8 ký tự");
         } else {
             setPasswordErrMsg("");
         }
     }, [errors.password]);
-
+    console.log(errors);
     return (
-        <div className='login py-5 px-0 has-background-white'>
+        <div className='register py-5 px-0 has-background-white'>
             <Head>
-                <title>Đăng nhập để dánh giá phim</title>
+                <title>Đăng ký tài khoản mới</title>
                 <link rel='icon' href='/favicon.ico' />
             </Head>
-            <div className='title px-4'>Đăng Nhập vào Tài Khoản Của Bạn</div>
+            <div className='title px-4'>Đăng Ký Tài Khoản Mới</div>
             <hr className='px-4' />
 
             <div className='form-container px-4'>
-                <div className='buttons are-medium'>
-                    <Link href='/api/auth/google'>
-                        <a className='button is-fullwidth has-text-black has-background-white mb-3'>
-                            <span className='google-icon-wp'>
-                                <img alt='google-icon' src='/google-icon.svg' />
-                            </span>
-                            <span className='ml-3 d-inline-block'>Đăng Nhập với Google</span>
-                        </a>
-                    </Link>
-                    <Link href='/api/auth/facebook'>
-                        <a className='fb-btn button is-fullwidth has-text-white'>
-                            <FontAwesomeIcon style={{ height: "1.25rem" }} icon={faFacebookF} />
-                            <span className='ml-3 d-inline-block'>Đăng Nhập với Facebook</span>
-                        </a>
-                    </Link>
-                </div>
-                <div className='has-text-centered my-3 or-wrapper'>
-                    <hr />
-                    <span className='or'>Hoặc</span>
-                </div>
                 <form className='mb-3'>
                     <div className='field'>
                         <label className='label'>Email</label>
@@ -104,6 +96,16 @@ function Login() {
                             </span>
                         </div>
                         {emailErrMsg ? <p className='has-text-danger'>{emailErrMsg}</p> : null}
+                    </div>
+                    <div className='field'>
+                        <label className='label'>Họ tên</label>
+                        <div className='control has-icons-left has-icons-right'>
+                            <input ref={nameRef} className='input is-medium' type='text' placeholder='Họ tên' />
+                            <span className='icon is-small is-left'>
+                                <FontAwesomeIcon style={{ height: "1rem" }} icon={faAddressCard} />
+                            </span>
+                        </div>
+                        {nameErrMsg ? <p className='has-text-danger'>{nameErrMsg}</p> : null}
                     </div>
                     <div className='field mb-3'>
                         <label className='label'>Mật khẩu</label>
@@ -124,30 +126,23 @@ function Login() {
                         disabled={isLoading}
                         className={`button is-primary is-fullwidth is-medium ${isLoading ? "is-loading" : ""}`}
                         type='submit'
-                        onClick={submitFormLogin}
+                        onClick={submitFormRegister}
                     >
                         Đăng Nhập
                     </button>
                 </form>
 
-                <div className='register-and-forgot-pass-wp'>
-                    <div className='register-wp'>
-                        <span>Bạn chưa có tài khoản? </span>
-                        <Link href='/register'>
-                            <a>Đăng Ký</a>
-                        </Link>
-                    </div>
-                    <div className='forgot-pass-wp'>
-                        <Link href='/register'>
-                            <a>Quên Mật Khẩu</a>
-                        </Link>
-                    </div>
+                <div className='register-wp'>
+                    <span>Bạn đã có tài khoản? </span>
+                    <Link href='/login'>
+                        <a>Đăng Nhập</a>
+                    </Link>
                 </div>
             </div>
 
             <style jsx>
                 {`
-                    .login {
+                    .register {
                         min-height: calc(100vh - 3.25rem);
                     }
                     .title,
@@ -158,32 +153,17 @@ function Login() {
                     .title {
                         font-size: 1rem;
                     }
-                    .or-wrapper {
-                        position: relative;
-                    }
-                    .or {
-                        position: absolute;
-                        top: 0;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        background: #fff;
-                        display: inline-block;
-                        padding: 0.3rem;
-                        z-index: 2;
-                    }
                     .form-container {
                         margin: 0 auto;
                     }
                     hr {
                         margin: 1rem auto;
                     }
-
                     .icon {
                         display: flex;
                         align-items: center;
                         justify-content: center;
                     }
-
                     .input {
                         border: 0.5px solid #000;
                     }
@@ -191,31 +171,8 @@ function Login() {
                     .input:active {
                         border-color: #f69314;
                     }
-                    .google-icon-wp {
-                        width: 1.25rem;
-                        height: 1.25rem;
-                        display: flex;
-                        align-items: center;
-                    }
-                    .google-icon-wp img {
-                        width: 100%;
-                    }
-                    .fb-btn {
-                        background: #3b5998;
-                        display: flex;
-                        justify-content: center;
-                    }
-                    .register-and-forgot-pass-wp {
-                        display: flex;
-                        flex-direction: column;
-                    }
                     .register-wp {
                         width: 100%;
-                    }
-                    .forgot-pass-wp {
-                        width: 100%;
-                        display: flex;
-                        justify-content: flex-start;
                     }
                     @media only screen and (min-width: 576px) {
                         .title,
@@ -227,18 +184,6 @@ function Login() {
                             margin: 0 auto;
                             font-size: 1.4rem;
                         }
-                        .register-and-forgot-pass-wp {
-                            flex-direction: row;
-                            justify-content: space-between;
-                        }
-                        .register-wp {
-                            width: 65%;
-                        }
-                        .forgot-pass-wp {
-                            width: 25%;
-                            display: flex;
-                            justify-content: flex-end;
-                        }
                     }
                 `}
             </style>
@@ -248,4 +193,4 @@ function Login() {
 
 export const getServerSideProps = withUserServerSideProps();
 
-export default withUser(Login);
+export default withUser(Register);
