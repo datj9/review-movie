@@ -31,18 +31,6 @@ export const login = (user, loginType) => async (dispatch) => {
     } 
 };
 
-export const logout = () => async (dispatch) => {
-    dispatch({
-        type: actionTypes.LOGOUT_START,
-    });
-    const res = await api.get("logout");
-    if (res.ok) {
-        dispatch({
-            type: actionTypes.LOGOUT_SUCCESS,
-        });
-    }
-};
-
 export const register = (user) => async (dispatch) => {
     dispatch({
         type: actionTypes.REGISTER_START,
@@ -61,3 +49,16 @@ export const register = (user) => async (dispatch) => {
         });
     }
 };
+
+export const logout = () => async (dispatch) => {
+    dispatch({
+        type: actionTypes.LOGOUT_START,
+    });
+    const res = await api.get("logout");
+    if (res.ok) {
+        dispatch({
+            type: actionTypes.LOGOUT_SUCCESS,
+        });
+    }
+};
+

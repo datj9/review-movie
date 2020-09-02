@@ -72,17 +72,21 @@ function Login() {
             <div className='form-container px-4'>
                 <div className='buttons are-medium'>
                     <Link href='/api/auth/google'>
-                        <a className='button is-fullwidth has-text-black has-background-white mb-3'>
-                            <span className='google-icon-wp'>
-                                <img alt='google-icon' src='/google-icon.svg' />
-                            </span>
-                            <span className='ml-3 d-inline-block'>Đăng Nhập với Google</span>
+                        <a className='gg-link'>
+                          <button disabled={loginType==='gg'} onClick={() => dispatch(login(null,'gg'))} className={`button is-fullwidth has-text-black has-background-white mb-3 ${loginType === 'gg' ? 'is-loading':''}`}>
+                               {loginType !== 'gg' ? <span className='google-icon-wp'>
+                                    <img alt='google-icon' src='/google-icon.svg' />
+                                </span> : null}
+                                <span className='ml-3 d-inline-block'>Đăng Nhập với Google</span>
+                          </button>
                         </a>
                     </Link>
                     <Link href='/api/auth/facebook'>
-                        <a onClick={() => dispatch(login(null, 'fb'))} className={`fb-btn button is-fullwidth has-text-white ${loginType === 'fb' ? 'is-loading':''}`}>
-                            <FontAwesomeIcon style={{ height: "1.25rem" }} icon={faFacebookF} />
-                            <span className='ml-3 d-inline-block'>Đăng Nhập với Facebook</span>
+                        <a className='fb-link'>
+                            <button disabled={loginType==='fb'}  onClick={() => dispatch(login(null, 'fb'))} className={`fb-btn button is-fullwidth has-text-white ${loginType === 'fb' ? 'is-loading':''}`}>
+                                <FontAwesomeIcon style={{ height: "1.25rem" }} icon={faFacebookF} />
+                                <span className='ml-3 d-inline-block'>Đăng Nhập với Facebook</span>
+                            </button>
                         </a>
                     </Link>
                 </div>
@@ -123,7 +127,7 @@ function Login() {
                     </div>
                     <button
                         disabled={isLoading}
-                        className={`button is-primary is-fullwidth is-medium ${isLoading ? "is-loading" : ""}`}
+                        className={`button is-primary is-fullwidth is-medium ${(isLoading && loginType === 'local') ? "is-loading" : ""}`}
                         type='submit'
                         onClick={submitFormLogin}
                     >
@@ -199,6 +203,9 @@ function Login() {
                         align-items: center;
                     }
                     .google-icon-wp img {
+                        width: 100%;
+                    }
+                    .fb-link, .gg-link {
                         width: 100%;
                     }
                     .fb-btn {
