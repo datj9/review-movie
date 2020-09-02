@@ -20,8 +20,7 @@ export default function Header() {
         setNavOpen((navOpen) => !navOpen);
     };
     const handleClick = (e) => {
-        console.log(navOpen);
-        if (navOpen && !navRef.current?.contains(e.target) && !hamburgerBtnRef.current?.contains(e.target)) {
+        if (!navRef.current?.contains(e.target) && !hamburgerBtnRef.current?.contains(e.target)) {
             closeNav();
         }
     };
@@ -34,11 +33,11 @@ export default function Header() {
     }, []);
 
     return (
-        <nav className="navbar" role="navigation" aria-label="main navigation">
-            <div className="navbar-brand">
-                <Link href="/">
-                    <a onClick={closeNav} className="navbar-item logo-wrapper">
-                        <img src="/logo.png" />
+        <nav className='navbar' role='navigation' aria-label='main navigation'>
+            <div className='navbar-brand'>
+                <Link href='/'>
+                    <a onClick={closeNav} className='navbar-item logo-wrapper'>
+                        <img src='/logo.png' />
                     </a>
                 </Link>
                 {/* <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="30" height="30">
@@ -59,46 +58,46 @@ export default function Header() {
                 </svg> */}
                 <span
                     ref={hamburgerBtnRef}
-                    role="button"
+                    role='button'
                     className={navOpen ? "navbar-burger burger is-active" : "navbar-burger burger"}
-                    aria-label="menu"
-                    aria-expanded="false"
-                    data-target="navbarBasicExample"
+                    aria-label='menu'
+                    aria-expanded='false'
+                    data-target='navbarBasicExample'
                     onClick={toggleNav}
                 >
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
+                    <span aria-hidden='true'></span>
+                    <span aria-hidden='true'></span>
+                    <span aria-hidden='true'></span>
                 </span>
             </div>
 
-            <div ref={navRef} id="navbarBasicExample" className={navOpen ? "navbar-menu is-active" : "navbar-menu"}>
-                <div className="navbar-start">
-                    <a onClick={closeNav} className="navbar-item">
+            <div ref={navRef} id='navbarBasicExample' className={navOpen ? "navbar-menu is-active" : "navbar-menu"}>
+                <div className='navbar-start'>
+                    <a onClick={closeNav} className='navbar-item'>
                         Đánh Giá Phim
                     </a>
 
-                    <a onClick={closeNav} className="navbar-item">
+                    <a onClick={closeNav} className='navbar-item'>
                         Đánh Giá Rạp
                     </a>
                 </div>
 
-                <div className="navbar-end">
+                <div className='navbar-end'>
                     {isAuthenticated ? (
-                        <div className="navbar-item">
+                        <div className='navbar-item'>
                             <button
                                 onClick={handleLogout}
-                                type="button"
+                                type='button'
                                 className={`button is-primary is-outlined ${isLoggingOut ? "is-loading" : ""}`}
                             >
                                 Đăng xuất
                             </button>
                         </div>
                     ) : (
-                        <div className="navbar-item">
-                            <div className="buttons">
-                                <Link href="/login">
-                                    <a onClick={closeNav} className="button is-primary">
+                        <div className='navbar-item'>
+                            <div className='buttons'>
+                                <Link href='/login'>
+                                    <a onClick={closeNav} className='button is-primary'>
                                         Đăng nhập
                                     </a>
                                 </Link>
