@@ -1,35 +1,19 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useState } from "react";
 import { withUserServerSideProps, withUser } from "../HOC/withUser";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { useEffect } from "react";
+import { getListMovies } from "../redux/movie/actions";
 
 function Home() {
-    const currentUser = useSelector((state) => state.user.currentUser);
-    const movies = [
-        {
-            id: 1,
-            name: "Dị Nhân Thế Hệ Mới",
-            image: "https://cdn.moveek.com/media/cache/short/5f1a767e413d1434389985.jpg",
-        },
-        {
-            id: 2,
-            name: "Kẻ Cắp Nhân Dạng",
-            image: "https://cdn.moveek.com/media/cache/short/5f17a7c1b1c57272959714.jpg",
-        },
-        {
-            id: 3,
-            name: "Đầu Gấu Bắc Cực: Kì Nghỉ Vui Nhộn",
-            image: "https://cdn.moveek.com/media/cache/short/5f34e5666bb8b047251186.jpg",
-        },
-        {
-            id: 4,
-            name: "Biệt Đội Săn Mồi",
-            image: "https://cdn.moveek.com/media/cache/short/5f34cd98969d3020652508.jpg",
-        },
-    ];
+    const dispatch = useDispatch();
+    const movies = useSelector((state) => state.movie.movies);
+
+    useEffect(() => {
+        dispatch(getListMovies());
+    }, []);
 
     return (
         <div>
@@ -41,7 +25,7 @@ function Home() {
             <main className='py-5 pl-3'>
                 <div className='list-and-title-wp'>
                     <div className='title-container mb-3 pr-3'>
-                        <span>Phim Đang Chiếu</span>
+                        <span className='has-text-black'>Phim Đang Chiếu</span>
                         <Link href='/'>
                             <a>Xem Tất Cả</a>
                         </Link>
@@ -54,7 +38,10 @@ function Home() {
                                     <div className='icons-wp has-text-grey-dark px-1'>
                                         <span>
                                             <span>4.7 </span>
-                                            <FontAwesomeIcon style={{ width: "1rem", color: "yellow" }} icon={faStar} />
+                                            <FontAwesomeIcon
+                                                style={{ width: "1rem", color: "#f69314" }}
+                                                icon={faStar}
+                                            />
                                         </span>
                                         <span>
                                             <span>99 </span>
