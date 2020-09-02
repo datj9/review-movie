@@ -5,7 +5,9 @@ const api = new BaseAPI("auth");
 
 const loginStart = (loginType) => ({
     type: actionTypes.LOGIN_START,
-    payload: { loginType },
+    payload: {
+        loginType,
+    },
 });
 const loginSuccess = () => ({
     type: actionTypes.LOGIN_SUCCESS,
@@ -16,9 +18,9 @@ const loginFail = (errors) => ({
 });
 
 export const login = (user, loginType) => async (dispatch) => {
-    if (loginType === "local") {
-        dispatch(loginStart(loginType));
+    dispatch(loginStart(loginType));
 
+    if (loginType === "local") {
         const { data, ok } = await api.post("login", user);
 
         if (ok) {
@@ -26,9 +28,7 @@ export const login = (user, loginType) => async (dispatch) => {
         } else {
             dispatch(loginFail(data));
         }
-    } else {
-        dispatch(loginStart(loginType));
-    }
+    } 
 };
 
 export const logout = () => async (dispatch) => {
@@ -47,8 +47,9 @@ export const register = (user) => async (dispatch) => {
     dispatch({
         type: actionTypes.REGISTER_START,
     });
+    
     const { data, ok } = await api.post("register", user);
-
+   
     if (ok) {
         dispatch({
             type: actionTypes.REGISTER_SUCCESS,

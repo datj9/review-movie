@@ -24,10 +24,11 @@ function Register() {
 
     const submitFormRegister = async (e) => {
         e.preventDefault();
+        console.log('object');
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
         const name = nameRef.current.value;
-        dispatch(register({ email, password, name }, "local"));
+        dispatch(register({ email, password, name }));
         setEmailErrMsg("");
         setPasswordErrMsg("");
     };
@@ -70,7 +71,7 @@ function Register() {
             setPasswordErrMsg("");
         }
     }, [errors.password]);
-    console.log(errors);
+ 
     return (
         <div className='register py-5 px-0 has-background-white'>
             <Head>
