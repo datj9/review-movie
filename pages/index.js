@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import axios from "axios";
 import { withUserServerSideProps, withUser } from "../HOC/withUser";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,13 +8,14 @@ import { faStar, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
 import { getListMovies } from "../redux/movie/actions";
 
-function Home() {
-    const dispatch = useDispatch();
-    const movies = useSelector((state) => state.movie.movies);
-
+function Home({ movies }) {
+    // const dispatch = useDispatch();
+    // const movies = useSelector((state) => state.movie.movies);
+    /*
     useEffect(() => {
         dispatch(getListMovies());
     }, []);
+    */
 
     return (
         <div>
@@ -105,6 +107,15 @@ function Home() {
             </style>
         </div>
     );
+}
+
+export async function getStaticProps() {
+    const movies = await axios.get("/api/movies");
+    return {
+      props: {
+        movies
+      }
+    }
 }
 
 export const getServerSideProps = withUserServerSideProps();
