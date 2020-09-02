@@ -34,7 +34,7 @@ function Home() {
     return (
         <div>
             <Head>
-                <title>Đánh giá phim mới</title>
+                <title>Đánh Giá Phim - Tìm Phim Hay, Rạp Xịn</title>
                 <link rel='icon' href='/favicon.ico' />
             </Head>
 
