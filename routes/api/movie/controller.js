@@ -1,6 +1,7 @@
 const { Movie } = require("../../../models/Movie");
 const isInt = require("validator/lib/isInt");
 const isURL = require("validator/lib/isURL");
+const { crawl } = require("../../../helpers/crawl");
 
 const getMovies = async (req, res) => {
     const { pageSize, pageIndex } = req.query;
@@ -66,4 +67,16 @@ const createMovie = async (req, res) => {
     }
 };
 
-module.exports = { getMovies, createMovie };
+const crawlMovies = async (req, res) => {
+    try {
+        const allCreatedMovies = await crawl();
+
+        allCreatedMovies.forEach((movie, i) => (allCreatedMovies[i] = movie.transform()));
+
+        return res.status(201).json(allCreatedMovies);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+};
+
+module.exports = { getMovies, createMovie, crawlMovies };

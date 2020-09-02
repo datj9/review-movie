@@ -30,10 +30,13 @@ const MovieSchema = new mongoose.Schema({
         required: true,
     },
     status: {
-        type:String,
-        required:true,
-        default: 'commingSoon'
-    }
+        type: Number,
+        required: true,
+        // 0: crawled commingSoon
+        // 1: crawled nowShowing
+        // 2: commingSoon
+        // 3: nowShowing
+    },
 });
 
 MovieSchema.methods = {

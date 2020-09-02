@@ -40,22 +40,6 @@ export default function Header() {
                         <img src='/logo.png' />
                     </a>
                 </Link>
-                {/* <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="30" height="30">
-                    <defs>
-                        <linearGradient id="half_grad">
-                            <stop offset="100%" stop-color="yellow" />
-                            <stop offset="100%" stop-color="white" stop-opacity="1" />
-                        </linearGradient>
-                    </defs>
-                    <path
-                        d="M20.388,10.918L32,12.118l-8.735,7.749L25.914,
-             31.4l-9.893-6.088L6.127,31.4l2.695-11.533L0,
-             12.118l11.547-1.2L16.026,0.6L20.388,10.918z"
-                        fill="url(#half_grad)"
-                        stroke-width="1"
-                        stroke="yellow"
-                    />
-                </svg> */}
                 <span
                     ref={hamburgerBtnRef}
                     role='button'
@@ -80,6 +64,27 @@ export default function Header() {
                     <a onClick={closeNav} className='navbar-item'>
                         Đánh Giá Rạp
                     </a>
+                    <div className='navbar-item has-dropdown is-hoverable'>
+                        <Link href='/manage-movies'>
+                            <a className='navbar-link'>Quản lý phim</a>
+                        </Link>
+
+                        <div className='navbar-dropdown'>
+                            <a className='navbar-item'>About</a>
+                            <a className='navbar-item'>Jobs</a>
+                        </div>
+                    </div>
+                    {/* <div className='navbar-item has-dropdown is-hoverable'>
+                        <a className='navbar-link'>More</a>
+
+                        <div className='navbar-dropdown'>
+                            <a className='navbar-item'>About</a>
+                            <a className='navbar-item'>Jobs</a>
+                            <a className='navbar-item'>Contact</a>
+                            <hr className='navbar-divider' />
+                            <a className='navbar-item'>Report an issue</a>
+                        </div>
+                    </div> */}
                 </div>
 
                 <div className='navbar-end'>
