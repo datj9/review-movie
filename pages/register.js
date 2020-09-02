@@ -3,9 +3,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { withUserServerSideProps, withUser } from "../HOC/withUser";
 import { useDispatch, useSelector } from "react-redux";
-import { Register } from "../redux/user/actions";
+import { register } from "../redux/user/actions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faLock, faPodcast } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faLock, faAddressCard } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/dist/client/router";
 import { CLEAN_UP } from "../redux/user/action-types";
 
@@ -27,7 +27,7 @@ function Register() {
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
         const name = nameRef.current.value;
-        dispatch(Register({ email, password, name }, "local"));
+        dispatch(register({ email, password, name }, "local"));
         setEmailErrMsg("");
         setPasswordErrMsg("");
     };
@@ -36,6 +36,9 @@ function Register() {
         if (isAuthenticated) {
             router.replace("/");
         }
+        return () => {
+            dispatch({ type: CLEAN_UP });
+        };
     }, [isAuthenticated]);
 
     useEffect(() => {
@@ -66,12 +69,8 @@ function Register() {
         } else {
             setPasswordErrMsg("");
         }
-
-        return () => {
-            dispatch({ type: CLEAN_UP });
-        };
     }, [errors.password]);
-
+    console.log(errors);
     return (
         <div className='register py-5 px-0 has-background-white'>
             <Head>
@@ -103,7 +102,7 @@ function Register() {
                         <div className='control has-icons-left has-icons-right'>
                             <input ref={nameRef} className='input is-medium' type='text' placeholder='Họ tên' />
                             <span className='icon is-small is-left'>
-                                <FontAwesomeIcon style={{ height: "1rem" }} icon={faPodcast} />
+                                <FontAwesomeIcon style={{ height: "1rem" }} icon={faAddressCard} />
                             </span>
                         </div>
                         {nameErrMsg ? <p className='has-text-danger'>{nameErrMsg}</p> : null}
@@ -135,7 +134,7 @@ function Register() {
 
                 <div className='register-wp'>
                     <span>Bạn đã có tài khoản? </span>
-                    <Link href='/register'>
+                    <Link href='/login'>
                         <a>Đăng Nhập</a>
                     </Link>
                 </div>

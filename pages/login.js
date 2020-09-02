@@ -32,6 +32,9 @@ function Login() {
         if (isAuthenticated) {
             router.replace("/");
         }
+        return () => {
+            dispatch({ type: CLEAN_UP });
+        };
     }, [isAuthenticated]);
 
     useEffect(() => {
@@ -54,10 +57,6 @@ function Login() {
         } else {
             setPasswordErrMsg("");
         }
-
-        return () => {
-            dispatch({ type: CLEAN_UP });
-        };
     }, [errors.password]);
 
     return (

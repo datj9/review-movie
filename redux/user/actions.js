@@ -48,6 +48,7 @@ export const register = (user) => async (dispatch) => {
         type: actionTypes.REGISTER_START,
     });
     const { data, ok } = await api.post("register", user);
+
     if (ok) {
         dispatch({
             type: actionTypes.REGISTER_SUCCESS,
