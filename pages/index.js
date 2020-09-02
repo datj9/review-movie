@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import axios from "axios";
-import { withUserServerSideProps, withUser } from "../HOC/withUser";
+// import { withUserServerSideProps, withUser } from "../HOC/withUser";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
@@ -118,6 +118,6 @@ export async function getStaticProps() {
     }
 }
 
-export const getServerSideProps = withUserServerSideProps();
+// export const getServerSideProps = withUserServerSideProps();
 
-export default withUser(Home);
+export default Home;
