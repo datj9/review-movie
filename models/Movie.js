@@ -25,18 +25,26 @@ const MovieSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    trailer: {
+        type: String,
+        required: true,
+    },
+    status: {
+        type:String,
+        required:true,
+        default: 'commingSoon'
+    }
 });
 
 MovieSchema.methods = {
     transform: function () {
-        const Movie = this.toObject();
+        const movie = this.toObject();
 
-        Movie.id = Movie._id;
-        delete Movie._id;
-        delete Movie.__v;
-        delete Movie.password;
+        movie.id = movie._id;
+        delete movie._id;
+        delete movie.__v;
 
-        return Movie;
+        return movie;
     },
 };
 

@@ -73,7 +73,7 @@ function Register() {
     }, [errors.password]);
  
     return (
-        <div className='register py-5 px-0 has-background-white'>
+        <div className='register py-6 px-0 has-background-white'>
             <Head>
                 <title>Đăng ký tài khoản mới</title>
                 <link rel='icon' href='/favicon.ico' />
