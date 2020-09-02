@@ -110,7 +110,7 @@ function Home({ movies }) {
 }
 
 export async function getStaticProps() {
-    const movies = await axios.get("/api/movies");
+    const movies = await axios.get("https://reviewphim.herokuapp.com/api/movies");
     return {
       props: {
         movies
