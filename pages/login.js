@@ -61,7 +61,7 @@ function Login() {
     }, [errors.password]);
 
     return (
-        <div className='login py-5 px-0 has-background-white'>
+        <div className='login py-6 px-0 has-background-white'>
             <Head>
                 <title>Đăng nhập để dánh giá phim</title>
                 <link rel='icon' href='/favicon.ico' />
@@ -126,8 +126,8 @@ function Login() {
                         {passwordErrMsg ? <p className='has-text-danger'>{passwordErrMsg}</p> : null}
                     </div>
                     <button
-                        disabled={isLoading}
-                        className={`button is-primary is-fullwidth is-medium ${(isLoading && loginType === 'local') ? "is-loading" : ""}`}
+                        disabled={loginType==='local'}
+                        className={`button is-primary is-fullwidth is-medium ${(loginType === 'local') ? "is-loading" : ""}`}
                         type='submit'
                         onClick={submitFormLogin}
                     >
