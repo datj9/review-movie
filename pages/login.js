@@ -207,7 +207,9 @@ function Login() {
                     }
                     .fb-link, .gg-link {
                         width: 100%;
-                        display: inline-block;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                     }
                     .fb-btn {
                         background: #3b5998;
