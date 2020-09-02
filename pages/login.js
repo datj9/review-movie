@@ -71,21 +71,39 @@ function Login() {
 
             <div className='form-container px-4'>
                 <div className='buttons are-medium'>
-                    <button className={`button is-fullwidth has-text-black has-background-white mb-3 px-0 ${loginType === 'gg' ? 'is-loading':''}`} disabled={loginType==='gg'} onClick={() => dispatch(login(null,'gg'))} >
+                    <button
+                        className={`button is-fullwidth has-text-black has-background-white mb-3 px-0 ${
+                            loginType === "gg" ? "is-loading" : ""
+                        }`}
+                        disabled={loginType === "gg"}
+                        onClick={() => dispatch(login(null, "gg"))}
+                    >
                         <Link href='/api/auth/google'>
                             <a className='gg-link'>
-                               {loginType !== 'gg' ? <><span className='google-icon-wp'>
-                                    <img alt='google-icon' src='/google-icon.svg' />
-                                </span>
-                                <span className='ml-3 d-inline-block has-text-black'>Đăng Nhập với Google</span></> : null}
+                                {loginType !== "gg" ? (
+                                    <>
+                                        <span className='google-icon-wp'>
+                                            <img alt='google-icon' src='/google-icon.svg' />
+                                        </span>
+                                        <span className='ml-3 d-inline-block has-text-black'>Đăng Nhập với Google</span>
+                                    </>
+                                ) : null}
                             </a>
                         </Link>
                     </button>
-                    <button disabled={loginType==='fb'}  onClick={() => dispatch(login(null, 'fb'))} className={`fb-btn button is-fullwidth px-0 ${loginType === 'fb' ? 'is-loading':''}`}>
+                    <button
+                        disabled={loginType === "fb"}
+                        onClick={() => dispatch(login(null, "fb"))}
+                        className={`fb-btn button is-fullwidth px-0 ${loginType === "fb" ? "is-loading" : ""}`}
+                    >
                         <Link href='/api/auth/facebook'>
                             <a className='fb-link has-text-white'>
-                                   {loginType !== 'fb' ? <><FontAwesomeIcon  style={{ height: "1.25rem" }} icon={faFacebookF} />
-                                    <span className='ml-3 d-inline-block'>Đăng Nhập với Facebook</span></> : null}
+                                {loginType !== "fb" ? (
+                                    <>
+                                        <FontAwesomeIcon style={{ height: "1.25rem" }} icon={faFacebookF} />
+                                        <span className='ml-3 d-inline-block'>Đăng Nhập với Facebook</span>
+                                    </>
+                                ) : null}
                             </a>
                         </Link>
                     </button>
@@ -126,8 +144,10 @@ function Login() {
                         {passwordErrMsg ? <p className='has-text-danger'>{passwordErrMsg}</p> : null}
                     </div>
                     <button
-                        disabled={loginType==='local'}
-                        className={`button is-primary is-fullwidth is-medium ${(loginType === 'local') ? "is-loading" : ""}`}
+                        disabled={loginType === "local"}
+                        className={`button is-primary is-fullwidth is-medium ${
+                            loginType === "local" ? "is-loading" : ""
+                        }`}
                         type='submit'
                         onClick={submitFormLogin}
                     >
@@ -205,7 +225,8 @@ function Login() {
                     .google-icon-wp img {
                         width: 100%;
                     }
-                    .fb-link, .gg-link {
+                    .fb-link,
+                    .gg-link {
                         width: 100%;
                         display: flex;
                         align-items: center;

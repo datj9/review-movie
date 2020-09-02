@@ -28,16 +28,16 @@ export const login = (user, loginType) => async (dispatch) => {
         } else {
             dispatch(loginFail(data));
         }
-    } 
+    }
 };
 
 export const register = (user) => async (dispatch) => {
     dispatch({
         type: actionTypes.REGISTER_START,
     });
-    
+
     const { data, ok } = await api.post("register", user);
-   
+
     if (ok) {
         dispatch({
             type: actionTypes.REGISTER_SUCCESS,
@@ -61,4 +61,3 @@ export const logout = () => async (dispatch) => {
         });
     }
 };
-
