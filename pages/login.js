@@ -63,7 +63,7 @@ function Login() {
     return (
         <div className='login py-6 px-0 has-background-white'>
             <Head>
-                <title>Đăng nhập để dánh giá phim</title>
+                <title>Đánh Giá Phim - Đăng Nhập để Đánh Giá Phim yêu thích</title>
                 <link rel='icon' href='/favicon.ico' />
             </Head>
             <div className='title px-4'>Đăng Nhập vào Tài Khoản Của Bạn</div>
@@ -71,24 +71,24 @@ function Login() {
 
             <div className='form-container px-4'>
                 <div className='buttons are-medium'>
-                    <Link href='/api/auth/google'>
-                        <a className='gg-link'>
-                          <button disabled={loginType==='gg'} onClick={() => dispatch(login(null,'gg'))} className={`button is-fullwidth has-text-black has-background-white mb-3 ${loginType === 'gg' ? 'is-loading':''}`}>
-                               {loginType !== 'gg' ? <span className='google-icon-wp'>
+                    <button className={`button is-fullwidth has-text-black has-background-white mb-3 px-0 ${loginType === 'gg' ? 'is-loading':''}`} disabled={loginType==='gg'} onClick={() => dispatch(login(null,'gg'))} >
+                        <Link href='/api/auth/google'>
+                            <a className='gg-link'>
+                               {loginType !== 'gg' ? <><span className='google-icon-wp'>
                                     <img alt='google-icon' src='/google-icon.svg' />
-                                </span> : null}
-                                <span className='ml-3 d-inline-block'>Đăng Nhập với Google</span>
-                          </button>
-                        </a>
-                    </Link>
-                    <Link href='/api/auth/facebook'>
-                        <a className='fb-link'>
-                            <button disabled={loginType==='fb'}  onClick={() => dispatch(login(null, 'fb'))} className={`fb-btn button is-fullwidth has-text-white ${loginType === 'fb' ? 'is-loading':''}`}>
-                                <FontAwesomeIcon style={{ height: "1.25rem" }} icon={faFacebookF} />
-                                <span className='ml-3 d-inline-block'>Đăng Nhập với Facebook</span>
-                            </button>
-                        </a>
-                    </Link>
+                                </span>
+                                <span className='ml-3 d-inline-block has-text-black'>Đăng Nhập với Google</span></> : null}
+                            </a>
+                        </Link>
+                    </button>
+                    <button disabled={loginType==='fb'}  onClick={() => dispatch(login(null, 'fb'))} className={`fb-btn button is-fullwidth px-0 ${loginType === 'fb' ? 'is-loading':''}`}>
+                        <Link href='/api/auth/facebook'>
+                            <a className='fb-link has-text-white'>
+                                   {loginType !== 'fb' ? <><FontAwesomeIcon  style={{ height: "1.25rem" }} icon={faFacebookF} />
+                                    <span className='ml-3 d-inline-block'>Đăng Nhập với Facebook</span></> : null}
+                            </a>
+                        </Link>
+                    </button>
                 </div>
                 <div className='has-text-centered my-3 or-wrapper'>
                     <hr />
@@ -207,6 +207,9 @@ function Login() {
                     }
                     .fb-link, .gg-link {
                         width: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                     }
                     .fb-btn {
                         background: #3b5998;

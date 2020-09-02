@@ -75,7 +75,7 @@ function Register() {
     return (
         <div className='register py-6 px-0 has-background-white'>
             <Head>
-                <title>Đăng ký tài khoản mới</title>
+                <title>Đánh Giá Phim - Đăng ký tài khoản mới</title>
                 <link rel='icon' href='/favicon.ico' />
             </Head>
             <div className='title px-4'>Đăng Ký Tài Khoản Mới</div>
