@@ -16,6 +16,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         unique: true,
     },
+    userType: {
+        type: String,
+        required: true,
+        default: "client",
+    },
     name: String,
     image: String,
 });
@@ -52,4 +57,7 @@ UserSchema.pre("save", async function (next) {
 
 const User = mongoose.model("User", UserSchema);
 
-module.exports = { User, UserSchema };
+module.exports = {
+    User,
+    UserSchema,
+};

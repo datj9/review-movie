@@ -17,6 +17,7 @@ function Login() {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const isLoading = useSelector((state) => state.user.isLoading);
     const errors = useSelector((state) => state.user.errors);
+    const loginType = useSelector((state) => state.user.loginType);
     const [emailErrMsg, setEmailErrMsg] = useState("");
     const [passwordErrMsg, setPasswordErrMsg] = useState("");
     const router = useRouter();
@@ -79,7 +80,7 @@ function Login() {
                         </a>
                     </Link>
                     <Link href='/api/auth/facebook'>
-                        <a className='fb-btn button is-fullwidth has-text-white'>
+                        <a onClick={() => dispatch(login(null, 'fb'))} className={`fb-btn button is-fullwidth has-text-white ${loginType === 'fb' ? 'is-loading':''}`}>
                             <FontAwesomeIcon style={{ height: "1.25rem" }} icon={faFacebookF} />
                             <span className='ml-3 d-inline-block'>Đăng Nhập với Facebook</span>
                         </a>
