@@ -6,6 +6,8 @@ import { faStar, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { wrapper } from "../redux/store";
 import { SET_USER } from "../redux/user/action-types";
 
+const apiURL = process.env.API_URL;
+
 function Home({ movies }) {
     return (
         <div>
@@ -138,7 +140,7 @@ function Home({ movies }) {
 
 export const getServerSideProps = wrapper.getServerSideProps(async ({ store, req, res }) => {
     const status = ["1", "0"];
-    const { data: movies } = await axios.get(`http://localhost:3000/api/movies?status=${JSON.stringify(status)}`);
+    const { data: movies } = await axios.get(`apiURL/api/movies?status=${JSON.stringify(status)}`);
 
     store.dispatch({
         type: SET_USER,
