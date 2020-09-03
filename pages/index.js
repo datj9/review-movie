@@ -118,11 +118,11 @@ function Home(props) {
                     }
                     .movie-card {
                         display: inline-block;
-                        width: 10rem;
+                        width: 8rem;
                     }
                     .movie-card img {
                         width: 100%;
-                        height: 15rem;
+                        height: 24rem;
                     }
                     .title-container {
                         font-weight: 700;
