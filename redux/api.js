@@ -1,3 +1,5 @@
+export const apiURL = process.env.API_URL;
+
 export default class BaseAPI {
     constructor(prefixOfEndpoint) {
         this.prefixOfEndpoint = prefixOfEndpoint;

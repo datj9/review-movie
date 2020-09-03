@@ -2,6 +2,7 @@ const { Movie } = require("../../../models/Movie");
 const isInt = require("validator/lib/isInt");
 const isURL = require("validator/lib/isURL");
 const { crawlMovies } = require("../../../helpers/crawl");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 const getMovies = async (req, res) => {
     const { pageSize, pageIndex, status } = req.query;
@@ -24,9 +25,7 @@ const getMovies = async (req, res) => {
 
             statusFilter = statusArr;
         }
-    } catch (error) {
-        console.log(error);
-    }
+    } catch (error) {}
 
     try {
         if (statusFilter) {
@@ -48,6 +47,20 @@ const getMovies = async (req, res) => {
 
             return res.status(200).json(movies);
         }
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+};
+
+const getMovieById = async (req, res) => {
+    const { movieId } = req.params;
+
+    if (!ObjectId.isValid(movieId)) return res.status(400).json({ error: "movieId is invalid" });
+
+    try {
+        const movie = await Movie.findById(movieId);
+        if (!movie) return res.status(404).json({ error: "Movie not found" });
+        return res.status(200).json(movie.transform());
     } catch (error) {
         return res.status(500).json(error);
     }
@@ -116,4 +129,4 @@ const createMoviesFromCrawling = async (req, res) => {
     }
 };
 
-module.exports = { getMovies, createMovie, createMoviesFromCrawling };
+module.exports = { getMovies, getMovieById, createMovie, createMoviesFromCrawling };
