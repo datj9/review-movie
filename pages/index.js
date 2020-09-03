@@ -122,7 +122,7 @@ function Home(props) {
                     }
                     .movie-card img {
                         width: 100%;
-                        height: 24rem;
+                        height: 12rem;
                     }
                     .title-container {
                         font-weight: 700;
