@@ -119,7 +119,6 @@ export default function userReducer(state = INITIAL_STATE, action) {
                 },
             };
         case actionTypes.SET_USER:
-            console.log("payload");
             return {
                 ...state,
                 server: {

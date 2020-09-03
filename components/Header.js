@@ -5,19 +5,16 @@ import { logout } from "../redux/user/actions";
 
 export default function Header() {
     const [navOpen, setNavOpen] = useState(false);
-    const server = useSelector((state) => state.user.server);
     const { currentUser, isAuthenticated } = useSelector((state) => state.user.server);
     const { isLoading: isLoggingOut } = useSelector((state) => state.user.client);
     const dispatch = useDispatch();
     const navRef = useRef();
     const hamburgerBtnRef = useRef();
-    console.log("currentUser", currentUser);
-    console.log("server", server);
+
     const closeNav = () => {
         setNavOpen(false);
     };
     const toggleNav = () => {
-        console.log(navOpen);
         setNavOpen((navOpen) => !navOpen);
     };
     const handleClick = (e) => {
@@ -58,34 +55,40 @@ export default function Header() {
 
             <div ref={navRef} id='navbarBasicExample' className={navOpen ? "navbar-menu is-active" : "navbar-menu"}>
                 <div className='navbar-start'>
-                    <a onClick={closeNav} className='navbar-item'>
-                        Đánh Giá Phim
-                    </a>
+                    <div className='navbar-item has-dropdown is-hoverable'>
+                        <input id='checkMovie' type='checkbox' />
+                        <label htmlFor='checkMovie' className='navbar-link'>
+                            Phim
+                        </label>
+                        <div className='navbar-dropdown'>
+                            <Link href='/'>
+                                <a onClick={closeNav} className='navbar-item'>
+                                    Phim Đang Chiếu
+                                </a>
+                            </Link>
+                            <Link href='/'>
+                                <a onClick={closeNav} className='navbar-item'>
+                                    Phim Sắp Chiếu
+                                </a>
+                            </Link>
+                        </div>
+                    </div>
 
+                    {currentUser.userType === "admin" ? (
+                        <div className='navbar-item has-dropdown is-hoverable'>
+                            <Link href='/manage-movies'>
+                                <a className='navbar-link'>Quản lý phim</a>
+                            </Link>
+
+                            <div className='navbar-dropdown'>
+                                <a className='navbar-item'>About</a>
+                                <a className='navbar-item'>Jobs</a>
+                            </div>
+                        </div>
+                    ) : null}
                     <a onClick={closeNav} className='navbar-item'>
                         Đánh Giá Rạp
                     </a>
-                    <div className='navbar-item has-dropdown is-hoverable'>
-                        <Link href='/manage-movies'>
-                            <a className='navbar-link'>Quản lý phim</a>
-                        </Link>
-
-                        <div className='navbar-dropdown'>
-                            <a className='navbar-item'>About</a>
-                            <a className='navbar-item'>Jobs</a>
-                        </div>
-                    </div>
-                    {/* <div className='navbar-item has-dropdown is-hoverable'>
-                        <a className='navbar-link'>More</a>
-
-                        <div className='navbar-dropdown'>
-                            <a className='navbar-item'>About</a>
-                            <a className='navbar-item'>Jobs</a>
-                            <a className='navbar-item'>Contact</a>
-                            <hr className='navbar-divider' />
-                            <a className='navbar-item'>Report an issue</a>
-                        </div>
-                    </div> */}
                 </div>
 
                 <div className='navbar-end'>
@@ -103,7 +106,7 @@ export default function Header() {
                         <div className='navbar-item'>
                             <div className='buttons'>
                                 <Link href='/login'>
-                                    <a onClick={closeNav} className='button is-primary'>
+                                    <a onClick={closeNav} className='button is-primary is-fullwidth'>
                                         Đăng nhập
                                     </a>
                                 </Link>
@@ -117,6 +120,9 @@ export default function Header() {
                     nav {
                         box-shadow: 1px 1px 1px #d4d4d4;
                     }
+                    .navbar-burger:hover {
+                        background: none;
+                    }
                     .logo-wrapper {
                         display: flex;
                         align-items: center;
@@ -128,6 +134,35 @@ export default function Header() {
                         height: 2.75rem;
                         max-height: unset;
                         border-radius: 5px;
+                    }
+                    .navbar-dropdown {
+                        display: none;
+                    }
+                    input[type="checkbox"] {
+                        display: none;
+                    }
+                    input[type="checkbox"]:checked ~ .navbar-dropdown {
+                        display: block;
+                    }
+                    input[type="checkbox"]:checked ~ .navbar-link::after {
+                        transform: rotate(135deg);
+                    }
+                    .navbar-link::after {
+                        transition: transform 0.2s;
+                    }
+                    .navbar-start,
+                    .navbar-end {
+                        animation: slide 0.4s;
+                    }
+                    @keyframes slide {
+                        0% {
+                            transform: translateY(1rem);
+                            opacity: 0;
+                        }
+                        100% {
+                            transform: translateY(0);
+                            opacity: 1;
+                        }
                     }
                 `}
             </style>
