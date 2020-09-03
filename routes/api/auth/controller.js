@@ -60,7 +60,8 @@ const login = async (req, res) => {
         const foundUser = await User.findOne({ email, provider: "local" });
         if (!foundUser) return res.status(404).json({ email: "User not found" });
 
-        const isMatch = foundUser.validatePassword(password);
+        const isMatch = await foundUser.validatePassword(password);
+
         if (!isMatch) return res.status(400).json({ password: "password is incorrect" });
 
         passport.authenticate("local")(req, res, function () {

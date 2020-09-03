@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { withUserServerSideProps, withUser } from "../HOC/withUser";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../redux/user/actions";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faLock, faAddressCard } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/dist/client/router";
 import { CLEAN_UP } from "../redux/user/action-types";
 
@@ -85,43 +83,34 @@ function Register() {
                 <form className='mb-3'>
                     <div className='field'>
                         <label className='label'>Email</label>
-                        <div className='control has-icons-left has-icons-right'>
+                        <div className='control'>
                             <input
                                 ref={emailRef}
                                 className='input is-medium'
                                 type='email'
                                 placeholder='Địa chỉ email'
                             />
-                            <span className='icon is-small is-left'>
-                                <FontAwesomeIcon style={{ height: "1rem" }} icon={faEnvelope} />
-                            </span>
                         </div>
-                        {emailErrMsg ? <p className='has-text-danger'>{emailErrMsg}</p> : null}
+                        {emailErrMsg ? <p className='has-text-danger mt-1'>{emailErrMsg}</p> : null}
                     </div>
                     <div className='field'>
                         <label className='label'>Họ tên</label>
-                        <div className='control has-icons-left has-icons-right'>
+                        <div className='control'>
                             <input ref={nameRef} className='input is-medium' type='text' placeholder='Họ tên' />
-                            <span className='icon is-small is-left'>
-                                <FontAwesomeIcon style={{ height: "1rem" }} icon={faAddressCard} />
-                            </span>
                         </div>
-                        {nameErrMsg ? <p className='has-text-danger'>{nameErrMsg}</p> : null}
+                        {nameErrMsg ? <p className='has-text-danger mt-1'>{nameErrMsg}</p> : null}
                     </div>
                     <div className='field mb-3'>
                         <label className='label'>Mật khẩu</label>
-                        <div className='control has-icons-left has-icons-right'>
+                        <div className='control'>
                             <input
                                 ref={passwordRef}
                                 className='input is-medium'
                                 type='password'
                                 placeholder='Mật khẩu'
                             />
-                            <span className='icon is-small is-left'>
-                                <FontAwesomeIcon style={{ height: "1rem" }} icon={faLock} />
-                            </span>
                         </div>
-                        {passwordErrMsg ? <p className='has-text-danger'>{passwordErrMsg}</p> : null}
+                        {passwordErrMsg ? <p className='has-text-danger mt-1'>{passwordErrMsg}</p> : null}
                     </div>
                     <button
                         disabled={isLoading}
@@ -160,13 +149,8 @@ function Register() {
                     hr {
                         margin: 1rem auto;
                     }
-                    .icon {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                    }
                     .input {
-                        border: 0.5px solid #000;
+                        border: 0.2px solid #000;
                     }
                     .input:focus,
                     .input:active {

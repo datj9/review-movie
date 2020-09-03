@@ -13,7 +13,7 @@ function Home(props) {
     const dispatch = useDispatch();
     const { movies } = props;
     const user = JSON.parse(props.user);
-    console.log(Object.keys(user));
+
     if (Object.keys(user).length) {
         dispatch(setUser(user));
     }

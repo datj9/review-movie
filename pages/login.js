@@ -5,7 +5,6 @@ import { withUserServerSideProps, withUser } from "../HOC/withUser";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/user/actions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
 import { useRouter } from "next/dist/client/router";
 import { CLEAN_UP } from "../redux/user/action-types";
@@ -14,10 +13,10 @@ function Login() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const dispatch = useDispatch();
-    const isAuthenticated = useSelector((state) => state.user.server.isAuthenticated);
-    const isLoading = useSelector((state) => state.user.client.isLoading);
-    const errors = useSelector((state) => state.user.client.errors);
-    const loginType = useSelector((state) => state.user.client.loginType);
+    const { isAuthenticated } = useSelector((state) => state.user.server);
+    const { errors, loginType } = useSelector((state) => state.user.client);
+    // const errors = useSelector((state) => state.user.client.errors);
+    // const loginType = useSelector((state) => state.user.client.loginType);
     const [emailErrMsg, setEmailErrMsg] = useState("");
     const [passwordErrMsg, setPasswordErrMsg] = useState("");
     const router = useRouter();
@@ -115,33 +114,27 @@ function Login() {
                 <form className='mb-3'>
                     <div className='field'>
                         <label className='label'>Email</label>
-                        <div className='control has-icons-left has-icons-right'>
+                        <div className='control'>
                             <input
                                 ref={emailRef}
                                 className='input is-medium'
                                 type='email'
                                 placeholder='Địa chỉ email'
                             />
-                            <span className='icon is-small is-left'>
-                                <FontAwesomeIcon style={{ height: "1rem" }} icon={faEnvelope} />
-                            </span>
                         </div>
-                        {emailErrMsg ? <p className='has-text-danger'>{emailErrMsg}</p> : null}
+                        {emailErrMsg ? <p className='has-text-danger mt-1'>{emailErrMsg}</p> : null}
                     </div>
                     <div className='field mb-3'>
                         <label className='label'>Mật khẩu</label>
-                        <div className='control has-icons-left has-icons-right'>
+                        <div className='control'>
                             <input
                                 ref={passwordRef}
                                 className='input is-medium'
                                 type='password'
                                 placeholder='Mật khẩu'
                             />
-                            <span className='icon is-small is-left'>
-                                <FontAwesomeIcon style={{ height: "1rem" }} icon={faLock} />
-                            </span>
                         </div>
-                        {passwordErrMsg ? <p className='has-text-danger'>{passwordErrMsg}</p> : null}
+                        {passwordErrMsg ? <p className='has-text-danger mt-1'>{passwordErrMsg}</p> : null}
                     </div>
                     <button
                         disabled={loginType === "local"}
@@ -208,12 +201,10 @@ function Login() {
                         align-items: center;
                         justify-content: center;
                     }
-
                     .input {
-                        border: 0.5px solid #000;
+                        border: 0.2px solid #000;
                     }
-                    .input:focus,
-                    .input:active {
+                    .input:focus {
                         border-color: #f69314;
                     }
                     .google-icon-wp {
