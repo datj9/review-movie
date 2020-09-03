@@ -17,7 +17,7 @@ function Home({ movies }) {
             </Head>
 
             <main className='py-5 pl-3'>
-                <div className='list-and-title-wp'>
+                <div className='list-and-title-wp mb-6'>
                     <div className='title-container mb-3 pr-3'>
                         <span className='has-text-black'>Phim Đang Chiếu</span>
                         <Link href='/'>
