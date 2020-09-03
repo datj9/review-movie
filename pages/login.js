@@ -52,7 +52,7 @@ function Login() {
     useEffect(() => {
         if (errors.password && errors.password.includes("required")) {
             setPasswordErrMsg("Vui lòng nhập mật khẩu");
-        } else if (errors.email && errors.email.includes("incorrect")) {
+        } else if (errors.password && errors.password.includes("incorrect")) {
             setPasswordErrMsg("Mật khẩu không đúng");
         } else {
             setPasswordErrMsg("");

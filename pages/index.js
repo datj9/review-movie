@@ -112,14 +112,18 @@ function Home(props) {
                     }
                     .movie-card {
                         display: inline-block;
-                        width: 10rem;
+
+                        width: 8rem;
                         border: 1px solid #d4d4d4;
                         overflow: hidden;
                         border-radius: 4px;
+
+
+
                     }
                     .movie-card img {
                         width: 100%;
-                        height: 15rem;
+                        height: 12rem;
                     }
                     .title-container {
                         font-weight: 700;
