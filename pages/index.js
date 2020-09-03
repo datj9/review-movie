@@ -28,30 +28,27 @@ function Home(props) {
             <main className='py-5 pl-3'>
                 <div className='list-and-title-wp mb-5'>
                     <div className='title-container mb-3 pr-3'>
-                        <span className='has-text-black'>Phim Đang Chiếu</span>
+                        <h2 className='has-text-black'>Phim Đang Chiếu</h2>
                         <Link href='/'>
                             <a>Xem Tất Cả</a>
                         </Link>
                     </div>
                     <div className='list-movies'>
                         {movies[0].map((movie, index) => (
-                            <Link key={movie.id} href='/'>
-                                <a className={index !== movies[0].length - 1 ? "movie-card mr-5" : "movie-card"}>
+                            <Link key={movie.id} href={`/movies/[movieId]`} as={`/movies/${movie.id}`}>
+                                <a
+                                    title={movie.name}
+                                    className={`movie-card ${index !== movies[0].length - 1 ? "mr-5" : "mr-3"}`}
+                                >
                                     <img src={movie.image} alt={movie.name} />
                                     <div className='icons-wp has-text-grey-dark px-1'>
                                         <span>
                                             <span>4.7 </span>
-                                            <FontAwesomeIcon
-                                                style={{ width: "1rem", color: "#f69314" }}
-                                                icon={faStar}
-                                            />
+                                            <FontAwesomeIcon className='has-text-primary' icon={faStar} />
                                         </span>
                                         <span>
                                             <span>99 </span>
-                                            <FontAwesomeIcon
-                                                style={{ width: "1rem", color: "#f69314" }}
-                                                icon={faThumbsUp}
-                                            />
+                                            <FontAwesomeIcon className='thumbs-up-icon' icon={faThumbsUp} />
                                         </span>
                                     </div>
                                     <div className='has-text-black px-1'>
@@ -65,7 +62,7 @@ function Home(props) {
 
                 <div className='list-and-title-wp'>
                     <div className='title-container mb-3 pr-3'>
-                        <span className='has-text-black'>Phim Sắp Chiếu</span>
+                        <h2 className='has-text-black'>Phim Sắp Chiếu</h2>
                         <Link href='/'>
                             <a>Xem Tất Cả</a>
                         </Link>
@@ -73,22 +70,19 @@ function Home(props) {
                     <div className='list-movies'>
                         {movies[1].map((movie, index) => (
                             <Link key={movie.id} href='/'>
-                                <a className={index !== movies[1].length - 1 ? "movie-card mr-5" : "movie-card"}>
+                                <a
+                                    title={movie.name}
+                                    className={`movie-card ${index !== movies[1].length - 1 ? "mr-5" : "mr-3"}`}
+                                >
                                     <img src={movie.image} alt={movie.name} />
                                     <div className='icons-wp has-text-grey-dark px-1'>
                                         <span>
                                             <span>4.7 </span>
-                                            <FontAwesomeIcon
-                                                style={{ width: "1rem", color: "#f69314" }}
-                                                icon={faStar}
-                                            />
+                                            <FontAwesomeIcon className='has-text-primary' icon={faStar} />
                                         </span>
                                         <span>
                                             <span>99 </span>
-                                            <FontAwesomeIcon
-                                                style={{ width: "1rem", color: "#f69314" }}
-                                                icon={faThumbsUp}
-                                            />
+                                            <FontAwesomeIcon className='thumbs-up-icon' icon={faThumbsUp} />
                                         </span>
                                     </div>
                                     <div className='has-text-black px-1'>
@@ -118,7 +112,14 @@ function Home(props) {
                     }
                     .movie-card {
                         display: inline-block;
+
                         width: 8rem;
+                        border: 1px solid #d4d4d4;
+                        overflow: hidden;
+                        border-radius: 4px;
+
+
+
                     }
                     .movie-card img {
                         width: 100%;
@@ -130,6 +131,10 @@ function Home(props) {
                         display: flex;
                         justify-content: space-between;
                     }
+                    .title-container h2 {
+                        font-weight: inherit;
+                        font-size: inherit;
+                    }
                     .card-title {
                         text-overflow: ellipsis;
                         overflow: hidden;
@@ -140,6 +145,22 @@ function Home(props) {
                     .icons-wp {
                         display: flex;
                         justify-content: space-between;
+                    }
+
+                    @media only screen and (min-width: 768px) {
+                        .title-container {
+                            font-size: 1.2rem;
+                        }
+                    }
+                `}
+            </style>
+            <style jsx global>
+                {`
+                    .icons-wp svg {
+                        width: 1rem;
+                    }
+                    .thumbs-up-icon {
+                        color: #f69314;
                     }
                 `}
             </style>
