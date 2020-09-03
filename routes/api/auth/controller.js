@@ -26,7 +26,7 @@ const register = async (req, res) => {
     if (Object.keys(errors).length > 0) return res.status(400).json(errors);
 
     try {
-        const foundUser = await User.findOne({ email });
+        const foundUser = await User.findOne({ email, provider: "local" });
         if (foundUser) return res.status(400).json({ email: "email already exists" });
 
         const newUser = new User({
@@ -57,7 +57,7 @@ const login = async (req, res) => {
     if (Object.keys(errors).length > 0) return res.status(400).json(errors);
 
     try {
-        const foundUser = await User.findOne({ email });
+        const foundUser = await User.findOne({ email, provider: "local" });
         if (!foundUser) return res.status(404).json({ email: "User not found" });
 
         const isMatch = foundUser.validatePassword(password);

@@ -1,18 +1,53 @@
 const { Movie } = require("../../../models/Movie");
 const isInt = require("validator/lib/isInt");
 const isURL = require("validator/lib/isURL");
-const { crawl } = require("../../../helpers/crawl");
+const { crawlMovies } = require("../../../helpers/crawl");
 
 const getMovies = async (req, res) => {
-    const { pageSize, pageIndex } = req.query;
+    const { pageSize, pageIndex, status } = req.query;
     const limit = isInt(pageSize + "") ? +pageSize : 10;
     const skip = isInt(pageIndex + "") ? +pageIndex * limit : 0;
+    let statusFilter;
 
     try {
-        const movies = await Movie.find().skip(skip).limit(limit);
-        movies.forEach((movie, i) => (movies[i] = movie.transform()));
+        const parsedStatus = JSON.parse(status);
 
-        return res.status(200).json(movies);
+        if (Array.isArray(parsedStatus) && parsedStatus.length <= 4) {
+            const statusArr = Array.from(new Set(parsedStatus));
+
+            statusArr.forEach((ele, i) => {
+                if (!isInt(ele + "")) {
+                    return res.status(400).json({ status: "status is invalid" });
+                }
+                statusArr[i] = +ele;
+            });
+
+            statusFilter = statusArr;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        if (statusFilter) {
+            const promiseArr = [];
+            statusFilter.forEach((status) => promiseArr.push(Movie.find({ status }).skip(skip).limit(limit)));
+            const foundMovies = await Promise.all(promiseArr);
+            foundMovies.forEach((movieListByStatus, i) => {
+                movieListByStatus.forEach((movie, j) => {
+                    foundMovies[i][j] = movie.transform();
+                });
+            });
+            const foundMoviesConvertedToObj = Object.assign({}, foundMovies);
+
+            return res.status(200).json(foundMoviesConvertedToObj);
+        } else {
+            const movies = await Movie.find().skip(skip).limit(limit);
+
+            movies.forEach((movie, i) => (movies[i] = movie.transform()));
+
+            return res.status(200).json(movies);
+        }
     } catch (error) {
         return res.status(500).json(error);
     }
@@ -67,9 +102,11 @@ const createMovie = async (req, res) => {
     }
 };
 
-const crawlMovies = async (req, res) => {
+const createMoviesFromCrawling = async (req, res) => {
     try {
-        const allCreatedMovies = await crawl();
+        const nowShowingMovies = await crawlMovies("dang-chieu");
+        const commingSoonMovies = await crawlMovies("sap-chieu");
+        const allCreatedMovies = nowShowingMovies.concat(commingSoonMovies);
 
         allCreatedMovies.forEach((movie, i) => (allCreatedMovies[i] = movie.transform()));
 
@@ -79,4 +116,4 @@ const crawlMovies = async (req, res) => {
     }
 };
 
-module.exports = { getMovies, createMovie, crawlMovies };
+module.exports = { getMovies, createMovie, createMoviesFromCrawling };

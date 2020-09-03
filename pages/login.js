@@ -14,10 +14,10 @@ function Login() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const dispatch = useDispatch();
-    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-    const isLoading = useSelector((state) => state.user.isLoading);
-    const errors = useSelector((state) => state.user.errors);
-    const loginType = useSelector((state) => state.user.loginType);
+    const isAuthenticated = useSelector((state) => state.user.server.isAuthenticated);
+    const isLoading = useSelector((state) => state.user.client.isLoading);
+    const errors = useSelector((state) => state.user.client.errors);
+    const loginType = useSelector((state) => state.user.client.loginType);
     const [emailErrMsg, setEmailErrMsg] = useState("");
     const [passwordErrMsg, setPasswordErrMsg] = useState("");
     const router = useRouter();

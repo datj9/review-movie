@@ -2,12 +2,14 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const UserSchema = new mongoose.Schema({
-    username: {
+    email: {
         type: String,
-        unique: true,
     },
     password: String,
-    email: String,
+    name: {
+        type: String,
+        required: true,
+    },
     googleId: {
         type: String,
         unique: true,
@@ -21,8 +23,12 @@ const UserSchema = new mongoose.Schema({
         required: true,
         default: "client",
     },
-    name: String,
     image: String,
+    provider: {
+        type: String,
+        required: true,
+        default: "local",
+    },
 });
 
 UserSchema.methods = {

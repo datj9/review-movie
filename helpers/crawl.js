@@ -8,8 +8,6 @@ const { Movie } = require("../models/Movie");
 dayjs.extend(customParseFormat);
 
 async function fetchData(url) {
-    // console.log("Crawling data...");
-    // make http call to url
     let response = await axios(url).catch((err) => console.log(err));
 
     if (response.status !== 200) {
@@ -19,15 +17,19 @@ async function fetchData(url) {
     return response;
 }
 
-module.exports.crawl = async function () {
-    const res = await fetchData(`${url}/dang-chieu`);
+module.exports.crawlMovies = async function (movieStatus) {
+    const res = await fetchData(`${url}/${movieStatus}`);
     const html = res.data;
     const $ = cheerio.load(html);
     const movieLinks = $(".card.card-xs.mb-4 > a");
     const fetchingMoviesList = [];
 
     movieLinks.each(function () {
-        fetchingMoviesList.push(fetchData(`${url}${$(this).attr("href")}`));
+        const href = !$(this).attr("href").startsWith("/mua-ve/")
+            ? $(this).attr("href")
+            : $(this).attr("href").replace("mua-ve", "phim");
+        const movieURL = `${url}${href}`;
+        fetchingMoviesList.push(fetchData(movieURL));
     });
 
     const resList = await Promise.all(fetchingMoviesList);
@@ -101,7 +103,7 @@ module.exports.crawl = async function () {
         if (!movie) {
             const newMovie = new Movie({
                 ...moviesData[i],
-                status: 1,
+                status: movieStatus === "dang-chieu" ? 1 : 0,
             });
             createdMovies.push(newMovie.save());
         }
