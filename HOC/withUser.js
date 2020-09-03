@@ -1,24 +1,26 @@
 import React from "react";
-import { SET_USER } from "../redux/user/action-types";
-import { wrapper } from "../redux/store";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/user/actions";
 
 export const withUserServerSideProps = () => {
-    return wrapper.getServerSideProps(({ store, req }) => {
+    return ({ req }) => {
         const user = req.user ? req.user : {};
-        console.log("setted user");
-        store.dispatch({
-            type: SET_USER,
-            payload: user,
-        });
 
         return {
             props: { user: JSON.stringify(user) },
         };
-    });
+    };
 };
 
 export const withUser = (WrappedComponent) => {
     return (props) => {
+        const dispatch = useDispatch();
+        const user = JSON.parse(props.user);
+
+        if (Object.keys(user).length) {
+            dispatch(setUser(user));
+        }
+
         return <WrappedComponent {...props} />;
     };
 };
