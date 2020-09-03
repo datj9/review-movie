@@ -140,7 +140,7 @@ function Home({ movies }) {
 
 export const getServerSideProps = wrapper.getServerSideProps(async ({ store, req, res }) => {
     const status = ["1", "0"];
-    const { data: movies } = await axios.get(`apiURL/api/movies?status=${JSON.stringify(status)}`);
+    const { data: movies } = await axios.get(`${apiURL}/api/movies?status=${JSON.stringify(status)}`);
 
     store.dispatch({
         type: SET_USER,
