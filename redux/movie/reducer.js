@@ -3,7 +3,7 @@ import * as actionTypes from "./action-types";
 
 const INITIAL_STATE = {
     isLoading: false,
-    movies: [],
+    movies: {},
 };
 
 export default function userReducer(state = INITIAL_STATE, action) {

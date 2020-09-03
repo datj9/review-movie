@@ -1,22 +1,12 @@
 import Head from "next/head";
 import Link from "next/link";
 import axios from "axios";
-// import { withUserServerSideProps, withUser } from "../HOC/withUser";
-import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
-import { useEffect } from "react";
-import { getListMovies } from "../redux/movie/actions";
+import { wrapper } from "../redux/store";
+import { SET_USER } from "../redux/user/action-types";
 
 function Home({ movies }) {
-    // const dispatch = useDispatch();
-    // const movies = useSelector((state) => state.movie.movies);
-    /*
-    useEffect(() => {
-        dispatch(getListMovies());
-    }, []);
-    */
-
     return (
         <div>
             <Head>
@@ -33,9 +23,46 @@ function Home({ movies }) {
                         </Link>
                     </div>
                     <div className='list-movies'>
-                        {movies.map((movie) => (
+                        {movies[0].map((movie, index) => (
                             <Link key={movie.id} href='/'>
-                                <a className='movie-card mr-3'>
+                                <a className={index !== movies[0].length - 1 ? "movie-card mr-5" : "movie-card"}>
+                                    <img src={movie.image} alt={movie.name} />
+                                    <div className='icons-wp has-text-grey-dark px-1'>
+                                        <span>
+                                            <span>4.7 </span>
+                                            <FontAwesomeIcon
+                                                style={{ width: "1rem", color: "#f69314" }}
+                                                icon={faStar}
+                                            />
+                                        </span>
+                                        <span>
+                                            <span>99 </span>
+                                            <FontAwesomeIcon
+                                                style={{ width: "1rem", color: "#f69314" }}
+                                                icon={faThumbsUp}
+                                            />
+                                        </span>
+                                    </div>
+                                    <div className='has-text-black px-1'>
+                                        <span className='card-title'>{movie.name}</span>
+                                    </div>
+                                </a>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+
+                <div className='list-and-title-wp'>
+                    <div className='title-container mb-3 pr-3'>
+                        <span className='has-text-black'>Phim Sắp Chiếu</span>
+                        <Link href='/'>
+                            <a>Xem Tất Cả</a>
+                        </Link>
+                    </div>
+                    <div className='list-movies'>
+                        {movies[1].map((movie, index) => (
+                            <Link key={movie.id} href='/'>
+                                <a className={index !== movies[1].length - 1 ? "movie-card mr-5" : "movie-card"}>
                                     <img src={movie.image} alt={movie.name} />
                                     <div className='icons-wp has-text-grey-dark px-1'>
                                         <span>
@@ -109,15 +136,20 @@ function Home({ movies }) {
     );
 }
 
-export async function getStaticProps() {
-    const movies = await axios.get("https://reviewphim.herokuapp.com/api/movies");
-    return {
-      props: {
-        movies
-      }
-    }
-}
+export const getServerSideProps = wrapper.getServerSideProps(async ({ store, req, res }) => {
+    const status = ["1", "0"];
+    const { data: movies } = await axios.get(`http://localhost:3000/api/movies?status=${JSON.stringify(status)}`);
 
-// export const getServerSideProps = withUserServerSideProps();
+    store.dispatch({
+        type: SET_USER,
+        payload: req.user ? req.user : {},
+    });
+
+    return {
+        props: {
+            movies,
+        },
+    };
+});
 
 export default Home;

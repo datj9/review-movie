@@ -27,7 +27,7 @@ passport.deserializeUser((id, done) => {
 
 passport.use(
     new LocalStrategy({ usernameField: "email" }, function (email, password, done) {
-        User.findOne({ email }, function (err, user) {
+        User.findOne({ email, provider: "local" }, function (err, user) {
             if (err) {
                 return done(err);
             }
@@ -49,10 +49,12 @@ passport.use(
                 const user = await User.findOne({ googleId: profile.id });
 
                 if (user) return done(null, user);
+
                 const newUser = new User({
                     googleId: profile.id,
                     name: profile.displayName,
                     image: profile._json.picture,
+                    provider: "google",
                 });
                 await newUser.save();
                 return done(null, newUser);
@@ -81,6 +83,7 @@ passport.use(
                     facebookId: profile.id,
                     name: profile.displayName,
                     image: profile._json.picture ? profile._json.picture.data.url : null,
+                    provider: "facebook",
                 });
                 await newUser.save();
                 return done(null, newUser);

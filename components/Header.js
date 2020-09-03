@@ -5,13 +5,14 @@ import { logout } from "../redux/user/actions";
 
 export default function Header() {
     const [navOpen, setNavOpen] = useState(false);
-    const currentUser = useSelector((state) => state.user.currentUser);
-    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-    const isLoggingOut = useSelector((state) => state.user.isLoading);
+    const server = useSelector((state) => state.user.server);
+    const { currentUser, isAuthenticated } = useSelector((state) => state.user.server);
+    const { isLoading: isLoggingOut } = useSelector((state) => state.user.client);
     const dispatch = useDispatch();
     const navRef = useRef();
     const hamburgerBtnRef = useRef();
-
+    console.log("currentUser", currentUser);
+    console.log("server", server);
     const closeNav = () => {
         setNavOpen(false);
     };
