@@ -3,12 +3,21 @@ import Link from "next/link";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
-import { wrapper } from "../redux/store";
-import { SET_USER } from "../redux/user/action-types";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/user/actions";
 
 const apiURL = process.env.API_URL;
 
-function Home({ movies }) {
+function Home(props) {
+    const dispatch = useDispatch();
+    const { movies } = props;
+    const user = JSON.parse(props.user);
+    console.log(Object.keys(user));
+    if (Object.keys(user).length) {
+        dispatch(setUser(user));
+    }
+
     return (
         <div>
             <Head>
@@ -17,7 +26,7 @@ function Home({ movies }) {
             </Head>
 
             <main className='py-5 pl-3'>
-                <div className='list-and-title-wp mb-6'>
+                <div className='list-and-title-wp mb-5'>
                     <div className='title-container mb-3 pr-3'>
                         <span className='has-text-black'>Phim Đang Chiếu</span>
                         <Link href='/'>
@@ -138,20 +147,17 @@ function Home({ movies }) {
     );
 }
 
-export const getServerSideProps = wrapper.getServerSideProps(async ({ store, req, res }) => {
+export const getServerSideProps = async ({ req, res }) => {
     const status = ["1", "0"];
     const { data: movies } = await axios.get(`${apiURL}/api/movies?status=${JSON.stringify(status)}`);
-
-    store.dispatch({
-        type: SET_USER,
-        payload: req.user ? req.user : {},
-    });
+    const user = req.user ? req.user : {};
 
     return {
         props: {
             movies,
+            user: JSON.stringify(user),
         },
     };
-});
+};
 
 export default Home;

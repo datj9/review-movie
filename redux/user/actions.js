@@ -61,3 +61,8 @@ export const logout = () => async (dispatch) => {
         });
     }
 };
+
+export const setUser = (user) => ({
+    type: actionTypes.SET_USER,
+    payload: user,
+});
