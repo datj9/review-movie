@@ -3,7 +3,6 @@ import Link from "next/link";
 import fetch from "isomorphic-unfetch";
 import { apiURL } from "../../redux/api";
 import { useState } from "react";
-// import { withUserServerSideProps, withUser } fro../../HOC/withUserser";
 
 function Movie({ movie }) {
     const [tabActive, setTabActive] = useState(0);
@@ -80,4 +79,5 @@ export async function getStaticProps({ params: { movieId } }) {
         props: { movie },
     };
 }
+
 export default Movie;
