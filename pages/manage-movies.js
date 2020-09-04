@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
-import { withUserServerSideProps, withUser } from "../HOC/withUser";
+import { withAuthServerSideProps, withAuth } from "../HOC/withAuth";
 
 function ManageMovies() {
     return (
@@ -52,6 +52,6 @@ function ManageMovies() {
     );
 }
 
-export const getServerSideProps = withUserServerSideProps();
+export const getServerSideProps = withAuthServerSideProps();
 
-export default withUser(ManageMovies);
+export default withAuth(ManageMovies);
