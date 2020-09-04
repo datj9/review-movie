@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { withUserServerSideProps, withUser } from "../HOC/withUser";
+import { withAuthServerSideProps, withAuth } from "../HOC/withAuth";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../redux/user/actions";
 import { useRouter } from "next/dist/client/router";
@@ -12,9 +12,7 @@ function Register() {
     const nameRef = useRef();
     const passwordRef = useRef();
     const dispatch = useDispatch();
-    const isAuthenticated = useSelector((state) => state.user.server.isAuthenticated);
-    const isLoading = useSelector((state) => state.user.client.isLoading);
-    const errors = useSelector((state) => state.user.client.errors);
+    const { isLoading, errors, isSuccess } = useSelector((state) => state.user.client);
     const [emailErrMsg, setEmailErrMsg] = useState("");
     const [passwordErrMsg, setPasswordErrMsg] = useState("");
     const [nameErrMsg, setNameErrMsg] = useState("");
@@ -22,7 +20,7 @@ function Register() {
 
     const submitFormRegister = async (e) => {
         e.preventDefault();
-        console.log("object");
+
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
         const name = nameRef.current.value;
@@ -32,13 +30,14 @@ function Register() {
     };
 
     useEffect(() => {
-        if (isAuthenticated) {
+        if (isSuccess) {
             router.replace("/");
         }
+
         return () => {
             dispatch({ type: CLEAN_UP });
         };
-    }, [isAuthenticated]);
+    }, [isSuccess]);
 
     useEffect(() => {
         if (errors.email && errors.email.includes("required")) {
@@ -71,7 +70,7 @@ function Register() {
     }, [errors.password]);
 
     return (
-        <div className='register py-6 px-0 has-background-white'>
+        <div className='register py-6 mb-5 has-background-white'>
             <Head>
                 <title>Đánh Giá Phim - Đăng ký tài khoản mới</title>
                 <link rel='icon' href='/favicon.ico' />
@@ -176,6 +175,6 @@ function Register() {
     );
 }
 
-export const getServerSideProps = withUserServerSideProps();
+export const getServerSideProps = withAuthServerSideProps();
 
-export default withUser(Register);
+export default withAuth(Register);

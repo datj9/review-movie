@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
@@ -14,6 +15,8 @@ import {
 
 function BottomNavigation(props) {
     const router = useRouter();
+    const isAuthenticatedFromServer = Object.keys(props.user).length;
+    const { isAuthenticated: isAuthenticatedFromClient } = useSelector((state) => state.user.server);
 
     const [tabActive, setTabActive] = useState(0);
     const tabsList = [
@@ -39,7 +42,12 @@ function BottomNavigation(props) {
             name: "Tài Khoản",
             filledIcon: <AccountCircle htmlColor='#f69314' />,
             outlinedIcon: <AccountCircleOutlined htmlColor='#676767' />,
-            href: "/login",
+            href:
+                isAuthenticatedFromServer || isAuthenticatedFromClient
+                    ? "/my-account"
+                    : router.pathname === "/register" || router.pathname === "/my-account"
+                    ? router.pathname
+                    : "/login",
         },
     ];
 

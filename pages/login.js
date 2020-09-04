@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { withUserServerSideProps, withUser } from "../HOC/withUser";
+import { withAuthServerSideProps, withAuth } from "../HOC/withAuth";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/user/actions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,14 +9,11 @@ import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
 import { useRouter } from "next/dist/client/router";
 import { CLEAN_UP } from "../redux/user/action-types";
 
-function Login() {
+function Login(props) {
     const emailRef = useRef();
     const passwordRef = useRef();
     const dispatch = useDispatch();
-    const { isAuthenticated } = useSelector((state) => state.user.server);
     const { errors, loginType, isSuccess } = useSelector((state) => state.user.client);
-    // const errors = useSelector((state) => state.user.client.errors);
-    // const loginType = useSelector((state) => state.user.client.loginType);
     const [emailErrMsg, setEmailErrMsg] = useState("");
     const [passwordErrMsg, setPasswordErrMsg] = useState("");
     const router = useRouter();
@@ -30,7 +27,7 @@ function Login() {
 
     useEffect(() => {
         if (isSuccess) {
-            Router.back();
+            router.replace("/");
         }
 
         return () => {
@@ -60,8 +57,19 @@ function Login() {
         }
     }, [errors.password]);
 
+    // const isAuthenticated = Object.keys(JSON.parse(props.user)).length > 0;
+
+    // if (isAuthenticated) {
+    //     router.replace("/my-account");
+    //     return null;
+    // }
+    // if (!isAuthenticated && router.pathname !== "/login" && router.pathname !== "/register") {
+    //     router.replace("/login");
+    // }
+    const isAuthenticated = Object.keys(props.user).length > 0;
+
     if (isAuthenticated) {
-        router.replace("/my-account");
+        return <div>Loading.........</div>;
     }
 
     return (
@@ -274,6 +282,6 @@ function Login() {
     );
 }
 
-export const getServerSideProps = withUserServerSideProps();
+export const getServerSideProps = withAuthServerSideProps();
 
-export default withUser(Login);
+export default withAuth(Login);

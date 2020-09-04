@@ -5,11 +5,13 @@ import Header from "../components/Header";
 import BottomNavigation from "../components/BottomNavigation";
 
 function MyApp({ Component, pageProps }) {
+    const user = pageProps.user ? JSON.parse(pageProps.user) : {};
+
     return (
         <>
             <Header />
             <Component {...pageProps} />
-            <BottomNavigation />
+            <BottomNavigation user={user} />
         </>
     );
 }
