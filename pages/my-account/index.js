@@ -1,28 +1,42 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/user/actions";
-import { withUserServerSideProps, withUser } from "../../HOC/withUser";
+import { withAuthServerSideProps, withAuth } from "../../HOC/withAuth";
+import { CLEAN_UP } from "../../redux/user/action-types";
 
-function MyAccount() {
+function MyAccount(props) {
     const router = useRouter();
-    const { isLoading: isLoggingOut } = useSelector((state) => state.user.client);
-    const { isAuthenticated } = useSelector((state) => state.user.server);
+    const { isLoading: isLoggingOut, isSuccess } = useSelector((state) => state.user.client);
     const dispatch = useDispatch();
     const handleLogout = () => {
         dispatch(logout());
-        router.replace("/login");
     };
 
     useEffect(() => {
-        if (!isAuthenticated) {
+        if (isSuccess) {
             router.replace("/login");
         }
-    });
+
+        return () => {
+            dispatch({ type: CLEAN_UP });
+        };
+    }, [isSuccess]);
+
+    const isAuthenticated = Object.keys(props.user).length > 0;
+
+    if (!isAuthenticated) {
+        return <div>Loading.........</div>;
+    }
 
     return (
         <div>
-            My Account
+            <Head>
+                <title>Tài Khoản của bạn</title>
+                <link rel='icon' href='/favicon.ico' />
+            </Head>
+
             <button
                 onClick={handleLogout}
                 type='button'
@@ -34,6 +48,6 @@ function MyAccount() {
     );
 }
 
-export const getServerSideProps = withUserServerSideProps();
+export const getServerSideProps = withAuthServerSideProps();
 
-export default withUser(MyAccount);
+export default withAuth(MyAccount);

@@ -10,13 +10,8 @@ import { setUser } from "../redux/user/actions";
 const apiURL = process.env.API_URL;
 
 function Home(props) {
-    const dispatch = useDispatch();
     const { movies } = props;
-    const user = JSON.parse(props.user);
 
-    if (Object.keys(user).length) {
-        dispatch(setUser(user));
-    }
     useEffect(() => {
         localStorage.setItem("location", "hcm");
     });
@@ -167,17 +162,15 @@ function Home(props) {
     );
 }
 
-export const getServerSideProps = async ({ req, res }) => {
+export async function getStaticProps(context) {
     const status = ["1", "0"];
     const { data: movies } = await axios.get(`${apiURL}/api/movies?status=${JSON.stringify(status)}`);
-    const user = req.user ? req.user : {};
 
     return {
         props: {
             movies,
-            user: JSON.stringify(user),
         },
     };
-};
+}
 
 export default Home;

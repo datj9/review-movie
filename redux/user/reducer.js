@@ -106,6 +106,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
                 client: {
                     ...state.client,
                     isLoading: false,
+                    isSuccess: true,
                 },
                 server: {
                     ...state.server,
@@ -139,6 +140,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
                     message: "",
                     isLoading: false,
                     isSuccess: false,
+                    loginType: "",
                 },
             };
         default:
