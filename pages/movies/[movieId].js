@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/dist/client/router";
 import fetch from "isomorphic-unfetch";
 import { apiURL } from "../../redux/api";
 import { useState } from "react";
@@ -16,10 +15,10 @@ function Movie({ movie }) {
                     {[
                         { name: "Thông tin phim", id: "info" },
                         { name: "Đánh giá", id: "review" },
-                    ].map((tab, i) => (
-                        <li className={tabActive === i ? "is-active" : ""}>
-                            <a onClick={() => setTabActive(i)} href={`#${tab.id}`}>
-                                {tab.name}
+                    ].map(({ id, name }, i) => (
+                        <li key={id} className={tabActive === i ? "is-active" : ""}>
+                            <a onClick={() => setTabActive(i)} href={`#${id}`}>
+                                {name}
                             </a>
                         </li>
                     ))}
@@ -45,7 +44,6 @@ function Movie({ movie }) {
                     height: 12rem;
                 }
                 .tab-content {
-                    animation: fadeIn 0.3s ease-in-out;
                 }
                 @keyframes fadeIn {
                     0% {
