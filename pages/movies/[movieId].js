@@ -24,11 +24,11 @@ function Movie() {
                     ))}
                 </ul>
             </div>
-            {/* {tabActive === 0 ? (
+            {tabActive === 0 ? (
                 <div id='info' className='tab-content ytb-video'>
                     <iframe src={movie.trailer} />
                 </div>
-            ) : null} */}
+            ) : null}
 
             {tabActive === 1 ? (
                 <div id='review' className='tab-content'>
