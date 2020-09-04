@@ -6,7 +6,7 @@ import { logout } from "../redux/user/actions";
 export default function Header() {
     const [navOpen, setNavOpen] = useState(false);
     const { currentUser, isAuthenticated } = useSelector((state) => state.user.server);
-    const { isLoading: isLoggingOut } = useSelector((state) => state.user.client);
+
     const dispatch = useDispatch();
     const navRef = useRef();
     const hamburgerBtnRef = useRef();
@@ -21,9 +21,6 @@ export default function Header() {
         if (!navRef.current?.contains(e.target) && !hamburgerBtnRef.current?.contains(e.target)) {
             closeNav();
         }
-    };
-    const handleLogout = () => {
-        dispatch(logout());
     };
 
     useEffect(() => {

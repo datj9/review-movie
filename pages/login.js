@@ -14,7 +14,7 @@ function Login() {
     const passwordRef = useRef();
     const dispatch = useDispatch();
     const { isAuthenticated } = useSelector((state) => state.user.server);
-    const { errors, loginType } = useSelector((state) => state.user.client);
+    const { errors, loginType, isSuccess } = useSelector((state) => state.user.client);
     // const errors = useSelector((state) => state.user.client.errors);
     // const loginType = useSelector((state) => state.user.client.loginType);
     const [emailErrMsg, setEmailErrMsg] = useState("");
@@ -29,13 +29,20 @@ function Login() {
     };
 
     useEffect(() => {
-        if (isAuthenticated) {
-            router.replace("/");
+        if (isSuccess) {
+            Router.back();
         }
+
         return () => {
             dispatch({ type: CLEAN_UP });
         };
-    }, [isAuthenticated]);
+    }, [isSuccess]);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            router.replace("/my-account");
+        }
+    });
 
     useEffect(() => {
         if (errors.email && errors.email.includes("required")) {
@@ -60,7 +67,7 @@ function Login() {
     }, [errors.password]);
 
     return (
-        <div className='login py-6 px-0 has-background-white'>
+        <div className='login py-6 px-0 mb-5 has-background-white'>
             <Head>
                 <title>Đánh Giá Phim - Đăng Nhập để Đánh Giá Phim yêu thích</title>
                 <link rel='icon' href='/favicon.ico' />

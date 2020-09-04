@@ -11,6 +11,7 @@ const INITIAL_STATE = {
         loginType: "",
         errors: {},
         message: "",
+        isSuccess: false,
     },
 };
 
@@ -43,6 +44,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
                     ...state.client,
                     isLoading: false,
                     loginType: "",
+                    isSuccess: true,
                 },
                 server: {
                     ...state.server,
@@ -74,6 +76,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
                 client: {
                     ...state.client,
                     isLoading: false,
+                    isSuccess: true,
                 },
                 server: {
                     ...state.server,
@@ -135,6 +138,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
                     errors: {},
                     message: "",
                     isLoading: false,
+                    isSuccess: false,
                 },
             };
         default:
