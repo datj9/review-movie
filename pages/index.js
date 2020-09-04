@@ -27,7 +27,7 @@ function Home(props) {
                 <link rel='icon' href='/favicon.ico' />
             </Head>
 
-            <main className='py-5 pl-3'>
+            <main className='py-5 mb-6 pl-3'>
                 <div className='list-and-title-wp mb-5'>
                     <div className='title-container mb-3 pr-3'>
                         <h2 className='has-text-black'>Phim Đang Chiếu</h2>
