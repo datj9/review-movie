@@ -19,9 +19,9 @@ const authorize = (req, res, next) => {
 };
 
 router.get("/", movieController.getMovies);
+router.get("/crawl-movies", authCheck, authorize, movieController.createMoviesFromCrawling);
 router.get("/:movieId", movieController.getMovieById);
 router.post("/", movieController.createMovie);
-router.get("/crawl-movies", authCheck, authorize, movieController.createMoviesFromCrawling);
 // router.post("/upload-image", uploadSingle("image"));
 
 module.exports = router;
