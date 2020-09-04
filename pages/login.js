@@ -39,12 +39,6 @@ function Login() {
     }, [isSuccess]);
 
     useEffect(() => {
-        if (isAuthenticated) {
-            router.replace("/my-account");
-        }
-    });
-
-    useEffect(() => {
         if (errors.email && errors.email.includes("required")) {
             setEmailErrMsg("Vui lòng nhập email");
         } else if (errors.email && errors.email.includes("invalid")) {
@@ -65,6 +59,10 @@ function Login() {
             setPasswordErrMsg("");
         }
     }, [errors.password]);
+
+    if (isAuthenticated) {
+        router.replace("/my-account");
+    }
 
     return (
         <div className='login py-6 px-0 mb-5 has-background-white'>
