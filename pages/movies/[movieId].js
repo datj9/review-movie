@@ -3,18 +3,25 @@ import Link from "next/link";
 import fetch from "isomorphic-unfetch";
 import { apiURL } from "../../redux/api";
 import { useState } from "react";
+import dayjs from "dayjs";
 
 function Movie({ movie }) {
     const [tabActive, setTabActive] = useState(0);
+    const [iframeLoading, setIframeLoading] = useState(true);
+    const tabsList = [
+        { name: "Thông tin phim", id: "info" },
+        { name: "Đánh giá", id: "review" },
+    ];
+
+    const handleIframeLoaded = () => {
+        setIframeLoading(false);
+    };
 
     return (
         <div className='px-3 py-5'>
             <div className='tabs'>
                 <ul>
-                    {[
-                        { name: "Thông tin phim", id: "info" },
-                        { name: "Đánh giá", id: "review" },
-                    ].map(({ id, name }, i) => (
+                    {tabsList.map(({ id, name }, i) => (
                         <li key={id} className={tabActive === i ? "is-active" : ""}>
                             <a onClick={() => setTabActive(i)} href={`#${id}`}>
                                 {name}
@@ -24,8 +31,31 @@ function Movie({ movie }) {
                 </ul>
             </div>
             {tabActive === 0 ? (
-                <div id='info' className='tab-content ytb-video'>
-                    <iframe src={movie.trailer} />
+                <div id='info' className='tab-content'>
+                    <div className='basic-info'>
+                        <p>
+                            Đạo diễn:{" "}
+                            {movie.filmDirectors.map((director, i) => (
+                                <span key={i}>
+                                    {director}
+                                    {i !== movie.filmDirectors.length - 1 ? ", " : ""}
+                                </span>
+                            ))}
+                        </p>
+                        <p>
+                            Diễn viên:{" "}
+                            {movie.actors.map((actor, i) => (
+                                <span key={i}>
+                                    {actor}
+                                    {i !== movie.actors.length - 1 ? ", " : ""}
+                                </span>
+                            ))}
+                        </p>
+                        {/* <p>Thời gian công chiếu: {dayjs(movie.releaseDate)}</p> */}
+                    </div>
+                    <div className='ytb-video'>
+                        <iframe onLoad={handleIframeLoaded} src={movie.trailer} />
+                    </div>
                 </div>
             ) : null}
 
@@ -61,7 +91,7 @@ function Movie({ movie }) {
 
 export async function getStaticPaths() {
     // Call an external API endpoint to get posts
-    const res = await fetch(`${apiURL}/api/movies`);
+    const res = await fetch(`${apiURL}/api/movies?pageSize=100`);
     const movies = await res.json();
 
     // Get the paths we want to pre-render based on posts

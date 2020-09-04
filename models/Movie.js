@@ -14,6 +14,10 @@ const MovieSchema = new mongoose.Schema(
             type: Number, // minute,
             required: true,
         },
+        releaseDate: {
+            type: Date,
+            required: true,
+        },
         filmDirectors: {
             type: [String],
             required: true,
