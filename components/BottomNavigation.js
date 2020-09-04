@@ -52,9 +52,12 @@ function BottomNavigation(props) {
             case pathname.startsWith("/theaters"):
                 setTabActive(1);
                 break;
-            case pathname.startsWith("/login") || pathname.startsWith("/register"):
+            case pathname.startsWith("/login") ||
+                pathname.startsWith("/register") ||
+                pathname.startsWith("/my-account"):
                 setTabActive(3);
                 break;
+
             default:
                 break;
         }
