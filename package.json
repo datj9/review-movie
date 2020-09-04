@@ -2,6 +2,9 @@
     "name": "new",
     "version": "0.1.0",
     "private": true,
+    "engines": {
+        "node": ">=0.12"
+    },
     "scripts": {
         "dev": "node server.js -p $PORT",
         "build": "next build",
