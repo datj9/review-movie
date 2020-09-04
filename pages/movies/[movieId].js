@@ -5,7 +5,7 @@ import { apiURL } from "../../redux/api";
 import { useState } from "react";
 // import { withUserServerSideProps, withUser } fro../../HOC/withUserser";
 
-function Movie({ movie }) {
+function Movie() {
     const [tabActive, setTabActive] = useState(0);
 
     return (
@@ -24,11 +24,11 @@ function Movie({ movie }) {
                     ))}
                 </ul>
             </div>
-            {tabActive === 0 ? (
+            {/* {tabActive === 0 ? (
                 <div id='info' className='tab-content ytb-video'>
                     <iframe src={movie.trailer} />
                 </div>
-            ) : null}
+            ) : null} */}
 
             {tabActive === 1 ? (
                 <div id='review' className='tab-content'>
