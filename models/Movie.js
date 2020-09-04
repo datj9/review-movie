@@ -12,11 +12,9 @@ const MovieSchema = new mongoose.Schema(
         },
         runningTime: {
             type: Number, // minute,
-            required: true,
         },
         releaseDate: {
             type: Date,
-            required: true,
         },
         filmDirectors: {
             type: [String],
@@ -32,7 +30,6 @@ const MovieSchema = new mongoose.Schema(
         },
         trailer: {
             type: String,
-            required: true,
         },
         status: {
             type: Number,
