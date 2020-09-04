@@ -5,7 +5,7 @@ import { apiURL } from "../../redux/api";
 import { useState } from "react";
 // import { withUserServerSideProps, withUser } fro../../HOC/withUserser";
 
-function Movie() {
+function Movie({movie}) {
     const [tabActive, setTabActive] = useState(0);
 
     return (
