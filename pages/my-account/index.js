@@ -14,11 +14,9 @@ function MyAccount() {
         router.replace("/login");
     };
 
-    useEffect(() => {
-        if (!isAuthenticated) {
-            router.replace("/login");
-        }
-    });
+    if (!isAuthenticated) {
+        router.replace("/login");
+    }
 
     return (
         <div>
