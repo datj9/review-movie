@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
@@ -14,7 +14,7 @@ import {
 
 function BottomNavigation(props) {
     const router = useRouter();
-    console.log(router.pathname);
+
     const [tabActive, setTabActive] = useState(0);
     const tabsList = [
         {
@@ -43,14 +43,27 @@ function BottomNavigation(props) {
         },
     ];
 
+    useEffect(() => {
+        const { pathname } = router;
+        switch (true) {
+            case pathname === "/" || pathname.startsWith("/movies"):
+                setTabActive(0);
+                break;
+            case pathname.startsWith("/theaters"):
+                setTabActive(1);
+                break;
+            case pathname.startsWith("/login") || pathname.startsWith("/register"):
+                setTabActive(3);
+                break;
+            default:
+                break;
+        }
+    }, [router.pathname]);
+
     return (
         <ul className='bottom-nav'>
             {tabsList.map((tab, i) => (
-                <li
-                    onClick={() => setTabActive(i)}
-                    key={i}
-                    className={`nav-item ${tabActive !== i ? "" : "tab-active"}`}
-                >
+                <li key={i} className={`nav-item ${tabActive !== i ? "" : "tab-active"}`}>
                     <Link href={tab.href}>
                         <a>
                             {tabActive !== i ? tab.outlinedIcon : tab.filledIcon}

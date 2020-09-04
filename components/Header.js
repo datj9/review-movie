@@ -91,7 +91,7 @@ export default function Header() {
                     </a>
                 </div>
 
-                <div className='navbar-end'>
+                {/* <div className='navbar-end'>
                     {isAuthenticated ? (
                         <div className='navbar-item'>
                             <button
@@ -113,7 +113,7 @@ export default function Header() {
                             </div>
                         </div>
                     )}
-                </div>
+                </div> */}
             </div>
             <style jsx>
                 {`

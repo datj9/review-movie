@@ -71,7 +71,7 @@ function Home(props) {
                     </div>
                     <div className='list-movies'>
                         {movies[1].map((movie, index) => (
-                            <Link key={movie.id} href='/'>
+                            <Link key={movie.id} href={`/movies/${movie.id}`}>
                                 <a
                                     title={movie.name}
                                     className={`movie-card ${index !== movies[1].length - 1 ? "mr-5" : "mr-3"}`}
