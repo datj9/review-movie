@@ -17,7 +17,9 @@ function Home(props) {
     if (Object.keys(user).length) {
         dispatch(setUser(user));
     }
-
+    useEffect(() => {
+        localStorage.setItem("location", "hcm");
+    });
     return (
         <div>
             <Head>
@@ -117,9 +119,6 @@ function Home(props) {
                         border: 1px solid #d4d4d4;
                         overflow: hidden;
                         border-radius: 4px;
-
-
-
                     }
                     .movie-card img {
                         width: 100%;
