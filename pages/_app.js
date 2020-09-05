@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps }) {
 
     return (
         <>
-            <Header />
+            <Header user={user} />
             <Component {...pageProps} />
             <BottomNavigation user={user} />
         </>

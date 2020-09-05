@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
-    AccountCircle,
-    AccountCircleOutlined,
+    Person,
+    PersonOutlined,
     MovieFilter,
     MovieFilterOutlined,
     Theaters,
@@ -27,21 +27,21 @@ function BottomNavigation(props) {
             href: "/",
         },
         {
-            name: "Rạp Chiếu",
+            name: "Rạp chiếu",
             filledIcon: <Theaters htmlColor='#f69314' />,
             outlinedIcon: <TheatersOutlined htmlColor='#676767' />,
             href: "/",
         },
         {
-            name: "Thông Báo",
+            name: "Thông báo",
             filledIcon: <Notifications htmlColor='#f69314' />,
             outlinedIcon: <NotificationsOutlined htmlColor='#676767' />,
             href: "/",
         },
         {
-            name: "Tài Khoản",
-            filledIcon: <AccountCircle htmlColor='#f69314' />,
-            outlinedIcon: <AccountCircleOutlined htmlColor='#676767' />,
+            name: "Tài khoản",
+            filledIcon: <Person htmlColor='#f69314' />,
+            outlinedIcon: <PersonOutlined htmlColor='#676767' />,
             href:
                 isAuthenticatedFromServer || isAuthenticatedFromClient
                     ? "/my-account"
@@ -114,6 +114,11 @@ function BottomNavigation(props) {
                     .fa-film,
                     .fa-map-marked {
                         width: 1.2rem;
+                    }
+                    @media only screen and (min-width: 768px) {
+                        .bottom-nav {
+                            display: none;
+                        }
                     }
                 `}
             </style>
