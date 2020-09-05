@@ -39,6 +39,9 @@ const MovieSchema = new mongoose.Schema(
             // 2: commingSoon
             // 3: nowShowing
         },
+        averageRating: {
+            type: Number,
+        },
     },
     { timestamps: true }
 );

@@ -39,6 +39,7 @@
         "react-redux": "^7.2.1",
         "redux": "^4.0.5",
         "redux-thunk": "^2.3.0",
+        "swr": "^0.3.2",
         "validator": "^13.1.1"
     }
 }

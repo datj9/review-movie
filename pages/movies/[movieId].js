@@ -4,22 +4,13 @@ import { apiURL } from "../../redux/api";
 import { useState } from "react";
 import dayjs from "dayjs";
 
-function Movie({ movie: { name, description, runningTime, releaseDate, trailer, filmDirectors, actors } }) {
-    const [tabActive, setTabActive] = useState(0);
+function Movie({ movie: { id, name, description, runningTime, releaseDate, trailer, filmDirectors, actors } }) {
     const [loadingIframeTrailer, setLoadingIframeTrailer] = useState(true);
     const tabsList = [
-        { name: "Thông tin phim", id: "info" },
-        { name: "Đánh giá", id: "review" },
+        { name: "Thông tin phim", href: `/movies/${id}` },
+        { name: "Đánh giá", href: `/reviews?mid=${id}` },
     ];
 
-    const changeTab = (i) => {
-        setTabActive(i);
-        if (i === 0) {
-            setLoadingIframeTrailer(true);
-        }
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-    };
     const handleFinishLoadingTrailer = () => {
         setLoadingIframeTrailer(false);
     };
@@ -32,72 +23,61 @@ function Movie({ movie: { name, description, runningTime, releaseDate, trailer, 
             </Head>
             <div className='tabs'>
                 <ul>
-                    {tabsList.map(({ id, name }, i) => (
-                        <li key={id} className={tabActive === i ? "is-active" : ""}>
-                            <a onClick={() => changeTab(i)} href={`#${id}`}>
-                                {name}
-                            </a>
+                    {tabsList.map(({ name, href }, i) => (
+                        <li key={i} className={i === 0 ? "is-active" : ""}>
+                            <a href={href}>{name}</a>
                         </li>
                     ))}
                 </ul>
             </div>
-            {tabActive === 0 ? (
-                <div id='info' className='tab-content py-3 mb-6'>
-                    <div className='basic-info mb-3'>
-                        <h1 className='has-text-centered has-text-weight-bold'>{name}</h1>
-                        <p>{description}</p>
-                        {releaseDate ? (
-                            <p>
-                                <span className='has-text-weight-semibold'>Thời gian công chiếu</span>:{" "}
-                                {dayjs(releaseDate).format("DD/MM/YYYY")}
-                            </p>
-                        ) : null}
-                        {runningTime ? (
-                            <p>
-                                <span className='has-text-weight-semibold'>Thời lượng</span>: {runningTime} phút
-                            </p>
-                        ) : null}
-                        <p>
-                            <span className='has-text-weight-semibold'>Đạo diễn</span>:{" "}
-                            {filmDirectors.map((director, i) => (
-                                <span key={i}>
-                                    {director}
-                                    {i !== filmDirectors.length - 1 ? ", " : ""}
-                                </span>
-                            ))}
-                        </p>
-                        <p>
-                            <span className='has-text-weight-semibold'>Diễn viên</span>:{" "}
-                            {actors.map((actor, i) => (
-                                <span key={i}>
-                                    {actor}
-                                    {i !== actors.length - 1 ? ", " : ""}
-                                </span>
-                            ))}
-                        </p>
-                    </div>
-                    {trailer ? (
-                        <div className='ytb-video'>
-                            {loadingIframeTrailer ? <div className='has-text-centered'>Đang tải trailer...</div> : null}
-                            <iframe onLoad={handleFinishLoadingTrailer} src={trailer} />
-                        </div>
-                    ) : null}
-                    <div className='moveek-link-wp'>
-                        <a href='https://moveek.com' target='_blank'>
-                            Moveek
-                        </a>
-                    </div>
-                </div>
-            ) : null}
 
-            {tabActive === 1 ? (
-                <div id='review' className='tab-content py-3 mb-5'>
-                    <div>Phim hay lắm nhé</div>
-                    <div>Phim hay lắm nhé</div>
-                    <div>Phim hay lắm nhé</div>
-                    <div>Phim hay lắm nhé</div>
+            <div id='info' className='tab-content py-3 mb-6'>
+                <div className='basic-info mb-3'>
+                    <h1 className='has-text-centered has-text-weight-bold'>{name}</h1>
+                    <p>{description}</p>
+                    {releaseDate ? (
+                        <p>
+                            <span className='has-text-weight-semibold'>Thời gian công chiếu</span>:{" "}
+                            {dayjs(releaseDate).format("DD/MM/YYYY")}
+                        </p>
+                    ) : null}
+                    {runningTime ? (
+                        <p>
+                            <span className='has-text-weight-semibold'>Thời lượng</span>: {runningTime} phút
+                        </p>
+                    ) : null}
+                    <p>
+                        <span className='has-text-weight-semibold'>Đạo diễn</span>:{" "}
+                        {filmDirectors.map((director, i) => (
+                            <span key={i}>
+                                {director}
+                                {i !== filmDirectors.length - 1 ? ", " : ""}
+                            </span>
+                        ))}
+                    </p>
+                    <p>
+                        <span className='has-text-weight-semibold'>Diễn viên</span>:{" "}
+                        {actors.map((actor, i) => (
+                            <span key={i}>
+                                {actor}
+                                {i !== actors.length - 1 ? ", " : ""}
+                            </span>
+                        ))}
+                    </p>
                 </div>
-            ) : null}
+                {trailer ? (
+                    <div className='ytb-video'>
+                        {loadingIframeTrailer ? <div className='has-text-centered'>Đang tải trailer...</div> : null}
+                        <iframe onLoad={handleFinishLoadingTrailer} src={trailer} />
+                    </div>
+                ) : null}
+                <div className='moveek-link-wp'>
+                    <a href='https://moveek.com' target='_blank'>
+                        Moveek
+                    </a>
+                </div>
+            </div>
+
             <style jsx>{`
                 iframe {
                     width: 100%;

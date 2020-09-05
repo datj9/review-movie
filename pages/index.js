@@ -65,18 +65,10 @@ function Home(props) {
                                     title={movie.name}
                                     className={`movie-card ${index !== movies[0].length - 1 ? "mr-5" : "mr-3"}`}
                                 >
-                                    <LazyImage listIndex={0} src={movie.image} alt={movie.name} />
-
-                                    <div className='icons-wp has-text-grey-dark px-1'>
-                                        <span className='is-flex'>
-                                            <span className='mr-1'>4.7 </span>
-                                            <StarIcon className='has-text-primary' />
-                                        </span>
-                                        <span className='is-flex'>
-                                            <span className='mr-1'>99 </span>
-                                            <ThumbUpIcon htmlColor='#f69314' />
-                                        </span>
+                                    <div className='img-wrapper'>
+                                        <LazyImage listIndex={0} src={movie.image} alt={movie.name} />
                                     </div>
+
                                     <div className='has-text-black px-1'>
                                         <span className='card-title'>{movie.name}</span>
                                     </div>
@@ -143,9 +135,12 @@ function Home(props) {
                         overflow: hidden;
                         border-radius: 4px;
                     }
+                    .img-wrapper {
+                        height: 12rem;
+                    }
                     .movie-card img {
                         width: 100%;
-                        height: 12rem;
+                        height: 100%;
                         border-bottom: 1px solid #e8e8e8;
                     }
                     .title-container {
@@ -177,7 +172,7 @@ function Home(props) {
                         .movie-card {
                             width: 10rem;
                         }
-                        .movie-card img {
+                        .img-wrapper {
                             height: 15rem;
                         }
                     }

@@ -1,22 +1,15 @@
-// const jwt = require("jsonwebtoken");
-// const privateKey = process.env.JWT_PRIVATE_KEY;
+const authenticate = (req, res, next) => {
+    const { user } = req;
 
-// const authenticate = async (req, res, next) => {
-//     const { token } = req.headers;
+    if (!user) return res.status(401).json({});
+    next();
+};
 
-//     if (!token) return res.status(401).json({ error: "Token is required" });
-//     jwt.verify(token, privateKey, function (err, decoded) {
-//         if (err) return res.status(401).json(err);
-//         req.user = decoded;
-//         next();
-//     });
-// };
+const authorize = (req, res, next) => {
+    const { user } = req;
 
-// const authorize = (allowedUserTypes = []) => (req, res, next) => {
-//     const indexOfUserType = allowedUserTypes.findIndex((type) => type == req.user.userType);
+    if (user.userType != "admin") return res.status(401).json({ error: "User is not allowed" });
+    next();
+};
 
-//     if (indexOfUserType == -1) return res.status(401).json({ error: "User is unauthorized" });
-//     next();
-// };
-
-// module.exports = { authenticate, authorize };
+module.exports = { authenticate, authorize };

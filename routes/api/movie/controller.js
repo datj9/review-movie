@@ -7,7 +7,7 @@ const ObjectId = require("mongoose").Types.ObjectId;
 const getMovies = async (req, res) => {
     const { pageSize, pageIndex, status } = req.query;
     const limit = isInt(pageSize + "") ? +pageSize : 10;
-    const skip = isInt(pageIndex + "") ? +pageIndex * limit : 0;
+    const skip = isInt(pageIndex + "") ? (+pageIndex - 1) * limit : 0;
     let statusFilter;
 
     try {
