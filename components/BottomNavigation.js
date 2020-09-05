@@ -93,11 +93,11 @@ function BottomNavigation(props) {
                         left: 0;
                         width: 100%;
                         background: #fff;
-                        border-top: 1px solid #bdbdbd;
+                        border-top: 1px solid #e8e8e8;
                     }
                     .nav-item {
                         width: 25%;
-                        height: 3.3rem;
+                        height: 3.8rem;
                     }
                     .nav-item a {
                         height: 100%;
