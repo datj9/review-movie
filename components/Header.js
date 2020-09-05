@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../redux/user/actions";
+import { useSelector } from "react-redux";
+import Person from "@material-ui/icons/Person";
 
-export default function Header() {
+export default function Header(props) {
+    const isAuthenticatedFromServer = Object.keys(props.user).length;
+    const { isAuthenticated: isAuthenticatedFromClient } = useSelector((state) => state.user.server);
     const [navOpen, setNavOpen] = useState(false);
-    const { currentUser, isAuthenticated } = useSelector((state) => state.user.server);
+    const { currentUser } = useSelector((state) => state.user.server);
 
-    const dispatch = useDispatch();
     const navRef = useRef();
     const hamburgerBtnRef = useRef();
 
@@ -87,7 +88,15 @@ export default function Header() {
                         Đánh Giá Rạp
                     </a>
                 </div>
-
+                <div className='navbar-end'>
+                    <div className='navbar-item'>
+                        <Link href={isAuthenticatedFromClient || isAuthenticatedFromServer ? "/my-account" : "/login"}>
+                            <a>
+                                <Person />
+                            </a>
+                        </Link>
+                    </div>
+                </div>
                 {/* <div className='navbar-end'>
                     {isAuthenticated ? (
                         <div className='navbar-item'>
@@ -150,6 +159,14 @@ export default function Header() {
                     .navbar-start,
                     .navbar-end {
                         animation: slide 0.4s;
+                    }
+                    .navbar-end {
+                        display: none;
+                    }
+                    @media only screen and (min-width: 768px) {
+                        .navbar-end {
+                            display: block;
+                        }
                     }
                     @keyframes slide {
                         0% {

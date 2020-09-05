@@ -6,7 +6,7 @@ import { logout } from "../../redux/user/actions";
 import { withAuthServerSideProps, withAuth } from "../../HOC/withAuth";
 import { CLEAN_UP } from "../../redux/user/action-types";
 
-function MyAccount(props) {
+function MyAccount({ user }) {
     const router = useRouter();
     const { isLoading: isLoggingOut, isSuccess } = useSelector((state) => state.user.client);
     const dispatch = useDispatch();
@@ -24,7 +24,7 @@ function MyAccount(props) {
         };
     }, [isSuccess]);
 
-    const isAuthenticated = Object.keys(props.user).length > 0;
+    const isAuthenticated = Object.keys(user).length > 0;
 
     if (!isAuthenticated) {
         return <div>Loading.........</div>;
@@ -33,17 +33,22 @@ function MyAccount(props) {
     return (
         <div>
             <Head>
-                <title>Tài Khoản của bạn</title>
+                <title>Tài Khoản của Tôi</title>
                 <link rel='icon' href='/favicon.ico' />
             </Head>
 
-            <button
-                onClick={handleLogout}
-                type='button'
-                className={`button is-primary is-outlined ${isLoggingOut ? "is-loading" : ""}`}
-            >
-                Đăng xuất
-            </button>
+            <ul>
+                <li>{user.name}</li>
+                <li>
+                    <button
+                        onClick={handleLogout}
+                        type='button'
+                        className={`button is-primary is-outlined ${isLoggingOut ? "is-loading" : ""}`}
+                    >
+                        Đăng xuất
+                    </button>
+                </li>
+            </ul>
         </div>
     );
 }

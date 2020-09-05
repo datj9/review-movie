@@ -73,7 +73,7 @@ function Login(props) {
     }
 
     return (
-        <div className='login py-6 px-0 mb-5 has-background-white'>
+        <div className='login pt-5 pb-6 px-0 mb-5 has-background-white'>
             <Head>
                 <title>Đánh Giá Phim - Đăng Nhập để Đánh Giá Phim yêu thích</title>
                 <link rel='icon' href='/favicon.ico' />
@@ -84,7 +84,7 @@ function Login(props) {
             <div className='form-container px-4'>
                 <div className='buttons are-medium'>
                     <button
-                        className={`button is-fullwidth has-text-black has-background-white mb-3 px-0 ${
+                        className={`button is-fullwidth has-text-black has-background-white mb-3 px-0 py-0 ${
                             loginType === "gg" ? "is-loading" : ""
                         }`}
                         disabled={loginType === "gg"}
@@ -106,7 +106,9 @@ function Login(props) {
                     <button
                         disabled={loginType === "fb"}
                         onClick={() => dispatch(login(null, "fb"))}
-                        className={`fb-btn button is-fullwidth px-0 ${loginType === "fb" ? "is-loading" : ""}`}
+                        className={`fb-btn button is-fullwidth px-0 has-text-white px-0 py-0 ${
+                            loginType === "fb" ? "is-loading" : ""
+                        }`}
                     >
                         <Link href='/api/auth/facebook'>
                             <a className='fb-link has-text-white'>
@@ -232,14 +234,13 @@ function Login(props) {
                     .fb-link,
                     .gg-link {
                         width: 100%;
+                        height: 100%;
                         display: flex;
                         align-items: center;
                         justify-content: center;
                     }
                     .fb-btn {
                         background: #3b5998;
-                        display: flex;
-                        justify-content: center;
                     }
                     .register-and-forgot-pass-wp {
                         display: flex;

@@ -1,20 +1,48 @@
+import React, { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { setUser } from "../redux/user/actions";
+import StarIcon from "@material-ui/icons/Star";
+import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import LazyImage from "../components/LazyImage";
 
 const apiURL = process.env.API_URL;
 
+function elementInViewport(el) {
+    const rect = el.getBoundingClientRect();
+
+    return rect.left + 80 <= (window.innerWidth || document.documentElement.clientWidth);
+}
+
 function Home(props) {
     const { movies } = props;
+    const nowShowingRef = useRef();
+
+    // const [loaded, setLoaded] = useState(false);
+
+    // const handleScroll = () => {
+    //     if (!loaded && elementInViewport(imgRef.current)) {
+    //         const imgLoader = new Image();
+
+    //         imgLoader.src = "https://cdn.moveek.com/media/cache/short/5f17a7c1b1c57272959714.jpg";
+    //         imgLoader.onload = () => {
+    //             console.log("in onload");
+    //             imgRef.current.setAttribute(
+    //                 `src`,
+    //                 `https://cdn.moveek.com/media/cache/short/5f17a7c1b1c57272959714.jpg`
+    //             );
+    //             setLoaded(true);
+    //         };
+    //     }
+    // };
 
     useEffect(() => {
-        localStorage.setItem("location", "hcm");
-    });
+        // nowShowingRef.current.addEventListener("scroll", handleScroll);
+        // return () => {
+        //     nowShowingRef.current.removeEventListener("scroll", handleScroll);
+        // };
+    }, []);
+
     return (
         <div>
             <Head>
@@ -30,22 +58,23 @@ function Home(props) {
                             <a>Xem Tất Cả</a>
                         </Link>
                     </div>
-                    <div className='list-movies'>
+                    <div ref={nowShowingRef} className='list-movies'>
                         {movies[0].map((movie, index) => (
                             <Link key={movie.id} href={`/movies/[movieId]`} as={`/movies/${movie.id}`}>
                                 <a
                                     title={movie.name}
                                     className={`movie-card ${index !== movies[0].length - 1 ? "mr-5" : "mr-3"}`}
                                 >
-                                    <img src={movie.image} alt={movie.name} />
+                                    <LazyImage listIndex={0} src={movie.image} alt={movie.name} />
+
                                     <div className='icons-wp has-text-grey-dark px-1'>
-                                        <span>
-                                            <span>4.7 </span>
-                                            <FontAwesomeIcon className='has-text-primary' icon={faStar} />
+                                        <span className='is-flex'>
+                                            <span className='mr-1'>4.7 </span>
+                                            <StarIcon className='has-text-primary' />
                                         </span>
-                                        <span>
-                                            <span>99 </span>
-                                            <FontAwesomeIcon className='thumbs-up-icon' icon={faThumbsUp} />
+                                        <span className='is-flex'>
+                                            <span className='mr-1'>99 </span>
+                                            <ThumbUpIcon htmlColor='#f69314' />
                                         </span>
                                     </div>
                                     <div className='has-text-black px-1'>
@@ -71,15 +100,15 @@ function Home(props) {
                                     title={movie.name}
                                     className={`movie-card ${index !== movies[1].length - 1 ? "mr-5" : "mr-3"}`}
                                 >
-                                    <img src={movie.image} alt={movie.name} />
+                                    <LazyImage listIndex={1} src={movie.image} alt={movie.name} />
                                     <div className='icons-wp has-text-grey-dark px-1'>
-                                        <span>
-                                            <span>4.7 </span>
-                                            <FontAwesomeIcon className='has-text-primary' icon={faStar} />
+                                        <span className='is-flex'>
+                                            <span className='mr-1'>4.7</span>
+                                            <StarIcon className='has-text-primary' />
                                         </span>
-                                        <span>
-                                            <span>99 </span>
-                                            <FontAwesomeIcon className='thumbs-up-icon' icon={faThumbsUp} />
+                                        <span className='is-flex'>
+                                            <span className='mr-1'>99</span>
+                                            <ThumbUpIcon htmlColor='#f69314' />
                                         </span>
                                     </div>
                                     <div className='has-text-black px-1'>
@@ -109,15 +138,15 @@ function Home(props) {
                     }
                     .movie-card {
                         display: inline-block;
-
                         width: 8rem;
-                        border: 1px solid #d4d4d4;
+                        border: 1px solid #e8e8e8;
                         overflow: hidden;
                         border-radius: 4px;
                     }
                     .movie-card img {
                         width: 100%;
                         height: 12rem;
+                        border-bottom: 1px solid #e8e8e8;
                     }
                     .title-container {
                         font-weight: 700;
@@ -144,6 +173,12 @@ function Home(props) {
                     @media only screen and (min-width: 768px) {
                         .title-container {
                             font-size: 1.2rem;
+                        }
+                        .movie-card {
+                            width: 10rem;
+                        }
+                        .movie-card img {
+                            height: 15rem;
                         }
                     }
                 `}
