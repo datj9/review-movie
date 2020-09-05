@@ -30,7 +30,14 @@ const getMovies = async (req, res) => {
     try {
         if (statusFilter) {
             const promiseArr = [];
-            statusFilter.forEach((status) => promiseArr.push(Movie.find({ status }).skip(skip).limit(limit)));
+            statusFilter.forEach((status) =>
+                promiseArr.push(
+                    Movie.find({ status })
+                        .skip(skip)
+                        .limit(limit)
+                        .sort([["createdAt", -1]])
+                )
+            );
             const foundMovies = await Promise.all(promiseArr);
             foundMovies.forEach((movieListByStatus, i) => {
                 movieListByStatus.forEach((movie, j) => {
@@ -41,7 +48,10 @@ const getMovies = async (req, res) => {
 
             return res.status(200).json(foundMoviesConvertedToObj);
         } else {
-            const movies = await Movie.find().skip(skip).limit(limit);
+            const movies = await Movie.find()
+                .skip(skip)
+                .limit(limit)
+                .sort([["createdAt", -1]]);
 
             movies.forEach((movie, i) => (movies[i] = movie.transform()));
 

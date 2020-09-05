@@ -88,6 +88,7 @@ function BottomNavigation(props) {
                     .bottom-nav {
                         display: flex;
                         position: fixed;
+                        z-index: 9;
                         bottom: 0;
                         left: 0;
                         width: 100%;

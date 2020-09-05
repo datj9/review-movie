@@ -95,6 +95,14 @@ module.exports.crawlMovies = async function (movieStatus) {
     });
 
     const promiseFoundMovies = [];
+    let i = 0;
+    const moviesDataLength = moviesData.length;
+    while (i < Math.ceil(moviesDataLength / 2)) {
+        const tem = moviesData[i];
+        moviesData[i] = moviesData[moviesDataLength - i - 1];
+        moviesData[moviesDataLength - i - 1] = tem;
+        i++;
+    }
     moviesData.forEach((data) => promiseFoundMovies.push(Movie.findOne({ name: data.name })));
     const foundMovies = await Promise.all(promiseFoundMovies);
 
