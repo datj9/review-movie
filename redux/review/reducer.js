@@ -1,14 +1,15 @@
 import * as actionTypes from "./action-types";
 
 const INITIAL_STATE = {
-    isLoading: false,
     reviewsList: [],
+    isSuccess: false,
+    isLoading: false,
 };
 
 export default function ReviewReducer(state = INITIAL_STATE, action) {
     const { payload } = action;
 
-    switch (action.payload) {
+    switch (action.type) {
         case actionTypes.CREATE_REVIEW_START:
             return {
                 ...state,
@@ -19,8 +20,14 @@ export default function ReviewReducer(state = INITIAL_STATE, action) {
                 ...state,
                 isLoading: false,
                 reviewsList: [payload].concat[state.reviewsList],
+                isSuccess: true,
             };
-
+        case actionTypes.CLEAN_UP:
+            return {
+                ...state,
+                isLoading: false,
+                isSuccess: false,
+            };
         default:
             return state;
     }

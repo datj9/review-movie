@@ -1,54 +1,66 @@
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import fetch from "isomorphic-unfetch";
 import RateReview from "@material-ui/icons/RateReview";
-import dayjs from "dayjs";
 import axios from "axios";
-import "dayjs/locale/vi";
-import relativeTime from "dayjs/plugin/relativeTime";
 import { useEffect, useRef, useState } from "react";
 import Star from "@material-ui/icons/Star";
-import StarBorderOutlined from "@material-ui/icons/StarBorderOutlined";
 import StarHalf from "@material-ui/icons/StarHalf";
+import StarBorderOutlined from "@material-ui/icons/StarBorderOutlined";
+import { useDispatch, useSelector } from "react-redux";
+import { createReview } from "../redux/review/actions";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/vi";
+import { CLEAN_UP } from "../redux/review/action-types";
 
 dayjs.locale("vi");
 dayjs.extend(relativeTime);
 
 function Reviews(props) {
     const router = useRouter();
-    const { mid: movieId, tid: theaterId } = router.query;
+    const dispatch = useDispatch();
     const [modalOpen, setModalOpen] = useState(false);
+    const [text, setText] = useState("");
+    const [rating, setRating] = useState(0);
     const modalRef = useRef();
+    const { isSuccess, isLoading } = useSelector((state) => state.review);
     const user = JSON.parse(props.user);
     const isAuthenticated = Object.keys(user).length;
+    const { mid: movieId, tid: theaterId } = router.query;
     const tabsList = [
         {
             name: movieId ? "Thông tin phim" : theaterId ? "Thông tin rạp" : "",
             href: movieId ? `/movies/${movieId}` : `/theaters/${theaterId}`,
         },
         {
-            name: "Đánh giá",
+            name: "Đánh giá từ cộng đồng",
             href: `/reviews?${movieId ? `movieId=${movieId}` : theaterId ? `theaterId=${theaterId}` : ""}`,
         },
     ];
-    const createReview = async () => {
+    const submitCreateReview = async () => {
         if (isAuthenticated) {
-            const res = await fetch("/api/reviews", {
-                body: JSON.stringify({ text: "Phim rất hay", rating: 5, user: user.id, movieId }),
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            const data = res.json();
+            dispatch(createReview({ text, rating, movieId, user: user.id }));
         } else {
             router.push("/login");
         }
     };
     const handleClick = (e) => {
         if (!modalRef.current?.contains(e.target)) {
-            setModalOpen(false);
+            closeModal();
         }
+    };
+    const openModal = () => {
+        if (isAuthenticated) {
+            setModalOpen(true);
+        } else {
+            router.push("/login");
+        }
+    };
+    const closeModal = () => {
+        setModalOpen(false);
+        dispatch({
+            type: CLEAN_UP,
+        });
     };
 
     useEffect(() => {
@@ -59,18 +71,26 @@ function Reviews(props) {
         };
     });
 
+    useEffect(() => {
+        if (isSuccess) {
+            closeModal();
+            setText("");
+            setRating(0);
+        }
+    }, [isSuccess]);
+
     if (movieId || theaterId) {
-        const { data, error } = useSWR(
+        const { data: res, error } = useSWR(
             `/api/reviews?${movieId ? `movieId=${movieId}` : `theaterId=${theaterId}`}`,
             axios
         );
-        const { data: movieRes, error: errGetMovie } = useSWR(`/api/movies/${movieId}`, axios);
 
         if (error) return <div>Error</div>;
-        if (!data || !movieRes) return <div>Loading...</div>;
-        const reviewsList = data.data;
-        const movie = movieRes.data;
-
+        if (!res) return <div>Loading...</div>;
+        const reviewsList = res.data.reviews;
+        const movie = res.data.movie;
+        const total = res.data.total;
+        const averageRating = movie.averageRating;
         return (
             <div>
                 <div className='tabs'>
@@ -83,43 +103,62 @@ function Reviews(props) {
                     </ul>
                 </div>
                 <div className='tab-content px-3 py-3 mb-5'>
-                    <div className='is-flex mb-2'>
-                        <h1 className='has-text-bold mr-3'>{movie.name ? movie.name : ""}</h1>
-                        <div>
-                            <Star />
-                            <Star />
-                            <Star />
-                            <StarHalf />
-                            <StarBorderOutlined />
-                        </div>
+                    <div className='movie-info is-flex mb-2'>
+                        <h1 className='has-text-weight-bold mr-3 is-size-5'>{movie.name ? movie.name : ""}</h1>
+                        {averageRating ? (
+                            <div>
+                                {[1, 2, 3, 4, 5].map((grade) =>
+                                    averageRating > grade ? (
+                                        <Star key={grade} htmlColor='yellow' />
+                                    ) : averageRating - Math.floor(averageRating) >= 0.5 ? (
+                                        <StarHalf key={grade} htmlColor='yellow' />
+                                    ) : (
+                                        <StarBorderOutlined key={grade} htmlColor='yellow' />
+                                    )
+                                )}
+                            </div>
+                        ) : null}
                     </div>
-                    <button onClick={() => setModalOpen(true)} className='button is-primary is-rounded'>
+                    <button onClick={openModal} className='button is-primary is-rounded'>
                         <span className='icon'>
                             <RateReview />
                         </span>
                         <span>Viết Đánh Giá</span>
                     </button>
                     <div className='my-5'>
-                        {reviewsList.map((review) => (
-                            <div key={review.id} className='review-item mb-4 py-2 px-4'>
-                                <div className='header-review-item is-flex'>
-                                    <div className='avatar mr-2 is-flex'>
-                                        {review.user.image ? (
-                                            <span className='is-block'>
-                                                <img src={user.image} />
-                                            </span>
-                                        ) : (
-                                            <span className='name-icon is-flex has-text-white'>Đ</span>
+                        {total === 0 ? (
+                            <div>Chưa có đánh giá nào</div>
+                        ) : (
+                            reviewsList.map((review) => (
+                                <div key={review.id} className='review-item mb-4 py-2 px-4'>
+                                    <div className='header-review-item is-flex'>
+                                        <div className='avatar mr-2 is-flex'>
+                                            {review.user.image ? (
+                                                <span className='is-block'>
+                                                    <img src={review.user.image} />
+                                                </span>
+                                            ) : (
+                                                <span className='name-icon is-flex has-text-white'>Đ</span>
+                                            )}
+                                        </div>
+                                        <div className='name-and-time is-flex'>
+                                            <span>{review.user.name}</span>
+                                            <span>{dayjs(review.createdAt).fromNow()}</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        {[1, 2, 3, 4, 5].map((grade) =>
+                                            grade <= review.rating ? (
+                                                <Star key={grade} htmlColor='yellow' />
+                                            ) : (
+                                                <StarBorderOutlined key={grade} htmlColor='yellow' />
+                                            )
                                         )}
                                     </div>
-                                    <div className='name-and-time is-flex'>
-                                        <span>{review.user.name}</span>
-                                        <span>{dayjs(review.createdAt).fromNow()}</span>
-                                    </div>
+                                    <div className='review-text ml-1'>{review.text}</div>
                                 </div>
-                                <div className='review-text'>{review.text}</div>
-                            </div>
-                        ))}
+                            ))
+                        )}
                     </div>
 
                     <div className={`modal ${modalOpen ? "is-active" : ""}`}>
@@ -127,14 +166,42 @@ function Reviews(props) {
                         <div ref={modalRef} className='modal-card'>
                             <header className='modal-card-head'>
                                 <p className='modal-card-title'>Viết Đánh Giá</p>
-                                {/* <button className='delete' aria-label='close'></button> */}
                             </header>
-                            <section className='modal-card-body'></section>
+                            <section className='modal-card-body'>
+                                <div className='field'>
+                                    <label className='label'>Nội dung đánh giá</label>
+                                    <div className='control'>
+                                        <textarea
+                                            onChange={(e) => setText(e.target.value)}
+                                            className='textarea'
+                                            placeholder='Nhập vào nội dung đánh giá (ít nhất 10 ký tự)'
+                                        />
+                                    </div>
+                                </div>
+                                <div className='field'>
+                                    <label className='label'>Đánh giá</label>
+                                    {[1, 2, 3, 4, 5].map((grade) =>
+                                        grade <= rating ? (
+                                            <span key={grade} role='button' onClick={() => setRating(grade)}>
+                                                <Star htmlColor='yellow' />
+                                            </span>
+                                        ) : (
+                                            <span key={grade} role='button' onClick={() => setRating(grade)}>
+                                                <StarBorderOutlined htmlColor='yellow' />
+                                            </span>
+                                        )
+                                    )}
+                                </div>
+                            </section>
                             <footer className='modal-card-foot'>
-                                <button onClick={createReview} className='button is-success'>
+                                <button
+                                    disabled={text.length < 10 || rating === 0 || isLoading}
+                                    onClick={submitCreateReview}
+                                    className={`button is-primary ${isLoading ? "is-loading" : ""}`}
+                                >
                                     Đăng
                                 </button>
-                                <button onClick={() => setModalOpen(false)} className='button'>
+                                <button onClick={closeModal} className='button'>
                                     Hủy
                                 </button>
                             </footer>
@@ -143,6 +210,9 @@ function Reviews(props) {
                 </div>
                 <style jsx>
                     {`
+                        .movie-info {
+                            flex-direction: column;
+                        }
                         .review-item {
                             border: 1px solid #e8e8e8;
                             border-radius: 3px;
@@ -164,9 +234,15 @@ function Reviews(props) {
                             justify-content: center;
                             align-items: center;
                             background: green;
+                            border-radius: 50%;
                         }
                         .name-and-time {
                             flex-direction: column;
+                        }
+                        @media only screen and (min-width: 576px) {
+                            .movie-info {
+                                flex-direction: row;
+                            }
                         }
                     `}
                 </style>

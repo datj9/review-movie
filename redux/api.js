@@ -42,7 +42,7 @@ export default class BaseAPI {
                 },
                 body: JSON.stringify(body),
             });
-            console.log(res);
+
             if (res.status === 200 || res.status === 201 || res.status === 400 || res.status === 404) {
                 const data = await res.json();
 

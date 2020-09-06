@@ -1,4 +1,5 @@
 const { Review } = require("../../../models/Review");
+const { Movie } = require("../../../models/Movie");
 const ObjectId = require("mongoose").Types.ObjectId;
 const isInt = require("validator/lib/isInt");
 
@@ -16,17 +17,24 @@ const getReviews = async (req, res) => {
     }
 
     try {
-        const filter = movieId ? { movie: movieId } : { theater: theaterId };
-        const reviews = await Review.find(filter)
-            .skip(skip)
-            .limit(limit)
-            .populate("user", "name image")
-            .populate("movie")
-            .populate("theater");
+        if (movieId) {
+            const foundMovie = await Movie.findById(movieId);
+            if (!foundMovie) return res.status(404).json({ error: "Movie not found" });
 
-        reviews.forEach((rev, i) => (reviews[i] = rev.transform()));
+            const filter = { movie: movieId };
+            const reviews = await Review.find(filter)
+                .skip(skip)
+                .limit(limit)
+                .populate("user", "name image")
+                .populate("movie");
+            const totalReviews = await Review.countDocuments(filter);
 
-        return res.status(200).json(reviews);
+            reviews.forEach((rev, i) => (reviews[i] = rev.transform()));
+            if (foundMovie.averageRating) {
+                foundMovie.roundedRating = Math.round(foundMovie.averageRating * 10) / 10;
+            }
+            return res.status(200).json({ movie: foundMovie, reviews, total: totalReviews });
+        }
     } catch (error) {
         console.log(error);
         return res.status(500).json(error);
@@ -37,7 +45,7 @@ const createReview = async (req, res) => {
     const { text, rating, movieId, theaterId } = req.body;
     const { id: userId } = req.user;
     const errors = {};
-    console.log(req.body);
+
     if (!text) errors.text = "text is required";
     if (!rating) errors.rating = "rating is required";
     if (!movieId && !theaterId) errors.id = "movieId or theaterId is required";
@@ -51,16 +59,24 @@ const createReview = async (req, res) => {
     if (Object.keys(errors).length) return res.status(400).json(errors);
 
     try {
-        const newReview = new Review({
-            text,
-            rating,
-            movie: movieId,
-            theater: theaterId,
-            user: userId,
-        });
-        await newReview.save();
+        if (movieId) {
+            const foundMovie = await Movie.findById(movieId);
+            if (!foundMovie) return res.status(404).json({ error: "Movie not found" });
 
-        return res.status(201).json(newReview.transform());
+            const newReview = new Review({
+                text,
+                rating,
+                movie: movieId,
+                user: userId,
+            });
+            const totalReviews = await Review.countDocuments({ movie: movieId });
+            const sumRatingOfAllReviews = foundMovie.averageRating ? totalReviews * foundMovie.averageRating : 0;
+            await newReview.save();
+            const newAverageRating = (sumRatingOfAllReviews + rating) / (totalReviews + 1);
+            await Movie.updateOne({ _id: movieId }, { averageRating: newAverageRating });
+
+            return res.status(201).json(newReview.transform());
+        }
     } catch (error) {
         console.log(error);
         return res.status(500).json(error);
