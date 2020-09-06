@@ -115,7 +115,7 @@ function Reviews(props) {
                         {averageRating ? (
                             <div>
                                 {[1, 2, 3, 4, 5].map((grade) =>
-                                    averageRating > grade ? (
+                                    averageRating >= grade ? (
                                         <Star key={grade} htmlColor='yellow' />
                                     ) : averageRating - Math.floor(averageRating) >= 0.5 ? (
                                         <StarHalf key={grade} htmlColor='yellow' />
