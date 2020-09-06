@@ -8,14 +8,15 @@ import Star from "@material-ui/icons/Star";
 import StarHalf from "@material-ui/icons/StarHalf";
 import StarBorderOutlined from "@material-ui/icons/StarBorderOutlined";
 import { useDispatch, useSelector } from "react-redux";
-
+import { Facebook } from "react-content-loader";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 import "dayjs/locale/vi";
-import { Facebook } from "react-content-loader";
 
 dayjs.locale("vi");
 dayjs.extend(relativeTime);
+dayjs.extend(advancedFormat);
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
