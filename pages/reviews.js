@@ -224,7 +224,7 @@ function Reviews(props) {
                                             <span className='has-text-black'>
                                                 {Date.now() / 1000 - new Date(review.createdAt).getSeconds() >=
                                                 3 * 24 * 60 * 60
-                                                    ? dayjs(review.createdAt).format("hh:mm DD/MM/YYYY")
+                                                    ? dayjs(review.createdAt).format("kk:mm DD/MM/YYYY")
                                                     : dayjs(review.createdAt).fromNow()}
                                             </span>
                                         </div>
