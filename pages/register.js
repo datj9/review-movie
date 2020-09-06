@@ -6,8 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { register } from "../redux/user/actions";
 import { useRouter } from "next/dist/client/router";
 import { CLEAN_UP } from "../redux/user/action-types";
+import { BulletList } from "react-content-loader";
 
-function Register() {
+function Register(props) {
     const emailRef = useRef();
     const nameRef = useRef();
     const passwordRef = useRef();
@@ -17,6 +18,7 @@ function Register() {
     const [passwordErrMsg, setPasswordErrMsg] = useState("");
     const [nameErrMsg, setNameErrMsg] = useState("");
     const router = useRouter();
+    const isAuthenticated = Object.keys(props.user).length;
 
     const submitFormRegister = async (e) => {
         e.preventDefault();
@@ -68,6 +70,13 @@ function Register() {
             setPasswordErrMsg("");
         }
     }, [errors.password]);
+
+    if (isAuthenticated)
+        return (
+            <div className='px-3'>
+                <BulletList />
+            </div>
+        );
 
     return (
         <div className='register py-6 mb-5 has-background-white'>

@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import RateReview from "@material-ui/icons/RateReview";
-import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import fetch from "isomorphic-unfetch";
 import Star from "@material-ui/icons/Star";
 import StarHalf from "@material-ui/icons/StarHalf";
 import StarBorderOutlined from "@material-ui/icons/StarBorderOutlined";
@@ -12,10 +12,13 @@ import { createReview } from "../redux/review/actions";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/vi";
-import { CLEAN_UP } from "../redux/review/action-types";
+import { CLEAN_UP, UPDATE_REVIEWS_LIST } from "../redux/review/action-types";
+import { Facebook } from "react-content-loader";
 
 dayjs.locale("vi");
 dayjs.extend(relativeTime);
+
+const fetcher = (url) => fetch(url).then((r) => r.json());
 
 function Reviews(props) {
     const router = useRouter();
@@ -63,6 +66,13 @@ function Reviews(props) {
             type: CLEAN_UP,
         });
     };
+    const Skeleton = () => {
+        const items = [];
+        for (let i = 0; i <= 4; i++) {
+            items.push(<Facebook key={i} />);
+        }
+        return <div className='px-3 pb-3 my-5'>{items}</div>;
+    };
 
     useEffect(() => {
         document.addEventListener("mousedown", handleClick);
@@ -81,24 +91,36 @@ function Reviews(props) {
     }, [isSuccess]);
 
     if (movieId || theaterId) {
-        const { data: res, error } = useSWR(
+        const { data, error } = useSWR(
             `/api/reviews?${movieId ? `movieId=${movieId}` : `theaterId=${theaterId}`}`,
-            axios
+            fetcher,
+            {
+                refreshInterval: 5000,
+                onErrorRetry: (error, key, option, revalidate, { retryCount }) => {
+                    if (retryCount >= 4) return;
+                    if ((error.status = 404)) return;
+
+                    setTimeout(() => revalidate({ retryCount: retryCount + 1 }), 5000);
+                },
+            }
         );
 
-        if (error) return <div>Error</div>;
-        if (!res) return <div>Loading...</div>;
-        const reviewsList = res.data.reviews;
-        const movie = res.data.movie;
-        const total = res.data.total;
+        if (error) return <div className='has-text-centered'>Error</div>;
+        if (!data) return <Skeleton />;
+
+        const reviewsList = data.reviews;
+        const movie = data.movie;
+        const total = data.total;
         const averageRating = movie.averageRating;
+
         return (
             <div>
                 <Head>
                     <title>Đánh giá {movieId ? "phim" : theaterId ? "rạp" : ""} từ cộng đồng </title>
                     <link rel='icon' href='/favicon.ico' />
                 </Head>
-                <div className='tabs'>
+
+                <div className='tabs pb-3 my-5'>
                     <ul>
                         {tabsList.map(({ name, href }, i) => (
                             <li key={i} className={i === 1 ? "is-active" : "has-text-black"}>
@@ -107,15 +129,15 @@ function Reviews(props) {
                         ))}
                     </ul>
                 </div>
-                <div className='tab-content px-3 py-3 mb-5'>
+                <div className='tab-content px-3 py-3 mb-6'>
                     <div className='movie-info is-flex mb-2'>
                         <h1 className='has-text-weight-bold has-text-black mr-3 is-size-5'>
                             {movie.name ? movie.name : ""}
                         </h1>
                         {averageRating ? (
-                            <div>
+                            <div className='is-flex'>
                                 {[1, 2, 3, 4, 5].map((grade) =>
-                                    averageRating > grade ? (
+                                    averageRating >= grade ? (
                                         <Star key={grade} htmlColor='yellow' />
                                     ) : averageRating - Math.floor(averageRating) >= 0.5 ? (
                                         <StarHalf key={grade} htmlColor='yellow' />
@@ -123,6 +145,7 @@ function Reviews(props) {
                                         <StarBorderOutlined key={grade} htmlColor='yellow' />
                                     )
                                 )}
+                                <span className='ml-2'>{averageRating} / 5</span>
                             </div>
                         ) : null}
                     </div>
@@ -150,7 +173,12 @@ function Reviews(props) {
                                         </div>
                                         <div className='name-and-time is-flex'>
                                             <span className='has-text-black'>{review.user.name}</span>
-                                            <span className='has-text-black'>{dayjs(review.createdAt).fromNow()}</span>
+                                            <span className='has-text-black'>
+                                                {Date.now() / 1000 - new Date(review.createdAt).getSeconds() >=
+                                                3 * 24 * 60 * 60
+                                                    ? dayjs(review.createdAt).format("hh:mm DD/MM/YYYY")
+                                                    : dayjs(review.createdAt).fromNow()}
+                                            </span>
                                         </div>
                                     </div>
                                     <div>

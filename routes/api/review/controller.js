@@ -25,6 +25,7 @@ const getReviews = async (req, res) => {
             const reviews = await Review.find(filter)
                 .skip(skip)
                 .limit(limit)
+                .sort([["createdAt", -1]])
                 .populate("user", "name image")
                 .populate("movie");
             const totalReviews = await Review.countDocuments(filter);
