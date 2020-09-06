@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
 import { useRouter } from "next/dist/client/router";
 import { CLEAN_UP } from "../redux/user/action-types";
+import { BulletList } from "react-content-loader";
 
 function Login(props) {
     const emailRef = useRef();
@@ -57,20 +58,14 @@ function Login(props) {
         }
     }, [errors.password]);
 
-    // const isAuthenticated = Object.keys(JSON.parse(props.user)).length > 0;
-
-    // if (isAuthenticated) {
-    //     router.replace("/my-account");
-    //     return null;
-    // }
-    // if (!isAuthenticated && router.pathname !== "/login" && router.pathname !== "/register") {
-    //     router.replace("/login");
-    // }
     const isAuthenticated = Object.keys(props.user).length > 0;
 
-    if (isAuthenticated) {
-        return <div>Loading.........</div>;
-    }
+    if (isAuthenticated)
+        return (
+            <div className='px-3'>
+                <BulletList />
+            </div>
+        );
 
     return (
         <div className='login pt-5 pb-6 px-0 mb-5 has-background-white'>

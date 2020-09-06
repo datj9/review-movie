@@ -28,6 +28,11 @@ export default function ReviewReducer(state = INITIAL_STATE, action) {
                 isLoading: false,
                 isSuccess: false,
             };
+        case actionTypes.UPDATE_REVIEWS_LIST:
+            return {
+                ...state,
+                reviewsList: payload,
+            };
         default:
             return state;
     }
