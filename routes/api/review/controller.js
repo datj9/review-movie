@@ -31,9 +31,9 @@ const getReviews = async (req, res) => {
             const totalReviews = await Review.countDocuments(filter);
 
             reviews.forEach((rev, i) => (reviews[i] = rev.transform()));
-            if (foundMovie.averageRating) {
-                foundMovie.roundedRating = Math.round(foundMovie.averageRating * 10) / 10;
-            }
+
+            foundMovie.roundedRating = foundMovie.averageRating ? Math.round(foundMovie.averageRating * 10) / 10 : null;
+
             return res.status(200).json({ movie: foundMovie, reviews, total: totalReviews });
         }
     } catch (error) {
