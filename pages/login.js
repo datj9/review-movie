@@ -216,12 +216,7 @@ function Login(props) {
                         align-items: center;
                         justify-content: center;
                     }
-                    .input {
-                        border: 0.2px solid #000;
-                    }
-                    .input:focus {
-                        border-color: #f69314;
-                    }
+
                     .google-icon-wp {
                         width: 1.25rem;
                         height: 1.25rem;
