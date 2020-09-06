@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import Head from "next/head";
 import useSWR from "swr";
 import RateReview from "@material-ui/icons/RateReview";
 import axios from "axios";
@@ -93,10 +94,14 @@ function Reviews(props) {
         const averageRating = movie.averageRating;
         return (
             <div>
+                <Head>
+                    <title>Đánh giá {movieId ? "phim" : theaterId ? "rạp" : ""} từ cộng đồng </title>
+                    <link rel='icon' href='/favicon.ico' />
+                </Head>
                 <div className='tabs'>
                     <ul>
                         {tabsList.map(({ name, href }, i) => (
-                            <li key={i} className={i === 1 ? "is-active" : ""}>
+                            <li key={i} className={i === 1 ? "is-active" : "has-text-black"}>
                                 <a href={href}>{name}</a>
                             </li>
                         ))}
@@ -104,7 +109,9 @@ function Reviews(props) {
                 </div>
                 <div className='tab-content px-3 py-3 mb-5'>
                     <div className='movie-info is-flex mb-2'>
-                        <h1 className='has-text-weight-bold mr-3 is-size-5'>{movie.name ? movie.name : ""}</h1>
+                        <h1 className='has-text-weight-bold has-text-black mr-3 is-size-5'>
+                            {movie.name ? movie.name : ""}
+                        </h1>
                         {averageRating ? (
                             <div>
                                 {[1, 2, 3, 4, 5].map((grade) =>
@@ -127,7 +134,7 @@ function Reviews(props) {
                     </button>
                     <div className='my-5'>
                         {total === 0 ? (
-                            <div>Chưa có đánh giá nào</div>
+                            <div className='has-text-black'>Chưa có đánh giá nào</div>
                         ) : (
                             reviewsList.map((review) => (
                                 <div key={review.id} className='review-item mb-4 py-2 px-4'>
@@ -142,8 +149,8 @@ function Reviews(props) {
                                             )}
                                         </div>
                                         <div className='name-and-time is-flex'>
-                                            <span>{review.user.name}</span>
-                                            <span>{dayjs(review.createdAt).fromNow()}</span>
+                                            <span className='has-text-black'>{review.user.name}</span>
+                                            <span className='has-text-black'>{dayjs(review.createdAt).fromNow()}</span>
                                         </div>
                                     </div>
                                     <div>
@@ -155,7 +162,7 @@ function Reviews(props) {
                                             )
                                         )}
                                     </div>
-                                    <div className='review-text ml-1'>{review.text}</div>
+                                    <div className='review-text has-text-black ml-1'>{review.text}</div>
                                 </div>
                             ))
                         )}

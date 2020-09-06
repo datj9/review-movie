@@ -1,47 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import axios from "axios";
-import StarIcon from "@material-ui/icons/Star";
-import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import LazyImage from "../components/LazyImage";
 
 const apiURL = process.env.API_URL;
 
-function elementInViewport(el) {
-    const rect = el.getBoundingClientRect();
-
-    return rect.left + 80 <= (window.innerWidth || document.documentElement.clientWidth);
-}
-
 function Home(props) {
     const { movies } = props;
     const nowShowingRef = useRef();
-
-    // const [loaded, setLoaded] = useState(false);
-
-    // const handleScroll = () => {
-    //     if (!loaded && elementInViewport(imgRef.current)) {
-    //         const imgLoader = new Image();
-
-    //         imgLoader.src = "https://cdn.moveek.com/media/cache/short/5f17a7c1b1c57272959714.jpg";
-    //         imgLoader.onload = () => {
-    //             console.log("in onload");
-    //             imgRef.current.setAttribute(
-    //                 `src`,
-    //                 `https://cdn.moveek.com/media/cache/short/5f17a7c1b1c57272959714.jpg`
-    //             );
-    //             setLoaded(true);
-    //         };
-    //     }
-    // };
-
-    useEffect(() => {
-        // nowShowingRef.current.addEventListener("scroll", handleScroll);
-        // return () => {
-        //     nowShowingRef.current.removeEventListener("scroll", handleScroll);
-        // };
-    }, []);
 
     return (
         <div>
@@ -69,7 +36,7 @@ function Home(props) {
                                         <LazyImage listIndex={0} src={movie.image} alt={movie.name} />
                                     </div>
 
-                                    <div className='has-text-black px-1'>
+                                    <div className='has-text-black px-1 py-2 is-flex'>
                                         <span className='card-title'>{movie.name}</span>
                                     </div>
                                 </a>
@@ -93,17 +60,8 @@ function Home(props) {
                                     className={`movie-card ${index !== movies[1].length - 1 ? "mr-5" : "mr-3"}`}
                                 >
                                     <LazyImage listIndex={1} src={movie.image} alt={movie.name} />
-                                    <div className='icons-wp has-text-grey-dark px-1'>
-                                        <span className='is-flex'>
-                                            <span className='mr-1'>4.7</span>
-                                            <StarIcon className='has-text-primary' />
-                                        </span>
-                                        <span className='is-flex'>
-                                            <span className='mr-1'>99</span>
-                                            <ThumbUpIcon htmlColor='#f69314' />
-                                        </span>
-                                    </div>
-                                    <div className='has-text-black px-1'>
+
+                                    <div className='has-text-black px-1 py-2 is-flex'>
                                         <span className='card-title'>{movie.name}</span>
                                     </div>
                                 </a>
@@ -159,10 +117,6 @@ function Home(props) {
                         white-space: nowrap;
                         width: 100%;
                         display: inline-block;
-                    }
-                    .icons-wp {
-                        display: flex;
-                        justify-content: space-between;
                     }
 
                     @media only screen and (min-width: 768px) {

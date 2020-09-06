@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 function elementInViewport(el) {
     const rect = el.getBoundingClientRect();
 
-    return rect.left + 80 <= (window.innerWidth || document.documentElement.clientWidth);
+    return rect.left + 20 <= (window.innerWidth || document.documentElement.clientWidth);
 }
 
 export default function LazyImage({ listIndex, src, alt }) {

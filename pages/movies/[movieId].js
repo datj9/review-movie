@@ -24,7 +24,7 @@ function Movie({ movie: { id, name, description, runningTime, releaseDate, trail
             <div className='tabs'>
                 <ul>
                     {tabsList.map(({ name, href }, i) => (
-                        <li key={i} className={i === 0 ? "is-active" : ""}>
+                        <li key={i} className={i === 0 ? "is-active" : "has-text-black"}>
                             <a href={href}>{name}</a>
                         </li>
                     ))}
@@ -33,21 +33,22 @@ function Movie({ movie: { id, name, description, runningTime, releaseDate, trail
 
             <div id='info' className='tab-content py-3 mb-6'>
                 <div className='basic-info mb-3'>
-                    <h1 className='has-text-centered has-text-weight-bold'>{name}</h1>
+                    <h1 className='has-text-centered has-text-weight-bold has-text-black'>{name}</h1>
                     <p>{description}</p>
                     {releaseDate ? (
                         <p>
-                            <span className='has-text-weight-semibold'>Thời gian công chiếu</span>:{" "}
+                            <span className='has-text-weight-semibold has-text-black'>Thời gian công chiếu</span>:{" "}
                             {dayjs(releaseDate).format("DD/MM/YYYY")}
                         </p>
                     ) : null}
                     {runningTime ? (
                         <p>
-                            <span className='has-text-weight-semibold'>Thời lượng</span>: {runningTime} phút
+                            <span className='has-text-weight-semibold has-text-black'>Thời lượng</span>: {runningTime}{" "}
+                            phút
                         </p>
                     ) : null}
                     <p>
-                        <span className='has-text-weight-semibold'>Đạo diễn</span>:{" "}
+                        <span className='has-text-weight-semibold has-text-black'>Đạo diễn</span>:{" "}
                         {filmDirectors.map((director, i) => (
                             <span key={i}>
                                 {director}
@@ -56,7 +57,7 @@ function Movie({ movie: { id, name, description, runningTime, releaseDate, trail
                         ))}
                     </p>
                     <p>
-                        <span className='has-text-weight-semibold'>Diễn viên</span>:{" "}
+                        <span className='has-text-weight-semibold has-text-black'>Diễn viên</span>:{" "}
                         {actors.map((actor, i) => (
                             <span key={i}>
                                 {actor}
@@ -67,7 +68,9 @@ function Movie({ movie: { id, name, description, runningTime, releaseDate, trail
                 </div>
                 {trailer ? (
                     <div className='ytb-video'>
-                        {loadingIframeTrailer ? <div className='has-text-centered'>Đang tải trailer...</div> : null}
+                        {loadingIframeTrailer ? (
+                            <div className='has-text-centered has-text-black'>Đang tải trailer...</div>
+                        ) : null}
                         <iframe onLoad={handleFinishLoadingTrailer} src={trailer} />
                     </div>
                 ) : null}

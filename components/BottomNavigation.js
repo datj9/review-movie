@@ -7,8 +7,8 @@ import {
     PersonOutlined,
     MovieFilter,
     MovieFilterOutlined,
-    Theaters,
-    TheatersOutlined,
+    LocationOn,
+    LocationOnOutlined,
     Notifications,
     NotificationsOutlined,
 } from "@material-ui/icons";
@@ -28,8 +28,8 @@ function BottomNavigation(props) {
         },
         {
             name: "Rạp chiếu",
-            filledIcon: <Theaters htmlColor='#f69314' />,
-            outlinedIcon: <TheatersOutlined htmlColor='#676767' />,
+            filledIcon: <LocationOn htmlColor='#f69314' />,
+            outlinedIcon: <LocationOnOutlined htmlColor='#676767' />,
             href: "/",
         },
         {
@@ -74,7 +74,7 @@ function BottomNavigation(props) {
     return (
         <ul className='bottom-nav'>
             {tabsList.map((tab, i) => (
-                <li key={i} className={`nav-item ${tabActive !== i ? "" : "tab-active"}`}>
+                <li key={i} className={`nav-item px-2 ${tabActive !== i ? "" : "tab-active"}`}>
                     <Link href={tab.href}>
                         <a>
                             {tabActive !== i ? tab.outlinedIcon : tab.filledIcon}
@@ -87,6 +87,7 @@ function BottomNavigation(props) {
                 {`
                     .bottom-nav {
                         display: flex;
+                        justify-content: space-around;
                         position: fixed;
                         z-index: 9;
                         bottom: 0;
@@ -96,7 +97,6 @@ function BottomNavigation(props) {
                         border-top: 1px solid #e8e8e8;
                     }
                     .nav-item {
-                        width: 25%;
                         height: 3.8rem;
                     }
                     .nav-item a {
