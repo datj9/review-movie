@@ -195,6 +195,7 @@ function Reviews(props) {
                         </div>
                     ) : null}
                 </div>
+
                 <button onClick={openModal} className='button is-primary is-rounded'>
                     <span className='icon'>
                         <RateReview />
