@@ -8,7 +8,7 @@ function Movie({ movie: { id, name, description, runningTime, releaseDate, trail
     const [loadingIframeTrailer, setLoadingIframeTrailer] = useState(true);
     const tabsList = [
         { name: "Thông tin phim", href: `/movies/${id}` },
-        { name: "Đánh giá", href: `/reviews?mid=${id}` },
+        { name: "Đánh giá từ cộng đồng", href: `/reviews?mid=${id}` },
     ];
 
     const handleFinishLoadingTrailer = () => {
