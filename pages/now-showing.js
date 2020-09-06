@@ -6,10 +6,10 @@ export default function NowShowingMovies() {
 }
 
 export async function getStaticProps() {
-    const res = await fetch(`${apiURL}/movies?status=[0]`);
-    const data = await res.json();
+    // const res = await fetch(`${apiURL}/movies?status=[0]`);
+    // const data = await res.json();
 
     return {
-        props: { movies: data },
+        props: {},
     };
 }
