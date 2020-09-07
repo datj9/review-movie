@@ -14,11 +14,12 @@ const transporter = nodemailer.createTransport({
 const sendEmail = promisify(transporter.sendMail).bind(transporter);
 
 const sendEmailRecoverPassword = async (to, token) => {
+    const sentToken = token.slice(0, 4) + " " + token.slice(4, 8);
     const mailOptions = {
         from: emailAddress,
         to,
         subject: "Khôi phục mật khẩu",
-        html: `<p>Mã xác thực của bạn là: <strong>${token}</strong></p>`,
+        html: `<p>Mã xác thực của bạn là: <strong>${sentToken}</strong></p>`,
     };
 
     try {

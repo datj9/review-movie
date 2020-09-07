@@ -4,13 +4,14 @@ const isInt = require("validator/lib/isInt");
 const { User } = require("../../../models/User");
 const { sendEmailRecoverPassword } = require("../../../helpers/sendEmail");
 const bcrypt = require("bcryptjs");
-const { totp } = require("otplib");
+const { hotp } = require("otplib");
 const { promisify } = require("util");
 const hashPass = promisify(bcrypt.hash);
 const otpSecret = process.env.OTP_SECRET;
+let counter = Math.floor(Math.random() * Math.pow(10, 6));
 
-totp.options = {
-    step: 60,
+hotp.options = {
+    algorithm: "sha256",
     digits: 8,
 };
 
@@ -89,59 +90,63 @@ const sendEmailToRecoverAccount = async (req, res) => {
 
     if (!email) return res.status(400).json({ email: "email is required" });
     if (typeof email != "string" || !isEmail(email)) return res.status(400).json({ email: "email is invalid" });
-    const token = totp.generate(otpSecret);
-    const currentTime = Date.now();
 
+    const token = hotp.generate(otpSecret, counter);
     const { isSuccess } = await sendEmailRecoverPassword(email, token);
+
     if (isSuccess) {
-        return res.status(200).json({ exp: currentTime + 60000 });
+        return res.status(200).json({});
     } else {
         return res.status(500).json({});
     }
 };
 const checkVerifyToken = async (req, res) => {
-    const { token, email } = req.body;
-    const errors = {};
+    const { token } = req.body;
 
-    if (typeof token != "string" || !isInt(token)) errors.token = "token is invalid";
+    if (typeof token != "string" || !isInt(token)) return res.status(400).json({ token: "token is invalid" });
 
     try {
-        const isValid = totp.verify({ token, secret: otpSecret });
+        const isValid = hotp.check(token, otpSecret, counter);
 
         if (!isValid) {
             return res.status(400).json({ isValid });
+        } else {
+            return res.status(200).json({ isValid });
         }
-
-        passport.authenticate("local")(req, res, function () {
-            return res.status(200).json({});
-        });
     } catch (error) {
         console.log(error);
         return res.status(500).json(error);
     }
 };
 const changePasswordByVerifyingEmail = async (req, res) => {
-    const { password, confirmPassword } = req.body;
-    const { email } = req.user;
+    const { email, password, confirmPassword, token } = req.body;
     const errors = {};
 
     if (!email) errors.email = "email is required";
     if (!password) errors.password = "password is required";
     if (!confirmPassword) errors.confirmPassword = "confirmPassword is required";
+    if (!token) errors.token = "token is required";
     if (Object.keys(errors).length) return res.status(400).json(errors);
 
     if (typeof email != "string" || !isEmail(email)) errors.email = "email is invalid";
     if (typeof password != "string" || password.length < 8) errors.password = "password is invalid";
     if (typeof confirmPassword != "string" || confirmPassword.length < 8)
         errors.confirmPassword = "confirmPassword is invalid";
+    if (typeof token != "string") errors.token = "token is invalid";
     if (Object.keys(errors).length) return res.status(400).json(errors);
     if (password != confirmPassword) return res.status(400).json({ confirmPassword: "confirmPassword does not match" });
 
     try {
+        const isValid = hotp.check(token, otpSecret, counter);
+        if (!isValid) return res.status(400).json({ token: "token is invalid", isValid });
+
+        counter = Math.floor(Math.random() * Math.pow(10, 6));
         const hash = await hashPass(password, 10);
         await User.updateOne({ email }, { password: hash });
 
-        return res.status(200).json({});
+        passport.authenticate("local")(req, res, function () {
+            return res.status(200).json({});
+        });
     } catch (error) {
         return res.status(500).json(error);
     }

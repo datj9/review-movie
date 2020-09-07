@@ -103,22 +103,6 @@ function ForgotPassword(props) {
         };
     }, [isSuccess]);
 
-    useEffect(() => {
-        if (exp > 0) {
-            setExpToken(Math.floor((exp - Date.now()) / 1000));
-        }
-    }, [exp]);
-
-    useEffect(() => {
-        const timeoutExp = setTimeout(() => {
-            if (expToken > 0) {
-                setExpToken(Math.floor((exp - Date.now()) / 1000));
-            } else {
-                clearTimeout(timeoutExp);
-            }
-        }, [1000]);
-    }, [expToken]);
-
     if (isAuthenticated) return <div></div>;
 
     return (
@@ -162,7 +146,6 @@ function ForgotPassword(props) {
                     <form className='mb-3'>
                         <div className='field'>
                             <p>Chúng tôi đã gữi mã xác thực đến email của bạn, bạn vui lòng kiểm tra</p>
-                            <p>Mã xác thực có thời hạn {String(expToken).padStart(2, "0")}</p>
                             <label className='label'>Mã xác thực</label>
                             <div className='control'>
                                 <input

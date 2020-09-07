@@ -17,6 +17,6 @@ router.get("/logout", authController.logOut);
 
 router.post("/send-email", authController.sendEmailToRecoverAccount);
 router.post("/verify-token", authController.checkVerifyToken);
-router.post("/change-password-by-email", authenticate, authController.changePasswordByVerifyingEmail);
+router.post("/change-password-by-email", authController.changePasswordByVerifyingEmail);
 
 module.exports = router;
