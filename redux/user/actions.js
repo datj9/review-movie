@@ -66,3 +66,57 @@ export const setUser = (user) => ({
     type: actionTypes.SET_USER,
     payload: user,
 });
+
+export const reqSendEmail = (email) => async (dispatch) => {
+    dispatch({
+        type: actionTypes.REQ_SEND_EMAIL_START,
+    });
+
+    const { data, ok } = await api.post("send-email", { email });
+    if (ok) {
+        dispatch({
+            type: actionTypes.REQ_SEND_EMAIL_SUCCESS,
+            payload: data.exp,
+        });
+    } else {
+        dispatch({
+            type: actionTypes.REQ_SEND_EMAIL_FAILURE,
+            payload: data,
+        });
+    }
+};
+
+export const confirmToken = (token, email) => async (dispatch) => {
+    dispatch({
+        type: actionTypes.CONFIRM_EMAIL_START,
+    });
+    const { data, ok } = await api.post("verify-token", { token, email });
+    if (ok) {
+        dispatch({
+            type: actionTypes.CONFIRM_EMAIL_SUCCESS,
+        });
+    } else {
+        dispatch({
+            type: actionTypes.CONFIRM_EMAIL_FAILURE,
+            payload: data,
+        });
+    }
+};
+
+export const changePasswordByVerifyingEmail = (userData) => async (dispatch) => {
+    dispatch({
+        type: actionTypes.CHANGE_PASSWORD_START,
+    });
+
+    const { data, ok } = await api.post("change-password-by-email", userData);
+    if (ok) {
+        dispatch({
+            type: actionTypes.CHANGE_PASSWORD_SUCCESS,
+        });
+    } else {
+        dispatch({
+            type: actionTypes.CHANGE_PASSWORD_FAILURE,
+            payload: data,
+        });
+    }
+};

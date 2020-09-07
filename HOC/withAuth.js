@@ -21,14 +21,20 @@ export const withAuth = (WrappedComponent) => {
         const isAuthenticated = Object.keys(user).length > 0;
 
         useEffect(() => {
+            const regTestUnprotectedRoutes = RegExp("/login|/register|/forgot-password");
             if (isAuthenticated) {
                 dispatch(setUser(user));
             }
-            if (isAuthenticated && (router.pathname === "/login" || router.pathname === "/register")) {
+            if (isAuthenticated && regTestUnprotectedRoutes.test(router.pathname)) {
                 router.replace("/my-account");
             }
             // user try to access protected routes
-            if (!isAuthenticated && router.pathname !== "/login" && router.pathname !== "/register") {
+            if (
+                !isAuthenticated &&
+                router.pathname !== "/login" &&
+                router.pathname !== "/register" &&
+                router.pathname !== "/forgot-password"
+            ) {
                 router.replace("/login");
             }
         }, []);

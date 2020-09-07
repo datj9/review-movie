@@ -166,7 +166,7 @@ function Login(props) {
                         </Link>
                     </div>
                     <div className='forgot-pass-wp'>
-                        <Link href='/register'>
+                        <Link href='/forgot-password'>
                             <a>Quên Mật Khẩu</a>
                         </Link>
                     </div>

@@ -80,6 +80,16 @@ function Reviews(props) {
             </div>
         );
     };
+    const decreasePageIndex = () => {
+        if (pageIndex > 1) {
+            setPageIndex(pageIndex - 1);
+        }
+    };
+    const increasePageIndex = () => {
+        if (pageIndex < numberOfPages) {
+            setPageIndex(pageIndex + 1);
+        }
+    };
 
     useEffect(() => {
         document.addEventListener("mousedown", handleClick);
@@ -245,14 +255,14 @@ function Reviews(props) {
                             <nav className='pagination' role='navigation' aria-label='pagination'>
                                 <a
                                     disabled={pageIndex === 1}
-                                    onClick={() => setPageIndex(pageIndex - 1)}
+                                    onClick={decreasePageIndex}
                                     className='pagination-previous'
                                 >
                                     Trang trước
                                 </a>
                                 <a
                                     disabled={pageIndex === numberOfPages}
-                                    onClick={() => setPageIndex(pageIndex + 1)}
+                                    onClick={increasePageIndex}
                                     className='pagination-next'
                                 >
                                     Trang kế tiếp
