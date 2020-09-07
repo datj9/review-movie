@@ -94,9 +94,18 @@ module.exports.crawlMovies = async function (movieStatus) {
         };
     });
 
+    const listMoviesName = moviesData.map((movie) => movie.name);
+
+    listMoviesName.forEach((name, i) => {
+        if (listMoviesName.indexOf(name) != i) {
+            moviesData.splice(i);
+            listMoviesName.splice(i);
+        }
+    });
     const promiseFoundMovies = [];
     let i = 0;
     const moviesDataLength = moviesData.length;
+    // reverse array
     while (i < Math.ceil(moviesDataLength / 2)) {
         const tem = moviesData[i];
         moviesData[i] = moviesData[moviesDataLength - i - 1];
@@ -108,7 +117,14 @@ module.exports.crawlMovies = async function (movieStatus) {
 
     const createdMovies = [];
     foundMovies.forEach((movie, i) => {
-        if (!movie) {
+        if (
+            !movie &&
+            moviesData[i].name &&
+            moviesData[i].image &&
+            moviesData[i].filmDirectors &&
+            moviesData[i].actors &&
+            moviesData[i].description
+        ) {
             const newMovie = new Movie({
                 ...moviesData[i],
                 status: movieStatus === "dang-chieu" ? 1 : 0,

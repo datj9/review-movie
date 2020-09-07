@@ -12,6 +12,7 @@ const INITIAL_STATE = {
         errors: {},
         message: "",
         isSuccess: false,
+        exp: 0,
     },
 };
 
@@ -141,6 +142,88 @@ export default function userReducer(state = INITIAL_STATE, action) {
                     isLoading: false,
                     isSuccess: false,
                     loginType: "",
+                },
+            };
+        case actionTypes.REQ_SEND_EMAIL_START:
+            return {
+                ...state,
+                client: {
+                    ...state.client,
+                    isLoading: true,
+                    errors: {},
+                    exp: 0,
+                },
+            };
+        case actionTypes.REQ_SEND_EMAIL_SUCCESS:
+            return {
+                ...state,
+                client: {
+                    ...state.client,
+                    isLoading: false,
+                    isSuccess: true,
+                    exp: payload,
+                },
+            };
+        case actionTypes.REQ_SEND_EMAIL_FAILURE:
+            return {
+                ...state,
+                client: {
+                    ...state.client,
+                    isLoading: false,
+                    errors: payload,
+                },
+            };
+        case actionTypes.CONFIRM_EMAIL_START:
+            return {
+                ...state,
+                client: {
+                    ...state.client,
+                    isLoading: true,
+                    errors: {},
+                },
+            };
+        case actionTypes.CONFIRM_EMAIL_SUCCESS:
+            return {
+                ...state,
+                client: {
+                    ...state.client,
+                    isLoading: false,
+                    isSuccess: true,
+                },
+            };
+        case actionTypes.CONFIRM_EMAIL_FAILURE:
+            return {
+                ...state,
+                client: {
+                    ...state.client,
+                    isLoading: false,
+                    errors: payload,
+                },
+            };
+        case actionTypes.CHANGE_PASSWORD_START:
+            return {
+                ...state,
+                client: {
+                    ...state.client,
+                    isLoading: true,
+                },
+            };
+        case actionTypes.CHANGE_PASSWORD_SUCCESS:
+            return {
+                ...state,
+                client: {
+                    ...state.client,
+                    isLoading: false,
+                    isSuccess: true,
+                },
+            };
+        case actionTypes.CHANGE_PASSWORD_FAILURE:
+            return {
+                ...state,
+                client: {
+                    ...state.client,
+                    isLoading: false,
+                    errors: payload,
                 },
             };
         default:

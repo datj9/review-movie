@@ -157,13 +157,6 @@ function Register(props) {
                     hr {
                         margin: 1rem auto;
                     }
-                    .input {
-                        border: 0.2px solid #000;
-                    }
-                    .input:focus,
-                    .input:active {
-                        border-color: #f69314;
-                    }
                     .register-wp {
                         width: 100%;
                     }

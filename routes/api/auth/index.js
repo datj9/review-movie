@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { authenticate } = require("../../../middlewares/auth");
 const passport = require("passport");
 const authController = require("./controller");
 
@@ -10,10 +11,12 @@ router.get(
     "/facebook/callback",
     passport.authenticate("facebook", { successRedirect: "/", failureRedirect: "/login" })
 );
-
 router.post("/register", authController.register);
 router.post("/login", authController.login);
-
 router.get("/logout", authController.logOut);
+
+router.post("/send-email", authController.sendEmailToRecoverAccount);
+router.post("/verify-token", authController.checkVerifyToken);
+router.post("/change-password-by-email", authController.changePasswordByVerifyingEmail);
 
 module.exports = router;
