@@ -127,7 +127,7 @@ export async function getStaticPaths() {
 
     // We'll pre-render only these paths at build time.
     // { fallback: false } means other routes should 404.
-    return { paths, fallback: false };
+    return { paths, fallback: true };
 }
 export async function getStaticProps({ params: { movieId } }) {
     const res = await fetch(`${apiURL}/api/movies/${movieId}`);
@@ -135,8 +135,7 @@ export async function getStaticProps({ params: { movieId } }) {
 
     return {
         props: { movie },
-        revalidate: 60, // seconds
-        fallback: true,
+        revalidate: 20 * 60, // seconds
     };
 }
 
