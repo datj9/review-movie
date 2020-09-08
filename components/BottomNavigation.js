@@ -52,29 +52,22 @@ function BottomNavigation(props) {
         },
     ];
 
-    const handleResize = () => {
-        if (window.innerHeight <= 200) {
-            setDisplayBottomNav(false);
-        } else {
-            setDisplayBottomNav(true);
-        }
-    };
-
     useEffect(() => {
         const { pathname } = router;
+        const regExpHomeTab = new RegExp("^/$|^/movies");
+        const regExpTheatersTab = new RegExp("^/theaters");
+        const regExpAccountTab = new RegExp("^/login|^/register|^/my-account|^/forgot-password");
+
         switch (true) {
-            case pathname === "/" || pathname.startsWith("/movies"):
+            case regExpHomeTab.test(pathname):
                 setTabActive(0);
                 break;
-            case pathname.startsWith("/theaters"):
+            case regExpTheatersTab.test(pathname):
                 setTabActive(1);
                 break;
-            case pathname.startsWith("/login") ||
-                pathname.startsWith("/register") ||
-                pathname.startsWith("/my-account"):
+            case regExpAccountTab.test(pathname):
                 setTabActive(3);
                 break;
-
             default:
                 break;
         }
