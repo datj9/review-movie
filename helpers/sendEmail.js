@@ -1,8 +1,8 @@
+const { promisify } = require("util");
 const nodemailer = require("nodemailer");
 const emailAddress = process.env.EMAIL_ADDRESS;
 const emailPassword = process.env.EMAIL_PASSWORD;
-const { promisify } = require("util");
-
+console.log(emailAddress);
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
