@@ -7,8 +7,8 @@ import fetch from "isomorphic-unfetch";
 import Star from "@material-ui/icons/Star";
 import StarHalf from "@material-ui/icons/StarHalf";
 import StarBorderOutlined from "@material-ui/icons/StarBorderOutlined";
-import { useDispatch, useSelector } from "react-redux";
-import { Facebook } from "react-content-loader";
+import { useSelector } from "react-redux";
+import ContentLoader, { Facebook } from "react-content-loader";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -41,6 +41,24 @@ function Reviews(props) {
             href: `/reviews?${movieId ? `movieId=${movieId}` : theaterId ? `theaterId=${theaterId}` : ""}`,
         },
     ];
+    const { data, error } = useSWR(
+        `/api/reviews?${movieId ? `movieId=${movieId}` : `theaterId=${theaterId}`}&pageIndex=${pageIndex}`,
+        fetcher,
+        {
+            onErrorRetry: (error, key, option, revalidate, { retryCount }) => {
+                if (retryCount >= 4) return;
+                if ((error.status = 404)) return;
+
+                setTimeout(() => revalidate({ retryCount: retryCount + 1 }), 5000);
+            },
+        }
+    );
+    const reviewsList = data?.reviews;
+    const movie = data?.movie;
+    const total = data?.total;
+    const averageRating = movie?.averageRating;
+    const numberOfPages = total && Math.ceil(total / 10);
+
     const createReview = async (newReview) => {
         await fetch("/api/reviews", {
             method: "POST",
@@ -49,8 +67,13 @@ function Reviews(props) {
         });
     };
     const submitCreateReview = async () => {
+        const newReview = { text, rating, movieId, user: user.id };
         closeModal();
-        await createReview({ text, rating, movieId, user: user.id });
+        mutate(`/api/reviews?${movieId ? `movieId=${movieId}` : `theaterId=${theaterId}`}&pageIndex=${pageIndex}`, {
+            ...data,
+            reviews: [{ ...newReview, user, id: Math.floor(Math.random() * Math.pow(10, 6)) + "" }, ...reviewsList],
+        });
+        await createReview(newReview);
         mutate(`/api/reviews?${movieId ? `movieId=${movieId}` : `theaterId=${theaterId}`}&pageIndex=${pageIndex}`);
     };
 
@@ -71,15 +94,6 @@ function Reviews(props) {
         setText("");
         setRating(0);
     };
-    const Skeleton = () => {
-        return (
-            <div className='px-3 pb-3 my-5'>
-                <Facebook />
-                <Facebook />
-                <Facebook />
-            </div>
-        );
-    };
     const decreasePageIndex = () => {
         if (pageIndex > 1) {
             setPageIndex(pageIndex - 1);
@@ -91,36 +105,32 @@ function Reviews(props) {
         }
     };
 
-    useEffect(() => {
-        document.addEventListener("mousedown", handleClick);
+    const Skeleton = () => {
+        const reviewsSkeleton = [];
 
-        return () => {
-            document.removeEventListener("mousedown", handleClick);
-        };
-    });
-
-    const { data, error } = useSWR(
-        `/api/reviews?${movieId ? `movieId=${movieId}` : `theaterId=${theaterId}`}&pageIndex=${pageIndex}`,
-        fetcher,
-        {
-            onErrorRetry: (error, key, option, revalidate, { retryCount }) => {
-                if (retryCount >= 4) return;
-                if ((error.status = 404)) return;
-
-                setTimeout(() => revalidate({ retryCount: retryCount + 1 }), 5000);
-            },
+        for (let i = 0; i < 4; i++) {
+            reviewsSkeleton.push(
+                <ContentLoader key={i} className='mb-4' viewBox='0 0 300 89'>
+                    <circle cx='30' cy='17' r='17' />
+                    <rect rx='5' ry='5' x='60' y='0' width='120' height='12' />
+                    <rect rx='5' ry='5' x='60' y='22' width='70' height='12' />
+                    <rect rx='5' ry='5' x='5' y='45' width='130' height='12' />
+                    <rect rx='5' ry='5' x='5' y='67' width='280' height='12' />
+                </ContentLoader>
+            );
         }
-    );
 
-    if (error) return <div className='has-text-centered'>Error</div>;
-    if (!data) return <Skeleton />;
-
-    const reviewsList = data.reviews;
-    const movie = data.movie;
-    const total = data.total;
-    const averageRating = movie.averageRating;
-    const numberOfPages = Math.ceil(total / 10);
-
+        return (
+            <div className='px-3 pb-3 my-5'>
+                <ContentLoader className='mb-5' viewBox='0 0 300 85'>
+                    <rect rx='5' ry='5' x='0' y='0' width='270' height='12' />
+                    <rect rx='5' ry='5' x='0' y='30' width='200' height='12' />
+                    <rect rx='15' ry='15' x='0' y='60' width='100' height='25' />
+                </ContentLoader>
+                {reviewsSkeleton}
+            </div>
+        );
+    };
     const Pagination = () => {
         if (total <= 90) {
             const list = [];
@@ -170,6 +180,16 @@ function Reviews(props) {
         }
     };
 
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClick);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClick);
+        };
+    });
+
+    if (error) return <div className='has-text-centered'>Error</div>;
+
     return (
         <div>
             <Head>
@@ -186,179 +206,146 @@ function Reviews(props) {
                     ))}
                 </ul>
             </div>
-            <div className='tab-content px-3 py-3 mb-6'>
-                <div className='movie-info is-flex mb-2'>
-                    <h1 className='has-text-weight-bold has-text-black mr-3 is-size-5'>
-                        {movie.name ? movie.name : ""}
-                    </h1>
-                    {averageRating ? (
-                        <div className='is-flex'>
-                            {[1, 2, 3, 4, 5].map((grade) =>
-                                averageRating >= grade ? (
-                                    <Star key={grade} htmlColor='yellow' />
-                                ) : averageRating - Math.floor(averageRating) >= 0.5 ? (
-                                    <StarHalf key={grade} htmlColor='yellow' />
-                                ) : (
-                                    <StarBorderOutlined key={grade} htmlColor='yellow' />
-                                )
-                            )}
-                            <span className='ml-2'>{Math.round(averageRating * 10) / 10} / 5</span>
-                        </div>
-                    ) : null}
-                </div>
 
-                <button onClick={openModal} className='button is-primary is-rounded'>
-                    <span className='icon'>
-                        <RateReview />
-                    </span>
-                    <span>Viết Đánh Giá</span>
-                </button>
-                <div className='my-5'>
-                    {total === 0 ? (
-                        <div className='has-text-black'>Chưa có đánh giá nào</div>
-                    ) : (
-                        <div className='reviews-list'>
-                            {reviewsList.map((review) => (
-                                <div key={review.id} className='review-item mb-4 py-2 px-4'>
-                                    <div className='header-review-item is-flex'>
-                                        <div className='avatar mr-2 is-flex'>
-                                            {review.user.image ? (
-                                                <span className='is-block'>
-                                                    <img src={review.user.image} />
-                                                </span>
-                                            ) : (
-                                                <span className='name-icon is-flex has-text-white'>Đ</span>
-                                            )}
-                                        </div>
-                                        <div className='name-and-time is-flex'>
-                                            <span className='has-text-black'>{review.user.name}</span>
-                                            <span className='has-text-black'>
-                                                {Date.now() - new Date(review.createdAt).getTime() >=
-                                                3 * 24 * 60 * 60 * 1000
-                                                    ? dayjs(review.createdAt).format("kk:mm DD/MM/YYYY")
-                                                    : dayjs(review.createdAt).fromNow()}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        {[1, 2, 3, 4, 5].map((grade) =>
-                                            grade <= review.rating ? (
-                                                <Star key={grade} htmlColor='yellow' />
-                                            ) : (
-                                                <StarBorderOutlined key={grade} htmlColor='yellow' />
-                                            )
-                                        )}
-                                    </div>
-                                    <div className='review-text has-text-black ml-1'>{review.text}</div>
-                                </div>
-                            ))}
-                            <nav className='pagination' role='navigation' aria-label='pagination'>
-                                <a
-                                    disabled={pageIndex === 1}
-                                    onClick={decreasePageIndex}
-                                    className='pagination-previous'
-                                >
-                                    Trang trước
-                                </a>
-                                <a
-                                    disabled={pageIndex === numberOfPages}
-                                    onClick={increasePageIndex}
-                                    className='pagination-next'
-                                >
-                                    Trang kế tiếp
-                                </a>
-                                <Pagination />
-                                {/* <ul className='pagination-list'>
-                                 
-                                    <li onClick={() => setPageIndex(1)}>
-                                        <a className='pagination-link' aria-label='Goto page 1'>
-                                            1
-                                        </a>
-                                    </li>
-                                    <li onClick={() => setPageIndex(2)}>
-                                        <span className='pagination-ellipsis'>&hellip;</span>
-                                    </li>
-                                    <li>
-                                        <a className='pagination-link' aria-label='Goto page 45'>
-                                            45
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            className='pagination-link is-current'
-                                            aria-label='Page 46'
-                                            aria-current='page'
-                                        >
-                                            46
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a className='pagination-link' aria-label='Goto page 47'>
-                                            47
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <span className='pagination-ellipsis'>&hellip;</span>
-                                    </li>
-                                    <li>
-                                        <a className='pagination-link' aria-label='Goto page 86'>
-                                            86
-                                        </a>
-                                    </li>
-                                </ul> */}
-                            </nav>
-                        </div>
-                    )}
-                </div>
-
-                <div className={`modal ${modalOpen ? "is-active" : ""}`}>
-                    <div className='modal-background'></div>
-                    <div ref={modalRef} className='modal-card'>
-                        <header className='modal-card-head'>
-                            <p className='modal-card-title'>Viết Đánh Giá</p>
-                        </header>
-                        <section className='modal-card-body'>
-                            <div className='field'>
-                                <label className='label'>Nội dung đánh giá</label>
-                                <div className='control'>
-                                    <textarea
-                                        value={text}
-                                        onChange={(e) => setText(e.target.value)}
-                                        className='textarea'
-                                        placeholder='Nhập vào nội dung đánh giá (ít nhất 10 ký tự)'
-                                    />
-                                </div>
-                            </div>
-                            <div className='field'>
-                                <label className='label'>Đánh giá</label>
+            {!data ? (
+                <Skeleton />
+            ) : (
+                <div className='tab-content px-3 py-3 mb-6'>
+                    <div className='movie-info is-flex mb-2'>
+                        <h1 className='has-text-weight-bold has-text-black mr-3 is-size-5'>
+                            {movie.name ? movie.name : ""}
+                        </h1>
+                        {averageRating ? (
+                            <div className='is-flex'>
                                 {[1, 2, 3, 4, 5].map((grade) =>
-                                    grade <= rating ? (
-                                        <span key={grade} role='button' onClick={() => setRating(grade)}>
-                                            <Star htmlColor='yellow' />
-                                        </span>
+                                    averageRating >= grade ? (
+                                        <Star key={grade} htmlColor='yellow' />
+                                    ) : averageRating - Math.floor(averageRating) >= 0.5 ? (
+                                        <StarHalf key={grade} htmlColor='yellow' />
                                     ) : (
-                                        <span key={grade} role='button' onClick={() => setRating(grade)}>
-                                            <StarBorderOutlined htmlColor='yellow' />
-                                        </span>
+                                        <StarBorderOutlined key={grade} htmlColor='yellow' />
                                     )
                                 )}
+                                <span className='ml-2'>{Math.round(averageRating * 10) / 10} / 5</span>
                             </div>
-                        </section>
-                        <footer className='modal-card-foot'>
-                            <button
-                                disabled={text.length < 10 || rating === 0 || isLoading}
-                                onClick={submitCreateReview}
-                                className={`button is-primary ${isLoading ? "is-loading" : ""}`}
-                            >
-                                Đăng
-                            </button>
-                            <button onClick={closeModal} className='button'>
-                                Hủy
-                            </button>
-                        </footer>
+                        ) : null}
+                    </div>
+
+                    <button onClick={openModal} className='button is-primary is-rounded'>
+                        <span className='icon'>
+                            <RateReview />
+                        </span>
+                        <span>Viết Đánh Giá</span>
+                    </button>
+                    <div className='my-5'>
+                        {total === 0 ? (
+                            <div className='has-text-black'>Chưa có đánh giá nào</div>
+                        ) : (
+                            <div className='reviews-list'>
+                                {reviewsList.map((review) => (
+                                    <div key={review.id} className='review-item mb-4 py-2 px-4'>
+                                        <div className='header-review-item is-flex'>
+                                            <div className='avatar mr-2 is-flex'>
+                                                {review.user.image ? (
+                                                    <span className='is-block'>
+                                                        <img src={review.user.image} />
+                                                    </span>
+                                                ) : (
+                                                    <span className='name-icon is-flex has-text-white'>Đ</span>
+                                                )}
+                                            </div>
+                                            <div className='name-and-time is-flex'>
+                                                <span className='has-text-black'>{review.user.name}</span>
+                                                <span className='has-text-black'>
+                                                    {Date.now() - new Date(review.createdAt).getTime() >=
+                                                    3 * 24 * 60 * 60 * 1000
+                                                        ? dayjs(review.createdAt).format("kk:mm DD/MM/YYYY")
+                                                        : dayjs(review.createdAt).fromNow()}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            {[1, 2, 3, 4, 5].map((grade) =>
+                                                grade <= review.rating ? (
+                                                    <Star key={grade} htmlColor='yellow' />
+                                                ) : (
+                                                    <StarBorderOutlined key={grade} htmlColor='yellow' />
+                                                )
+                                            )}
+                                        </div>
+                                        <div className='review-text has-text-black ml-1'>{review.text}</div>
+                                    </div>
+                                ))}
+                                <nav className='pagination' role='navigation' aria-label='pagination'>
+                                    <a
+                                        disabled={pageIndex === 1}
+                                        onClick={decreasePageIndex}
+                                        className='pagination-previous'
+                                    >
+                                        Trang trước
+                                    </a>
+                                    <a
+                                        disabled={pageIndex === numberOfPages}
+                                        onClick={increasePageIndex}
+                                        className='pagination-next'
+                                    >
+                                        Trang kế tiếp
+                                    </a>
+                                    <Pagination />
+                                </nav>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className={`modal ${modalOpen ? "is-active" : ""}`}>
+                        <div className='modal-background'></div>
+                        <div ref={modalRef} className='modal-card'>
+                            <header className='modal-card-head'>
+                                <p className='modal-card-title'>Viết Đánh Giá</p>
+                            </header>
+                            <section className='modal-card-body'>
+                                <div className='field'>
+                                    <label className='label'>Nội dung đánh giá (ít nhất 10 ký tự)</label>
+                                    <div className='control'>
+                                        <textarea
+                                            value={text}
+                                            onChange={(e) => setText(e.target.value)}
+                                            className='textarea'
+                                            placeholder='Nhập vào nội dung đánh giá'
+                                        />
+                                    </div>
+                                </div>
+                                <div className='field'>
+                                    <label className='label'>Đánh giá</label>
+                                    {[1, 2, 3, 4, 5].map((grade) =>
+                                        grade <= rating ? (
+                                            <span key={grade} role='button' onClick={() => setRating(grade)}>
+                                                <Star htmlColor='yellow' />
+                                            </span>
+                                        ) : (
+                                            <span key={grade} role='button' onClick={() => setRating(grade)}>
+                                                <StarBorderOutlined htmlColor='yellow' />
+                                            </span>
+                                        )
+                                    )}
+                                </div>
+                            </section>
+                            <footer className='modal-card-foot'>
+                                <button
+                                    disabled={text.length < 10 || rating === 0 || isLoading}
+                                    onClick={submitCreateReview}
+                                    className={`button is-primary ${isLoading ? "is-loading" : ""}`}
+                                >
+                                    Đăng
+                                </button>
+                                <button onClick={closeModal} className='button'>
+                                    Hủy
+                                </button>
+                            </footer>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
             <style jsx>
                 {`
                     .movie-info {
