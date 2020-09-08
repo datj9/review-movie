@@ -95,11 +95,11 @@ module.exports.crawlMovies = async function (movieStatus) {
     });
 
     const listMoviesName = moviesData.map((movie) => movie.name);
-
+    // remove duplicate movies
     listMoviesName.forEach((name, i) => {
         if (listMoviesName.indexOf(name) != i) {
-            moviesData.splice(i);
-            listMoviesName.splice(i);
+            moviesData.splice(i, 1);
+            listMoviesName.splice(i, 1);
         }
     });
     const promiseFoundMovies = [];
