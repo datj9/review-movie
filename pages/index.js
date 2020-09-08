@@ -154,6 +154,8 @@ export async function getStaticProps(context) {
         props: {
             movies,
         },
+        revalidate: 60, // seconds
+        fallback: true,
     };
 }
 

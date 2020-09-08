@@ -19,7 +19,7 @@ function BottomNavigation(props) {
     const { isAuthenticated: isAuthenticatedFromClient } = useSelector((state) => state.user.server);
 
     const [tabActive, setTabActive] = useState(0);
-    const [displayBottomNav, setDisplayBottomNav] = useState(true);
+
     const tabsList = [
         {
             name: "Phim",
@@ -80,10 +80,6 @@ function BottomNavigation(props) {
         }
     }, [router.pathname]);
 
-    useEffect(() => {
-        document.addEventListener("resize", handleResize);
-    });
-
     return (
         <ul className='bottom-nav'>
             {tabsList.map((tab, i) => (
@@ -99,7 +95,7 @@ function BottomNavigation(props) {
             <style global jsx>
                 {`
                     .bottom-nav {
-                        display: ${displayBottomNav ? "flex" : "none"};
+                        display: flex;
                         justify-content: space-around;
                         position: fixed;
                         z-index: 9;

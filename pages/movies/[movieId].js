@@ -135,6 +135,8 @@ export async function getStaticProps({ params: { movieId } }) {
 
     return {
         props: { movie },
+        revalidate: 60, // seconds
+        fallback: true,
     };
 }
 
