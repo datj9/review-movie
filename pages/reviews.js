@@ -233,8 +233,7 @@ function Reviews(props) {
                                         <div className='name-and-time is-flex'>
                                             <span className='has-text-black'>{review.user.name}</span>
                                             <span className='has-text-black'>
-                                                {Date.now() - new Date(review.createdAt).getTime() >=
-                                                3 * 24 * 60 * 60 * 1000
+                                                {dayjs().subtract(review.createdAt, "date") >= 3
                                                     ? dayjs(review.createdAt).format("kk:mm DD/MM/YYYY")
                                                     : dayjs(review.createdAt).fromNow()}
                                             </span>
