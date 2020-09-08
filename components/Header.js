@@ -163,7 +163,7 @@ export default function Header(props) {
                     .navbar-end {
                         display: none;
                     }
-                    @media only screen and (min-width: 768px) {
+                    @media only screen and (min-width: 576px) {
                         .navbar-end {
                             display: block;
                         }
