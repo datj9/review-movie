@@ -101,7 +101,7 @@ function BottomNavigation(props) {
                     .bottom-nav {
                         display: ${displayBottomNav ? "flex" : "none"};
                         justify-content: space-around;
-                        position: sticky;
+                        position: fixed;
                         z-index: 9;
                         bottom: 0;
                         left: 0;
