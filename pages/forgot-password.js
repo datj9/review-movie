@@ -19,9 +19,8 @@ function ForgotPassword(props) {
     const [passwordErrMsg, setPasswordErrMsg] = useState("");
     const [confirmPasswordErrMsg, setConfirmPasswordErrMsg] = useState("");
     const [step, setStep] = useState(0);
-    const [expToken, setExpToken] = useState(0);
     const [resentEmail, setResentEmail] = useState(false);
-    const { isLoading, errors, isSuccess, exp } = useSelector((state) => state.user.client);
+    const { isLoading, errors, isSuccess } = useSelector((state) => state.user.client);
 
     const dispatch = useDispatch();
 

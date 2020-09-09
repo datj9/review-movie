@@ -254,7 +254,7 @@ function Reviews(props) {
             </Head>
 
             <div className='tabs pb-3 my-5'>
-                <ul>
+                <ul className='tabs-list'>
                     {tabsList.map(({ name, href }, i) => (
                         <li key={i} className={i === 1 ? "is-active" : "has-text-black"}>
                             <a href={href}>{name}</a>
@@ -408,6 +408,12 @@ function Reviews(props) {
             )}
             <style jsx>
                 {`
+                    .tabs-list {
+                        border-bottom: none;
+                    }
+                    .tabs-list li:not(.is-active) {
+                        border-bottom: none;
+                    }
                     .movie-info {
                         flex-direction: column;
                     }
