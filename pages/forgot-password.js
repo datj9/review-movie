@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { withAuthServerSideProps, withAuth } from "../HOC/withAuth";
 import { CLEAN_UP } from "../redux/user/action-types";
 import { confirmToken, reqSendEmail, changePasswordByVerifyingEmail } from "../redux/user/actions";
+import { BulletList } from "react-content-loader";
 
 function ForgotPassword(props) {
     const isAuthenticated = Object.keys(props.user).length;
@@ -18,9 +19,8 @@ function ForgotPassword(props) {
     const [passwordErrMsg, setPasswordErrMsg] = useState("");
     const [confirmPasswordErrMsg, setConfirmPasswordErrMsg] = useState("");
     const [step, setStep] = useState(0);
-    const [expToken, setExpToken] = useState(0);
     const [resentEmail, setResentEmail] = useState(false);
-    const { isLoading, errors, isSuccess, exp } = useSelector((state) => state.user.client);
+    const { isLoading, errors, isSuccess } = useSelector((state) => state.user.client);
 
     const dispatch = useDispatch();
 
@@ -103,7 +103,19 @@ function ForgotPassword(props) {
         };
     }, [isSuccess]);
 
-    if (isAuthenticated) return <div></div>;
+    if (isAuthenticated) {
+        const windowWidth = typeof document !== "undefined" ? document.documentElement.clientWidth : 0;
+
+        if (windowWidth >= 992) {
+            return null;
+        } else {
+            return (
+                <div className='px-3'>
+                    <BulletList />
+                </div>
+            );
+        }
+    }
 
     return (
         <div className='forgot-password py-6 mb-5 has-background-white'>

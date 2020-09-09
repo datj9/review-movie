@@ -60,12 +60,19 @@ function Login(props) {
 
     const isAuthenticated = Object.keys(props.user).length > 0;
 
-    if (isAuthenticated)
-        return (
-            <div className='px-3'>
-                <BulletList />
-            </div>
-        );
+    if (isAuthenticated) {
+        const windowWidth = typeof document !== "undefined" ? document.documentElement.clientWidth : 0;
+
+        if (windowWidth >= 992) {
+            return null;
+        } else {
+            return (
+                <div className='px-3'>
+                    <BulletList />
+                </div>
+            );
+        }
+    }
 
     return (
         <div className='login pt-5 pb-6 px-0 mb-5 has-background-white'>
