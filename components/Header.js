@@ -61,12 +61,12 @@ export default function Header(props) {
                             Phim
                         </label>
                         <div className='navbar-dropdown'>
-                            <Link href='/'>
+                            <Link href='/now-showing'>
                                 <a onClick={closeNav} className='navbar-item'>
                                     Phim Đang Chiếu
                                 </a>
                             </Link>
-                            <Link href='/'>
+                            <Link href='/comming-soon'>
                                 <a onClick={closeNav} className='navbar-item'>
                                     Phim Sắp Chiếu
                                 </a>

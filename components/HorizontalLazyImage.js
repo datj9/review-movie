@@ -6,7 +6,7 @@ function elementInViewport(el) {
     return rect.left + 20 <= (window.innerWidth || document.documentElement.clientWidth);
 }
 
-export default function LazyImage({ listIndex, src, alt }) {
+export default function HorizontalLazyImage({ listIndex, src, alt }) {
     const imgRef = useRef();
     let loaded = false;
 

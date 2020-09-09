@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import axios from "axios";
-import LazyImage from "../components/LazyImage";
+import LazyImage from "../components/HorizontalLazyImage";
 
 const apiURL = process.env.API_URL;
 
@@ -21,7 +21,7 @@ function Home(props) {
                 <div className='list-and-title-wp mb-5'>
                     <div className='title-container mb-3 pr-3'>
                         <h2 className='has-text-black'>Phim Đang Chiếu</h2>
-                        <Link href='/'>
+                        <Link href='/now-showing'>
                             <a>Xem Tất Cả</a>
                         </Link>
                     </div>
@@ -48,7 +48,7 @@ function Home(props) {
                 <div className='list-and-title-wp'>
                     <div className='title-container mb-3 pr-3'>
                         <h2 className='has-text-black'>Phim Sắp Chiếu</h2>
-                        <Link href='/'>
+                        <Link href='/comming-soon'>
                             <a>Xem Tất Cả</a>
                         </Link>
                     </div>
