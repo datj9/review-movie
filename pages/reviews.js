@@ -376,6 +376,9 @@ function Reviews(props) {
                         border: 1px solid #e8e8e8;
                         border-radius: 3px;
                     }
+                    .review-text {
+                        white-space: pre-wrap;
+                    }
                     .header-review-item {
                         justify-content: flex-start;
                     }
