@@ -112,7 +112,7 @@ function Reviews(props) {
 
     const Skeleton = () => {
         const reviewsSkeleton = [];
-        const windowWidth = typeof document !== "undefined" ? window.innerWidth : 0;
+        const windowWidth = typeof document !== "undefined" ? document.documentElement.clientWidth : 0;
         const viewBoxWidth = typeof document !== "undefined" ? document.documentElement.offsetWidth - 2 * 0.75 * 16 : 0;
         const titleAndBtnHeight =
             typeof document !== "undefined" ? (document.documentElement.clientWidth > 576 ? 78 : 95) : 0;
