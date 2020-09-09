@@ -22,6 +22,7 @@ const fetcher = (url) => fetch(url).then((r) => r.json());
 
 function Reviews(props) {
     const router = useRouter();
+    const writeReviewBtnRef= useRef()
     const [modalOpen, setModalOpen] = useState(false);
     const [text, setText] = useState("");
     const [rating, setRating] = useState(0);
@@ -31,6 +32,9 @@ function Reviews(props) {
     const user = JSON.parse(props.user);
     const isAuthenticated = Object.keys(user).length;
     const { mid: movieId, tid: theaterId } = router.query;
+    const [btnWriteReviewWidth, setBtnWriteReviewWidth] = useState(0);
+    const [btnWriteReviewHeight, setBtnWriteReviewHeight] = useState(0);
+
     const tabsList = [
         {
             name: movieId ? "Thông tin phim" : theaterId ? "Thông tin rạp" : "",
@@ -107,25 +111,36 @@ function Reviews(props) {
 
     const Skeleton = () => {
         const reviewsSkeleton = [];
+        const windowWidth = typeof document !== 'undefined' ? document.documentElement.clientWidth : 0;
+        const viewBoxWidth =  typeof document !== 'undefined' ? document.documentElement.offsetWidth - 2 * 0.75 * 16 : 0
+        const titleAndBtnHeight = typeof document !== 'undefined' ? (document.documentElement.clientWidth > 576 ? 78 : 95) : 0
+        const titleHeight = 1.25 * 16;
+        const titleWidth = windowWidth > 576 ? windowWidth / 4 :windowWidth * 3 / 4 ;
+        const cardHeight = 119;
+        const cardWidth = viewBoxWidth;
+        const rOfAvatar = 2.5 * 16 / 2;
+        const nameWidth = windowWidth > 576 ? viewBoxWidth / 8  : viewBoxWidth * 2 / 5
+        const textHeight = 16;
+        const textWidth = viewBoxWidth * 4 / 5
 
         for (let i = 0; i < 4; i++) {
             reviewsSkeleton.push(
-                <ContentLoader key={i} className='mb-4' viewBox='0 0 300 89'>
-                    <circle cx='30' cy='17' r='17' />
-                    <rect rx='5' ry='5' x='60' y='0' width='120' height='12' />
-                    <rect rx='5' ry='5' x='60' y='22' width='70' height='12' />
-                    <rect rx='5' ry='5' x='5' y='45' width='130' height='12' />
-                    <rect rx='5' ry='5' x='5' y='67' width='280' height='12' />
+                <ContentLoader key={i} className='mb-4' viewBox={`-16 0 ${cardWidth} ${cardHeight}`}>
+                    <circle cx={rOfAvatar} cy={rOfAvatar} r={rOfAvatar} />
+                    <rect rx='5' ry='5' x='60' y='0' width={nameWidth} height={textHeight} />
+                    <rect rx='5' ry='5' x='60' y={textHeight + 10} width={nameWidth * 3 / 4} height={textHeight} />
+                    <rect rx='5' ry='5' x='5' y={2 * textHeight + 20} width={textWidth} height={textHeight} />
+                    <rect rx='5' ry='5' x='5' y={3 * textHeight + 30} width={textWidth * 4 / 5} height={textHeight} />
                 </ContentLoader>
             );
         }
 
         return (
             <div className='px-3 pb-3 my-5'>
-                <ContentLoader className='mb-5' viewBox='0 0 300 85'>
-                    <rect rx='5' ry='5' x='0' y='0' width='270' height='12' />
-                    <rect rx='5' ry='5' x='0' y='30' width='200' height='12' />
-                    <rect rx='15' ry='15' x='0' y='60' width='100' height='25' />
+                <ContentLoader className='mb-5' viewBox={`0 0 ${viewBoxWidth} ${titleAndBtnHeight}`}>
+                    <rect rx='5' ry='5' x='0' y='0' width={titleWidth} height={titleHeight} />
+                    <rect rx='5' ry='5' x={windowWidth >= 576 ? titleWidth + 16  :'0' } y={windowWidth >= 576 ? '0' : titleHeight * 5 / 4} width={titleWidth * 3 / 5} height={titleHeight} />
+                    <rect rx='20' ry='20' x='0' y={titleAndBtnHeight - btnWriteReviewHeight} width={btnWriteReviewWidth} height={btnWriteReviewHeight} />
                 </ContentLoader>
                 {reviewsSkeleton}
             </div>
@@ -188,6 +203,11 @@ function Reviews(props) {
         };
     });
 
+    useEffect(() => {
+            setBtnWriteReviewWidth(writeReviewBtnRef.current?.offsetWidth)
+            setBtnWriteReviewHeight(writeReviewBtnRef.current?.offsetHeight)
+    })
+
     if (error) return <div className='has-text-centered'>Error</div>;
 
     return (
@@ -205,38 +225,40 @@ function Reviews(props) {
                         </li>
                     ))}
                 </ul>
-            </div>
-
+                </div>
+         
             {!data ? (
                 <Skeleton />
             ) : (
                 <div className='tab-content px-3 py-3 mb-6'>
-                    <div className='movie-info is-flex mb-2'>
-                        <h1 className='has-text-weight-bold has-text-black mr-3 is-size-5'>
-                            {movie.name ? movie.name : ""}
-                        </h1>
-                        {averageRating ? (
-                            <div className='is-flex'>
-                                {[1, 2, 3, 4, 5].map((grade) =>
-                                    averageRating >= grade ? (
-                                        <Star key={grade} htmlColor='yellow' />
-                                    ) : averageRating - Math.floor(averageRating) >= 0.5 ? (
-                                        <StarHalf key={grade} htmlColor='yellow' />
-                                    ) : (
-                                        <StarBorderOutlined key={grade} htmlColor='yellow' />
-                                    )
-                                )}
-                                <span className='ml-2'>{Math.round(averageRating * 10) / 10} / 5</span>
-                            </div>
-                        ) : null}
-                    </div>
+                    <div>
+                        <div className='movie-info is-flex mb-2'>
+                            <h1  className='has-text-weight-bold has-text-black mr-3 is-size-5'>
+                                {movie.name ? movie.name : ""}
+                            </h1>
+                            {averageRating ? (
+                                <div className='is-flex'>
+                                    {[1, 2, 3, 4, 5].map((grade) =>
+                                        averageRating >= grade ? (
+                                            <Star key={grade} htmlColor='yellow' />
+                                        ) : averageRating - Math.floor(averageRating) >= 0.5 ? (
+                                            <StarHalf key={grade} htmlColor='yellow' />
+                                        ) : (
+                                            <StarBorderOutlined key={grade} htmlColor='yellow' />
+                                        )
+                                    )}
+                                    <span className='ml-2'>{Math.round(averageRating * 10) / 10} / 5</span>
+                                </div>
+                            ) : null}
+                        </div>
 
-                    <button onClick={openModal} className='button is-primary is-rounded'>
-                        <span className='icon'>
-                            <RateReview />
-                        </span>
-                        <span>Viết Đánh Giá</span>
-                    </button>
+                        <button ref={writeReviewBtnRef} onClick={openModal} className='button is-primary is-rounded'>
+                            <span className='icon'>
+                                <RateReview />
+                            </span>
+                            <span>Viết Đánh Giá</span>
+                        </button>
+                    </div>
                     <div className='my-5'>
                         {total === 0 ? (
                             <div className='has-text-black'>Chưa có đánh giá nào</div>
