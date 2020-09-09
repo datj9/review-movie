@@ -22,7 +22,7 @@ function Movie({ movie: { id, name, description, runningTime, releaseDate, trail
                 <link rel='icon' href='/favicon.ico' />
             </Head>
             <div className='tabs'>
-                <ul>
+                <ul className='tabs-list'>
                     {tabsList.map(({ name, href }, i) => (
                         <li key={i} className={i === 0 ? "is-active" : "has-text-black"}>
                             <a href={href}>{name}</a>
@@ -86,7 +86,10 @@ function Movie({ movie: { id, name, description, runningTime, releaseDate, trail
                     width: 100%;
                     height: 12rem;
                 }
-                .tab-content {
+                .tabs-list,
+                .tabs li:not(.is-active) a:hover,
+                .tabs li:not(.is-active) a {
+                    border-bottom-color: transparent;
                 }
                 .ytb-video {
                     position: relative;
@@ -119,7 +122,7 @@ function Movie({ movie: { id, name, description, runningTime, releaseDate, trail
 
 export async function getStaticPaths() {
     // Call an external API endpoint to get posts
-    const res = await fetch(`${apiURL}/api/movies?pageSize=100`);
+    const res = await fetch(`${apiURL}/api/movies?pageSize=300`);
     const movies = await res.json();
 
     // Get the paths we want to pre-render based on posts

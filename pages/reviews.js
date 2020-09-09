@@ -408,11 +408,10 @@ function Reviews(props) {
             )}
             <style jsx>
                 {`
-                    .tabs-list {
-                        border-bottom: none;
-                    }
-                    .tabs-list li:not(.is-active) {
-                        border-bottom: none;
+                    .tabs-list,
+                    .tabs li:not(.is-active) a:hover,
+                    .tabs li:not(.is-active) a {
+                        border-bottom-color: transparent;
                     }
                     .movie-info {
                         flex-direction: column;
