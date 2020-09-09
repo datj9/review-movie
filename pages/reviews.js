@@ -265,7 +265,7 @@ function Reviews(props) {
                     ))}
                 </ul>
             </div>
-            {!data ? <Skeleton /> : null}
+
             {!data ? (
                 <Skeleton />
             ) : (
