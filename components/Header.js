@@ -7,6 +7,7 @@ export default function Header(props) {
     const isAuthenticatedFromServer = Object.keys(props.user).length;
     const { isAuthenticated: isAuthenticatedFromClient } = useSelector((state) => state.user.server);
     const [navOpen, setNavOpen] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(0);
     const { currentUser } = useSelector((state) => state.user.server);
 
     const navRef = useRef();
@@ -26,6 +27,7 @@ export default function Header(props) {
 
     useEffect(() => {
         document.addEventListener("mousedown", handleClick);
+        setWindowWidth(window.innerWidth);
     }, []);
 
     return (
@@ -54,7 +56,7 @@ export default function Header(props) {
             <div ref={navRef} id='navbarBasicExample' className={navOpen ? "navbar-menu is-active" : "navbar-menu"}>
                 <div className='navbar-start'>
                     <div className='navbar-item has-dropdown is-hoverable'>
-                        <input id='checkMovie' type='checkbox' />
+                        {windowWidth < 1024 ? <input id='checkMovie' type='checkbox' /> : null}
                         <label htmlFor='checkMovie' className='navbar-link'>
                             Phim
                         </label>
@@ -144,13 +146,13 @@ export default function Header(props) {
                     .navbar-dropdown {
                         display: none;
                     }
-                    input[type="checkbox"] {
+                    #checkMovie {
                         display: none;
                     }
-                    input[type="checkbox"]:checked ~ .navbar-dropdown {
+                    #checkMovie:checked ~ .navbar-dropdown {
                         display: block;
                     }
-                    input[type="checkbox"]:checked ~ .navbar-link::after {
+                    #checkMovie:checked ~ .navbar-link::after {
                         transform: rotate(135deg);
                     }
                     .navbar-link::after {
@@ -168,6 +170,7 @@ export default function Header(props) {
                             display: block;
                         }
                     }
+
                     @keyframes slide {
                         0% {
                             transform: translateY(1rem);

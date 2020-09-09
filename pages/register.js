@@ -71,12 +71,19 @@ function Register(props) {
         }
     }, [errors.password]);
 
-    if (isAuthenticated)
-        return (
-            <div className='px-3'>
-                <BulletList />
-            </div>
-        );
+    if (isAuthenticated) {
+        const windowWidth = typeof document !== "undefined" ? document.documentElement.clientWidth : 0;
+
+        if (windowWidth >= 992) {
+            return null;
+        } else {
+            return (
+                <div className='px-3'>
+                    <BulletList />
+                </div>
+            );
+        }
+    }
 
     return (
         <div className='register py-6 mb-5 has-background-white'>
