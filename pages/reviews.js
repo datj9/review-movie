@@ -34,7 +34,6 @@ function Reviews(props) {
     const { mid: movieId, tid: theaterId } = router.query;
     const [btnWriteReviewWidth, setBtnWriteReviewWidth] = useState(0);
     const [btnWriteReviewHeight, setBtnWriteReviewHeight] = useState(0);
-
     const tabsList = [
         {
             name: movieId ? "Thông tin phim" : theaterId ? "Thông tin rạp" : "",
@@ -57,11 +56,11 @@ function Reviews(props) {
             },
         }
     );
-    const reviewsList = data?.reviews;
-    const movie = data?.movie;
-    const total = data?.total;
-    const averageRating = movie?.averageRating;
-    const numberOfPages = total && Math.ceil(total / 10);
+    const reviewsList = data?.reviews || [];
+    const movie = data?.movie || {};
+    const total = data?.total || 0;
+    const averageRating = movie?.averageRating || 0;
+    const numberOfPages = total && Math.ceil(total / 10) || 0;
 
     const createReview = async (newReview) => {
         await fetch("/api/reviews", {
@@ -122,15 +121,15 @@ function Reviews(props) {
         const nameWidth = windowWidth > 576 ? viewBoxWidth / 8  : viewBoxWidth * 2 / 5
         const textHeight = 16;
         const textWidth = viewBoxWidth * 4 / 5
-
+      
         for (let i = 0; i < 4; i++) {
             reviewsSkeleton.push(
                 <ContentLoader key={i} className='mb-4' viewBox={`-16 0 ${cardWidth} ${cardHeight}`}>
-                    <circle cx={rOfAvatar} cy={rOfAvatar} r={rOfAvatar} />
-                    <rect rx='5' ry='5' x='60' y='0' width={nameWidth} height={textHeight} />
-                    <rect rx='5' ry='5' x='60' y={textHeight + 10} width={nameWidth * 3 / 4} height={textHeight} />
-                    <rect rx='5' ry='5' x='5' y={2 * textHeight + 20} width={textWidth} height={textHeight} />
-                    <rect rx='5' ry='5' x='5' y={3 * textHeight + 30} width={textWidth * 4 / 5} height={textHeight} />
+                    <circle cx={rOfAvatar +''} cy={rOfAvatar +''} r={rOfAvatar +''} />
+                    <rect rx='5' ry='5' x='60' y='0' width={nameWidth +''} height={textHeight +''} />
+                    <rect rx='5' ry='5' x='60' y={textHeight + 10 +''} width={nameWidth * 3 / 4 +''} height={textHeight +''} />
+                    <rect rx='5' ry='5' x='5' y={2 * textHeight + 20 +''} width={nameWidth +''} height={textHeight +''} />
+                    <rect rx='5' ry='5' x='5' y={3 * textHeight + 30 +''} width={textWidth +''} height={textHeight +''} />
                 </ContentLoader>
             );
         }
@@ -138,16 +137,18 @@ function Reviews(props) {
         return (
             <div className='px-3 pb-3 my-5'>
                 <ContentLoader className='mb-5' viewBox={`0 0 ${viewBoxWidth} ${titleAndBtnHeight}`}>
-                    <rect rx='5' ry='5' x='0' y='0' width={titleWidth} height={titleHeight} />
-                    <rect rx='5' ry='5' x={windowWidth >= 576 ? titleWidth + 16  :'0' } y={windowWidth >= 576 ? '0' : titleHeight * 5 / 4} width={titleWidth * 3 / 5} height={titleHeight} />
-                    <rect rx='20' ry='20' x='0' y={titleAndBtnHeight - btnWriteReviewHeight} width={btnWriteReviewWidth} height={btnWriteReviewHeight} />
+                    <rect rx='5' ry='5' x='0' y='0' width={titleWidth +''} height={titleHeight +''} />
+                    <rect rx='5' ry='5' x={windowWidth >= 576 ? titleWidth + 16 +''  :'0' } y={windowWidth >= 576 ? '0' : titleHeight * 5 / 4 +''} width={titleWidth * 3 / 5 +''} height={titleHeight +''} />
+                    <rect rx='20' ry='20' x='0' y={titleAndBtnHeight - btnWriteReviewHeight +''} width={btnWriteReviewWidth +''} height={btnWriteReviewHeight +''} />
                 </ContentLoader>
                 {reviewsSkeleton}
             </div>
         );
     };
     const Pagination = () => {
-        if (total <= 90) {
+        if(total === undefined || total <= 10) {
+            return null
+        }else if (total <= 90) {
             const list = [];
 
             for (let i = 0; i < numberOfPages; i++) {
@@ -202,12 +203,10 @@ function Reviews(props) {
             document.removeEventListener("mousedown", handleClick);
         };
     });
-
     useEffect(() => {
-            setBtnWriteReviewWidth(writeReviewBtnRef.current?.offsetWidth)
-            setBtnWriteReviewHeight(writeReviewBtnRef.current?.offsetHeight)
-    })
-
+        setBtnWriteReviewWidth(161)
+        setBtnWriteReviewHeight(40)
+})
     if (error) return <div className='has-text-centered'>Error</div>;
 
     return (
@@ -226,10 +225,10 @@ function Reviews(props) {
                     ))}
                 </ul>
                 </div>
-         
+       
             {!data ? (
                 <Skeleton />
-            ) : (
+            ) :(
                 <div className='tab-content px-3 py-3 mb-6'>
                     <div>
                         <div className='movie-info is-flex mb-2'>
@@ -298,7 +297,7 @@ function Reviews(props) {
                                         <div className='review-text has-text-black ml-1'>{review.text}</div>
                                     </div>
                                 ))}
-                                <nav className='pagination' role='navigation' aria-label='pagination'>
+                               {total > 10 ? <nav className='pagination' role='navigation' aria-label='pagination'>
                                     <a
                                         disabled={pageIndex === 1}
                                         onClick={decreasePageIndex}
@@ -314,7 +313,7 @@ function Reviews(props) {
                                         Trang kế tiếp
                                     </a>
                                     <Pagination />
-                                </nav>
+                                </nav>: null}
                             </div>
                         )}
                     </div>
