@@ -161,7 +161,7 @@ function Reviews(props) {
         }
 
         return (
-            <div className='px-3 pb-3 my-5'>
+            <div className='px-3 py-3 mb-6'>
                 <ContentLoader className='mb-5' viewBox={`0 0 ${viewBoxWidth} ${titleAndBtnHeight}`}>
                     <rect rx='5' ry='5' x='0' y='0' width={titleWidth + ""} height={titleHeight + ""} />
                     <rect
