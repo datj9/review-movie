@@ -56,11 +56,11 @@ function Reviews(props) {
             },
         }
     );
-    const reviewsList = data?.reviews || [];
-    const movie = data?.movie || {};
-    const total = data?.total || 0;
-    const averageRating = movie?.averageRating || 0;
-    const numberOfPages = total && Math.ceil(total / 10) || 0;
+    const reviewsList = data?.reviews;
+    const movie = data?.movie;
+    const total = data?.total;
+    const averageRating = movie?.averageRating;
+    const numberOfPages = total && Math.ceil(total / 10);
 
     const createReview = async (newReview) => {
         await fetch("/api/reviews", {
