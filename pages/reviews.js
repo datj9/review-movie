@@ -8,7 +8,7 @@ import Star from "@material-ui/icons/Star";
 import StarHalf from "@material-ui/icons/StarHalf";
 import StarBorderOutlined from "@material-ui/icons/StarBorderOutlined";
 import { useSelector } from "react-redux";
-import ContentLoader, { Facebook } from "react-content-loader";
+import ContentLoader from "react-content-loader";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -22,16 +22,16 @@ const fetcher = (url) => fetch(url).then((r) => r.json());
 
 function Reviews(props) {
     const router = useRouter();
+    const { mid: movieId, tid: theaterId } = router.query;
     const writeReviewBtnRef = useRef();
+    const modalRef = useRef();
+    const { isSuccess, isLoading } = useSelector((state) => state.review);
     const [modalOpen, setModalOpen] = useState(false);
     const [text, setText] = useState("");
     const [rating, setRating] = useState(0);
     const [pageIndex, setPageIndex] = useState(1);
-    const modalRef = useRef();
-    const { isSuccess, isLoading } = useSelector((state) => state.review);
     const user = JSON.parse(props.user);
     const isAuthenticated = Object.keys(user).length;
-    const { mid: movieId, tid: theaterId } = router.query;
     const tabsList = [
         {
             name: movieId ? "Thông tin phim" : theaterId ? "Thông tin rạp" : "",
@@ -109,13 +109,13 @@ function Reviews(props) {
             setPageIndex(pageIndex + 1);
         }
     };
-
+    const [windowWidth, setWindowWidth] = useState(0);
+    const [viewBoxWidth, setViewBoxWidth] = useState(0);
     const Skeleton = () => {
         const reviewsSkeleton = [];
-        const windowWidth = typeof document !== "undefined" ? document.documentElement.clientWidth : 0;
-        const viewBoxWidth = typeof document !== "undefined" ? document.documentElement.offsetWidth - 2 * 0.75 * 16 : 0;
-        const titleAndBtnHeight =
-            typeof document !== "undefined" ? (document.documentElement.clientWidth > 576 ? 78 : 95) : 0;
+        // const windowWidth = typeof document !== "undefined" ? document.documentElement.clientWidth : 0;
+        // const viewBoxWidth = typeof document !== "undefined" ? document.documentElement.offsetWidth - 2 * 0.75 * 16 : 0;
+        const titleAndBtnHeight = windowWidth > 576 ? 78 : 95;
         const titleHeight = 1.25 * 16;
         const titleWidth = windowWidth > 576 ? windowWidth / 4 : (windowWidth * 3) / 4;
         const btnWriteReviewWidth = 161;
@@ -235,7 +235,10 @@ function Reviews(props) {
             );
         }
     };
-
+    useEffect(() => {
+        setWindowWidth(document.documentElement.clientWidth);
+        setViewBoxWidth(document.documentElement.offsetWidth - 2 * 0.75 * 16);
+    });
     useEffect(() => {
         document.addEventListener("mousedown", handleClick);
 
