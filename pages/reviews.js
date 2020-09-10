@@ -421,9 +421,11 @@ function Reviews(props) {
                     .tabs li:not(.is-active) a {
                         border-bottom-color: transparent;
                     }
+                    .tabs,
                     .tabs-list::-webkit-scrollbar {
                         display: none;
                     }
+                    .tabs,
                     .tabs-list {
                         -ms-overflow-style: none;
                         scrollbar-width: none;
