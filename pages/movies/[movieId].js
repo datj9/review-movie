@@ -91,6 +91,15 @@ function Movie({ movie: { id, name, description, runningTime, releaseDate, trail
                 .tabs li:not(.is-active) a {
                     border-bottom-color: transparent;
                 }
+
+                .tabs-list::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .tabs-list {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
                 .ytb-video {
                     position: relative;
                     height: 14rem;

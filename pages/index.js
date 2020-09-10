@@ -130,6 +130,21 @@ function Home(props) {
                             height: 15rem;
                         }
                     }
+
+                    ::-webkit-scrollbar {
+                        width: 5px;
+                        height: 3px;
+                    }
+                    ::-webkit-scrollbar-track {
+                        border-radius: 10px;
+                        box-shadow: inset 0 0 6px rgba(218, 218, 218, 0.5);
+                        -webkit-box-shadow: inset 0 0 6px rgba(218, 218, 218, 0.5);
+                    }
+                    ::-webkit-scrollbar-thumb {
+                        border-radius: 5px;
+                        box-shadow: inset 0 0 6px rgba(219, 219, 219, 0.8);
+                        -webkit-box-shadow: inset 0 0 6px rgba(219, 219, 219, 0.8);
+                    }
                 `}
             </style>
             <style jsx global>

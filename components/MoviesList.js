@@ -29,7 +29,7 @@ export default function MoviesList({ movies }) {
                     .movie-image-wrapper {
                         width: 100%;
                     }
-                    .movie-card img {
+                    .movie-image-wrapper img {
                         width: 100%;
                         height: auto;
                     }
@@ -37,6 +37,21 @@ export default function MoviesList({ movies }) {
                         text-overflow: ellipsis;
                         overflow: hidden;
                         white-space: nowrap;
+                    }
+                    @media only screen and (min-width: 576px) {
+                        .movie-card {
+                            width: 31%;
+                        }
+                    }
+                    @media only screen and (min-width: 786px) {
+                        .movie-card {
+                            width: 23%;
+                        }
+                    }
+                    @media only screen and (min-width: 1024px) {
+                        .movie-card {
+                            width: 16%;
+                        }
                     }
                 `}
             </style>
