@@ -129,11 +129,18 @@ function Reviews(props) {
             reviewsSkeleton.push(
                 <ContentLoader key={i} className='mb-4' viewBox={`-16 0 ${cardWidth} ${cardHeight}`}>
                     <circle cx={rOfAvatar + ""} cy={rOfAvatar + ""} r={rOfAvatar + ""} />
-                    <rect rx='5' ry='5' x='60' y='0' width={nameWidth + ""} height={textHeight + ""} />
                     <rect
                         rx='5'
                         ry='5'
-                        x='60'
+                        x={2 * rOfAvatar + 20 + ""}
+                        y='0'
+                        width={nameWidth + ""}
+                        height={textHeight + ""}
+                    />
+                    <rect
+                        rx='5'
+                        ry='5'
+                        x={2 * rOfAvatar + 20 + ""}
                         y={textHeight + 10 + ""}
                         width={(nameWidth * 3) / 4 + ""}
                         height={textHeight + ""}
