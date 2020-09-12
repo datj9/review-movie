@@ -69,12 +69,13 @@ function Reviews(props) {
     };
     const submitCreateReview = async () => {
         const newReview = { text, rating, movieId, user: user.id };
+
         closeModal();
         mutate(
             `/api/reviews?${movieId ? `movieId=${movieId}` : `theaterId=${theaterId}`}&pageIndex=${pageIndex}`,
             {
                 ...data,
-                reviews: [{ ...newReview, user, id: Math.floor(Math.random() * Math.pow(10, 6)) + "" }, ...reviewsList],
+                reviews: [{ ...newReview, user }, ...data.reviews],
             },
             false
         );
