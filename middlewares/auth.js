@@ -5,10 +5,11 @@ const authenticate = (req, res, next) => {
     next();
 };
 
-const authorize = (req, res, next) => {
+const authorize = (allowedUserTypes = []) => (req, res, next) => {
     const { user } = req;
 
-    if (user.userType != "admin") return res.status(401).json({ error: "User is not allowed" });
+    if (allowedUserTypes.findIndex(user.userType) == -1) return res.status(401).json({ error: "User is not allowed" });
+
     next();
 };
 

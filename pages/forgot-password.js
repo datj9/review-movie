@@ -74,6 +74,8 @@ function ForgotPassword(props) {
     useEffect(() => {
         if (errors.email && errors.email.includes("invalid")) {
             setEmailErrMsg("Email không hợp lệ");
+        } else if (errors.email && errors.email.includes("not found")) {
+            setEmailErrMsg("Email không tồn tại");
         } else {
             setEmailErrMsg("");
         }
@@ -81,7 +83,7 @@ function ForgotPassword(props) {
 
     useEffect(() => {
         if (errors.isValid === false) {
-            setTokenErrMsg("Mã xác thực đã hết hạn");
+            setTokenErrMsg("Mã xác thực không hợp lệ");
         } else {
             setTokenErrMsg("");
         }
@@ -157,7 +159,7 @@ function ForgotPassword(props) {
                 <div className='form-container px-4'>
                     <form className='mb-3'>
                         <div className='field'>
-                            <p>Chúng tôi đã gữi mã xác thực đến email của bạn, bạn vui lòng kiểm tra</p>
+                            <p>Chúng tôi đã gửi mã xác thực gồm 8 ký tự đến email của bạn, bạn vui lòng kiểm tra</p>
                             <label className='label'>Mã xác thực</label>
                             <div className='control'>
                                 <input

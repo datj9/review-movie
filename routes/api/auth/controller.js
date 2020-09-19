@@ -7,13 +7,6 @@ const bcrypt = require("bcryptjs");
 const { hotp } = require("otplib");
 const { promisify } = require("util");
 const hashPass = promisify(bcrypt.hash);
-const otpSecret = process.env.OTP_SECRET;
-let counter = Math.floor(Math.random() * Math.pow(10, 6));
-
-hotp.options = {
-    algorithm: "sha256",
-    digits: 8,
-};
 
 const logOut = (req, res) => {
     req.logout();
@@ -87,26 +80,41 @@ const login = async (req, res) => {
 
 const sendEmailToRecoverAccount = async (req, res) => {
     const { email } = req.body;
+    const randomPassword = Math.floor(Math.random() * 9 * Math.pow(10, 7)) + Math.pow(10, 7) + "";
 
     if (!email) return res.status(400).json({ email: "email is required" });
-    if (typeof email != "string" || !isEmail(email)) return res.status(400).json({ email: "email is invalid" });
+    if (!isEmail(email + "")) return res.status(400).json({ email: "email is invalid" });
 
-    const token = hotp.generate(otpSecret, counter);
-    const { isSuccess } = await sendEmailRecoverPassword(email, token);
+    try {
+        const user = await User.findOne({ email, provider: "local" });
+        if (!user || user.provider != "local") return res.status(404).json({ email: "User not found" });
 
-    if (isSuccess) {
-        return res.status(200).json({});
-    } else {
-        return res.status(500).json({});
+        const { isSuccess } = await sendEmailRecoverPassword(email, randomPassword);
+
+        if (isSuccess) {
+            const tokenResetPassword = await hashPass(randomPassword, 10);
+
+            await User.updateOne({ email, provider: "local" }, { tokenResetPassword });
+
+            return res.status(200).json({});
+        } else {
+            console.log(isSuccess);
+            return res.status(500).json({});
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error);
     }
 };
 const checkVerifyToken = async (req, res) => {
-    const { token } = req.body;
+    const { token, email } = req.body;
 
-    if (typeof token != "string" || !isInt(token)) return res.status(400).json({ token: "token is invalid" });
+    if (!isEmail(email + "")) return res.status(400).json({ email: "email is invalid" });
+    if (!isInt(token + "") || token.length != 8) return res.status(400).json({ token: "token is invalid" });
 
     try {
-        const isValid = hotp.check(token, otpSecret, counter);
+        const user = await User.findOne({ email, provider: "local" });
+        const isValid = await bcrypt.compare(token, user.tokenResetPassword);
 
         if (!isValid) {
             return res.status(400).json({ isValid });
@@ -130,19 +138,18 @@ const changePasswordByVerifyingEmail = async (req, res) => {
 
     if (typeof email != "string" || !isEmail(email)) errors.email = "email is invalid";
     if (typeof password != "string" || password.length < 8) errors.password = "password is invalid";
-    if (typeof confirmPassword != "string" || confirmPassword.length < 8)
-        errors.confirmPassword = "confirmPassword is invalid";
-    if (typeof token != "string") errors.token = "token is invalid";
-    if (Object.keys(errors).length) return res.status(400).json(errors);
     if (password != confirmPassword) return res.status(400).json({ confirmPassword: "confirmPassword does not match" });
+    if (!isInt(token + "") || token.length != 8) errors.token = "token is invalid";
+    if (Object.keys(errors).length) return res.status(400).json(errors);
 
     try {
-        const isValid = hotp.check(token, otpSecret, counter);
+        const user = await User.findOne({ email, provider: "local" });
+        const isValid = await bcrypt.compare(token, user.tokenResetPassword);
+
         if (!isValid) return res.status(400).json({ token: "token is invalid", isValid });
 
-        counter = Math.floor(Math.random() * Math.pow(10, 6));
         const hash = await hashPass(password, 10);
-        await User.updateOne({ email }, { password: hash });
+        await User.updateOne({ email, provider: "local" }, { password: hash, tokenResetPassword: null });
 
         passport.authenticate("local")(req, res, function () {
             return res.status(200).json({});
