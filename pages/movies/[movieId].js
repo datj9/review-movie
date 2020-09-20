@@ -131,7 +131,7 @@ function Movie({ movie: { id, name, description, runningTime, releaseDate, trail
 
 export async function getStaticPaths() {
     // Call an external API endpoint to get posts
-    const res = await fetch(`${apiURL}/api/movies?pageSize=1000`);
+    const res = await fetch(`${apiURL}/api/movies?pageSize=200`);
     const { movies } = await res.json();
 
     // Get the paths we want to pre-render based on posts
