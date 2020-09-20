@@ -3,6 +3,7 @@ const isInt = require("validator/lib/isInt");
 const isURL = require("validator/lib/isURL");
 const { crawlMovies } = require("../../../helpers/crawl");
 const ObjectId = require("mongoose").Types.ObjectId;
+const promise = require("bluebird");
 
 const getMovies = async (req, res) => {
     const { pageSize, pageIndex, status } = req.query;
@@ -29,16 +30,13 @@ const getMovies = async (req, res) => {
 
     try {
         if (statusFilter) {
-            const promiseArr = [];
-            statusFilter.forEach((status) =>
-                promiseArr.push(
-                    Movie.find({ status })
-                        .skip(skip)
-                        .limit(limit)
-                        .sort([["createdAt", -1]])
-                )
+            const foundMovies = await promise.map(statusFilter, (status) =>
+                Movie.find({ status })
+                    .skip(skip)
+                    .limit(limit)
+                    .sort([["createdAt", -1]])
             );
-            const foundMovies = await Promise.all(promiseArr);
+            const total = await promise.map(statusFilter, (status) => Movie.countDocuments({ status }));
             foundMovies.forEach((movieListByStatus, i) => {
                 movieListByStatus.forEach((movie, j) => {
                     foundMovies[i][j] = movie.transform();
@@ -46,7 +44,7 @@ const getMovies = async (req, res) => {
             });
             const foundMoviesConvertedToObj = Object.assign({}, foundMovies);
 
-            return res.status(200).json(foundMoviesConvertedToObj);
+            return res.status(200).json({ movies: foundMoviesConvertedToObj, total });
         } else {
             const movies = await Movie.find()
                 .skip(skip)

@@ -4,13 +4,11 @@ const ObjectId = require("mongoose").Schema.Types.ObjectId;
 
 const getNews = async (req, res) => {
     const { pageSize, pageIndex } = req.query;
-    const limit = isInt(pageSize + "") ? pageSize : 10;
-    const skip = isInt(pageIndex + "") ? pageIndex * limit : 0 * limit;
+    const limit = isInt(pageSize + "") && +pageSize >= 1 ? +pageSize : 10;
+    const skip = isInt(pageIndex + "") && +pageIndex >= 1 ? (+pageIndex - 1) * limit : 0 * limit;
 
     try {
-        const listNews = await News.find()
-            .skip(+skip)
-            .limit(+limit);
+        const listNews = await News.find().skip(skip).limit(limit);
 
         listNews.forEach((n, i) => (listNews[i] = n.transform()));
 
