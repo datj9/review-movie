@@ -1,27 +1,30 @@
 import Head from "next/head";
-import fetch from "isomorphic-unfetch";
-import { apiURL } from "../../redux/api";
 import { useState } from "react";
 import dayjs from "dayjs";
+import connectDB from "../../setup/connectDB";
+import { ObjectId } from "mongodb";
 
-function Movie() {
-    // const [loadingIframeTrailer, setLoadingIframeTrailer] = useState(true);
-    // const tabsList = [
-    //     { name: "Thông tin phim", href: `/movies/${id}` },
-    //     { name: "Đánh giá từ cộng đồng", href: `/reviews?mid=${id}` },
-    // ];
+function Movie(props) {
+    const { _id: id, name, runningTime, trailer, description, releaseDate, filmDirectors, actors } = JSON.parse(
+        props.movie
+    );
+    const [loadingIframeTrailer, setLoadingIframeTrailer] = useState(true);
+    const tabsList = [
+        { name: "Thông tin phim", href: `/movies/${id}` },
+        { name: "Đánh giá từ cộng đồng", href: `/reviews?mid=${id}` },
+    ];
 
-    // const handleFinishLoadingTrailer = () => {
-    //     setLoadingIframeTrailer(false);
-    // };
+    const handleFinishLoadingTrailer = () => {
+        setLoadingIframeTrailer(false);
+    };
 
     return (
         <div className='px-3 py-5'>
-            {/* <Head>
+            <Head>
                 <title>Phim {name}</title>
                 <link rel='icon' href='/favicon.ico' />
-            </Head> */}
-            {/* <div className='tabs'>
+            </Head>
+            <div className='tabs'>
                 <ul className='tabs-list'>
                     {tabsList.map(({ name, href }, i) => (
                         <li key={i} className={i === 0 ? "is-active" : "has-text-black"}>
@@ -79,7 +82,7 @@ function Movie() {
                         Moveek
                     </a>
                 </div>
-            </div> */}
+            </div>
 
             <style jsx>{`
                 iframe {
@@ -129,26 +132,27 @@ function Movie() {
     );
 }
 
-// export async function getStaticPaths() {
-//     // Call an external API endpoint to get posts
-//     const res = await fetch(`${apiURL}/api/movies?pageSize=1000`);
-//     const { movies } = await res.json();
+export async function getStaticPaths() {
+    const db = await connectDB();
+    // Call an external API endpoint to get posts
+    const movies = await db.collection("movies").find().toArray();
 
-//     // Get the paths we want to pre-render based on posts
-//     const paths = movies.map((movie) => `/movies/${movie.id}`);
+    // Get the paths we want to pre-render based on posts
+    const paths = movies.map((movie) => `/movies/${movie._id}`);
 
-//     // We'll pre-render only these paths at build time.
-//     // { fallback: false } means other routes should 404.
-//     return { paths, fallback: false };
-// }
-// export async function getStaticProps({ params: { movieId } }) {
-//     const res = await fetch(`${apiURL}/api/movies/${movieId}`);
-//     const movie = await res.json();
+    // We'll pre-render only these paths at build time.
+    // { fallback: false } means other routes should 404.
+    return { paths, fallback: false };
+}
+export async function getStaticProps({ params: { movieId } }) {
+    const db = await connectDB();
 
-//     return {
-//         props: { movie },
-//         revalidate: 20 * 60, // seconds
-//     };
-// }
+    const movie = await db.collection("movies").findOne({ _id: ObjectId(movieId) });
+
+    return {
+        props: { movie: JSON.stringify(movie) },
+        revalidate: 20 * 60, // seconds
+    };
+}
 
 export default Movie;

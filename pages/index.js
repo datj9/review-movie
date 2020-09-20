@@ -1,14 +1,11 @@
 import React, { useRef } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import axios from "axios";
 import LazyImage from "../components/HorizontalLazyImage";
-
-const apiURL = process.env.API_URL;
+import connectDB from "../setup/connectDB";
 
 function Home(props) {
-    const { movies } = props;
-    const nowShowingRef = useRef();
+    const movies = JSON.parse(props.movies);
 
     return (
         <div>
@@ -25,12 +22,12 @@ function Home(props) {
                             <a>Xem Tất Cả</a>
                         </Link>
                     </div>
-                    <div ref={nowShowingRef} className='list-movies'>
-                        {movies[0].map((movie, index) => (
-                            <Link key={movie.id} href={`/movies/[movieId]`} as={`/movies/${movie.id}`}>
+                    <div className='list-movies'>
+                        {movies.nowShowing.map((movie, index) => (
+                            <Link key={movie._id} href={`/movies/[movieId]`} as={`/movies/${movie._id}`}>
                                 <a
                                     title={movie.name}
-                                    className={`movie-card ${index !== movies[0].length - 1 ? "mr-5" : "mr-3"}`}
+                                    className={`movie-card ${index !== movies.nowShowing.length - 1 ? "mr-5" : "mr-3"}`}
                                 >
                                     <div className='img-wrapper'>
                                         <LazyImage listIndex={0} src={movie.image} alt={movie.name} />
@@ -53,11 +50,13 @@ function Home(props) {
                         </Link>
                     </div>
                     <div className='list-movies'>
-                        {movies[1].map((movie, index) => (
-                            <Link key={movie.id} href={`/movies/${movie.id}`}>
+                        {movies.commingSoon.map((movie, index) => (
+                            <Link key={movie._id} href={`/movies/${movie._id}`}>
                                 <a
                                     title={movie.name}
-                                    className={`movie-card ${index !== movies[1].length - 1 ? "mr-5" : "mr-3"}`}
+                                    className={`movie-card ${
+                                        index !== movies.commingSoon.length - 1 ? "mr-5" : "mr-3"
+                                    }`}
                                 >
                                     <LazyImage listIndex={1} src={movie.image} alt={movie.name} />
 
@@ -162,16 +161,17 @@ function Home(props) {
 }
 
 export async function getStaticProps(context) {
-    const status = ["1", "0"];
-
     try {
-        const {
-            data: { movies },
-        } = await axios.get(`${apiURL}/api/movies?status=${JSON.stringify(status)}`);
+        const db = await connectDB();
+        const commingSoon = await db.collection("movies").find({ status: 0 }).toArray();
+        const nowShowing = await db.collection("movies").find({ status: 1 }).toArray();
 
         return {
             props: {
-                movies,
+                movies: JSON.stringify({
+                    nowShowing,
+                    commingSoon,
+                }),
             },
             revalidate: 20 * 60, // seconds
         };
