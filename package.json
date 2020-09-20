@@ -21,6 +21,7 @@
         "body-parser": "^1.19.0",
         "bulma": "^0.9.0",
         "cheerio": "^1.0.0-rc.3",
+        "cors": "^2.8.5",
         "dayjs": "^1.8.35",
         "express": "^4.17.1",
         "express-session": "^1.17.1",

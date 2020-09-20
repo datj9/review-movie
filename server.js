@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== "production";
@@ -37,7 +38,7 @@ nextApp.prepare().then(() => {
     // deserialize and serialize cookie from the browser
     server.use(passport.session());
 
-    server.use("/api", require("./routes/api"));
+    server.use("/api", cors(), require("./routes/api"));
 
     server.all("*", (req, res) => {
         return nextHandler(req, res);
