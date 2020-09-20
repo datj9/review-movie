@@ -4,9 +4,11 @@ const isInt = require("validator/lib/isInt");
 const { User } = require("../../../models/User");
 const { sendEmailRecoverPassword } = require("../../../helpers/sendEmail");
 const bcrypt = require("bcryptjs");
-const { hotp } = require("otplib");
 const { promisify } = require("util");
 const hashPass = promisify(bcrypt.hash);
+const jwt = require("jsonwebtoken");
+const signToken = promisify(jwt.sign);
+const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
 const logOut = (req, res) => {
     req.logout();
@@ -53,6 +55,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     const { email, password } = req.body;
     const errors = {};
+    const { is_client_side: isClientSide = false } = req.headers;
 
     if (!email) errors.email = "email is required";
     if (!password) errors.password = "password is required";
@@ -70,9 +73,15 @@ const login = async (req, res) => {
 
         if (!isMatch) return res.status(400).json({ password: "password is incorrect" });
 
-        passport.authenticate("local")(req, res, function () {
-            return res.status(200).json({});
-        });
+        if (isClientSide == false) {
+            passport.authenticate("local")(req, res, function () {
+                return res.status(200).json({});
+            });
+        } else {
+            const token = await signToken(foundUser.transform(), jwtSecretKey, { expiresIn: "1h" });
+
+            return res.status(200).json({ token });
+        }
     } catch (error) {
         return res.status(500).json(error);
     }
