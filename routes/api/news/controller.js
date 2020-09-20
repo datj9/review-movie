@@ -1,6 +1,6 @@
 const { News } = require("../../../models/News");
 const isInt = require("validator/lib/isInt");
-const ObjectId = require("mongoose").Schema.Types.ObjectId;
+const ObjectId = require("mongoose").Types.ObjectId;
 
 const getNews = async (req, res) => {
     const { pageSize, pageIndex } = req.query;
