@@ -50,10 +50,11 @@ const getMovies = async (req, res) => {
                 .skip(skip)
                 .limit(limit)
                 .sort([["createdAt", -1]]);
+            const total = await Movie.countDocuments();
 
             movies.forEach((movie, i) => (movies[i] = movie.transform()));
 
-            return res.status(200).json(movies);
+            return res.status(200).json({ movies, total });
         }
     } catch (error) {
         return res.status(500).json(error);
