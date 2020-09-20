@@ -163,14 +163,25 @@ function Home(props) {
 
 export async function getStaticProps(context) {
     const status = ["1", "0"];
-    const { data: movies } = await axios.get(`${apiURL}/api/movies?status=${JSON.stringify(status)}`);
 
-    return {
-        props: {
-            movies,
-        },
-        revalidate: 20 * 60, // seconds
-    };
+    try {
+        const {
+            data: { movies },
+        } = await axios.get(`${apiURL}/api/movies?status=${JSON.stringify(status)}`);
+
+        return {
+            props: {
+                movies,
+            },
+            revalidate: 20 * 60, // seconds
+        };
+    } catch (error) {
+        return {
+            props: {
+                movies: { 0: [], 1: [] },
+            },
+        };
+    }
 }
 
 export default Home;
