@@ -9,10 +9,11 @@ const getNews = async (req, res) => {
 
     try {
         const listNews = await News.find().skip(skip).limit(limit);
+        const total = await News.countDocuments();
 
         listNews.forEach((n, i) => (listNews[i] = n.transform()));
 
-        return res.status(200).json(listNews);
+        return res.status(200).json({ listNews, total });
     } catch (error) {
         return res.status(500).json(error);
     }
