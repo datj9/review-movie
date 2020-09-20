@@ -3943,6 +3943,13 @@ jsesc@~0.5.0:
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha1-597mbjXW/Bb3EP6R1c9p9w8IkR0=
 
+json-immutable@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/json-immutable/-/json-immutable-0.4.0.tgz#4e6f1deac028d5178d1be7a133075c7dc69f02e2"
+  integrity sha512-c0bh98o1EJxip3Orn4+3wQ+Rh0qlfZUlEefZ28wEijMVeM446yE3Ctyvx4OwBX+93DUXqP5SRfvs54JJzyTe0g==
+  dependencies:
+    json-stream-stringify "1.5.x"
+
 json-parse-better-errors@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#bb867cfb3450e69107c131d1c514bab3dc8bcaa9"
@@ -3957,6 +3964,11 @@ json-schema@0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/json-schema/-/json-schema-0.2.3.tgz#b480c892e59a2f05954ce727bd3f2a4e882f9e13"
   integrity sha1-tIDIkuWaLwWVTOcnvT8qTogvnhM=
+
+json-stream-stringify@1.5.x:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/json-stream-stringify/-/json-stream-stringify-1.5.1.tgz#bab905aea92a2f130a4e142b78e66c8367a1064e"
+  integrity sha1-urkFrqkqLxMKThQreOZsg2ehBk4=
 
 json-stringify-safe@~5.0.1:
   version "5.0.1"
