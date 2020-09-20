@@ -4,8 +4,8 @@ import VerticalLazyImage from "../components/VerticalLazyImage";
 export default function MoviesList({ movies }) {
     return (
         <div className='movies-list'>
-            {movies.map((movie) => (
-                <Link key={movie.id} href={`/movies/${movie.id}`}>
+            {movies?.map((movie) => (
+                <Link key={movie._id} href={`/movies/${movie._id}`}>
                     <a className='movie-card mb-4'>
                         <div className='movie-image-wrapper'>
                             <VerticalLazyImage src={movie.image} alt={movie.name} />

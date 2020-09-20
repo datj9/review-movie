@@ -52,7 +52,7 @@ function Movie(props) {
                     ) : null}
                     <p>
                         <span className='has-text-weight-semibold has-text-black'>Đạo diễn</span>:{" "}
-                        {filmDirectors.map((director, i) => (
+                        {filmDirectors?.map((director, i) => (
                             <span key={i}>
                                 {director}
                                 {i !== filmDirectors.length - 1 ? ", " : ""}
@@ -61,7 +61,7 @@ function Movie(props) {
                     </p>
                     <p>
                         <span className='has-text-weight-semibold has-text-black'>Diễn viên</span>:{" "}
-                        {actors.map((actor, i) => (
+                        {actors?.map((actor, i) => (
                             <span key={i}>
                                 {actor}
                                 {i !== actors.length - 1 ? ", " : ""}
@@ -147,12 +147,18 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params: { movieId } }) {
     const db = await connectDB();
 
-    const movie = await db.collection("movies").findOne({ _id: ObjectId(movieId) });
+    try {
+        const movie = await db.collection("movies").findOne({ _id: ObjectId(movieId) });
 
-    return {
-        props: { movie: JSON.stringify(movie) },
-        revalidate: 20 * 60, // seconds
-    };
+        return {
+            props: { movie: JSON.stringify(movie) },
+            revalidate: 20 * 60, // seconds
+        };
+    } catch (error) {
+        return {
+            props: { movie: JSON.stringify({}) },
+        };
+    }
 }
 
 export default Movie;

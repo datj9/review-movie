@@ -178,7 +178,7 @@ export async function getStaticProps(context) {
     } catch (error) {
         return {
             props: {
-                movies: { 0: [], 1: [] },
+                movies: JSON.stringify({ 0: [], 1: [] }),
             },
         };
     }
