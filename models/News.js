@@ -20,7 +20,7 @@ const NewsSchema = new mongoose.Schema(
             required: true,
         },
         isPublic: {
-            type: String,
+            type: Boolean,
             required: true,
             default: false,
         },
