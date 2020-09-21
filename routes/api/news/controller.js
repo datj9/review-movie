@@ -14,7 +14,8 @@ const getNews = async (req, res) => {
 
         listNews.forEach((n, i) => {
             listNews[i] = n.transform();
-            listNews[i].author = listNews[i].author.transform();
+            listNews[i].author.id = listNews[i].author._id;
+            delete listNews[i].author._id;
         });
 
         return res.status(200).json({ listNews, total });
