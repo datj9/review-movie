@@ -24,21 +24,21 @@ const getNews = async (req, res) => {
 };
 
 const createNews = async (req, res) => {
-    const { title, content, author, image } = req.body;
+    const { title, content, image } = req.body;
+    const { id: userId } = req.user;
     const errors = {};
 
     if (typeof title != "string") errors.title = "title is invalid";
     if (typeof content != "string") errors.content = "content is invalid";
     if (!isURL(image + "")) errors.image = "image is not URL";
-    if (typeof author != "string" || !ObjectId.isValid(author + "")) errors.author = "author is invalid";
     if (Object.keys(errors).length) return res.status(400).json(errors);
 
     try {
         const news = new News({
             title,
-            author,
             content,
             image,
+            author: userId,
         });
 
         await news.save();
@@ -51,17 +51,16 @@ const createNews = async (req, res) => {
 
 const updateNews = async (req, res) => {
     const { newsId } = req.params;
-    const { title, content, author, image } = req.body;
+    const { title, content, image } = req.body;
     const errors = {};
 
     if (typeof title != "string") errors.title = "title is invalid";
     if (typeof content != "string") errors.content = "content is invalid";
     if (!isURL(image + "")) errors.image = "image is not URL";
-    if (typeof author != "string" || !ObjectId.isValid(author + "")) errors.author = "author is invalid";
     if (Object.keys(errors).length) return res.status(400).json(errors);
 
     try {
-        await News.updateOne({ _id: newsId }, { title, content, author, image });
+        await News.updateOne({ _id: newsId }, { title, content, image });
 
         return res.status(200).json({ isSuccess: true });
     } catch (error) {
