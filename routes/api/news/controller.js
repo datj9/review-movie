@@ -24,6 +24,26 @@ const getNews = async (req, res) => {
     }
 };
 
+const getNewsById = async (req, res) => {
+    const { newsId } = req.params;
+
+    if (!ObjectId.isValid(newsId + "")) return { newsId: "newsId is invadlid" };
+
+    try {
+        const news = await News.findById(newsId).populate("author", "name");
+
+        if (!news) return res.status(404).json({ error: "News not found" });
+
+        news.author.id = news.author._id;
+        delete news.author._id;
+        delete news.author.__v;
+
+        return res.status(200).json(news);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+};
+
 const createNews = async (req, res) => {
     const { title, content, image } = req.body;
     const { id: userId } = req.user;
@@ -87,4 +107,18 @@ const changePublicStatus = async (req, res) => {
     }
 };
 
-module.exports = { getNews, createNews, updateNews, changePublicStatus };
+const deleteNewsById = async (req, res) => {
+    const { newsId } = req.params;
+
+    if (!ObjectId.isValid(newsId + "")) return { newsId: "newsId is invadlid" };
+
+    try {
+        await News.deleteOne({ _id: newsId });
+
+        return res.status(200).json({ isSuccess: true });
+    } catch (error) {
+        return res.status(500).json({ ...error, isSuccess: false });
+    }
+};
+
+module.exports = { getNews, createNews, updateNews, changePublicStatus, deleteNewsById };

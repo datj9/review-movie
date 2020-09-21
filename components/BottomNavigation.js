@@ -9,8 +9,8 @@ import {
     MovieFilterOutlined,
     LocationOn,
     LocationOnOutlined,
-    Notifications,
-    NotificationsOutlined,
+    RateReview,
+    RateReviewOutlined,
 } from "@material-ui/icons";
 
 function BottomNavigation(props) {
@@ -34,9 +34,9 @@ function BottomNavigation(props) {
             href: "/",
         },
         {
-            name: "Thông báo",
-            filledIcon: <Notifications htmlColor='#f69314' />,
-            outlinedIcon: <NotificationsOutlined htmlColor='#676767' />,
+            name: "Đánh giá",
+            filledIcon: <RateReview htmlColor='#f69314' />,
+            outlinedIcon: <RateReviewOutlined htmlColor='#676767' />,
             href: "/",
         },
         {
