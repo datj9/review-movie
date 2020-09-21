@@ -1,5 +1,6 @@
 const { News } = require("../../../models/News");
 const isInt = require("validator/lib/isInt");
+const isURL = require("validator/lib/isURL");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 const getNews = async (req, res) => {
@@ -8,10 +9,13 @@ const getNews = async (req, res) => {
     const skip = isInt(pageIndex + "") && +pageIndex >= 1 ? (+pageIndex - 1) * limit : 0 * limit;
 
     try {
-        const listNews = await News.find().skip(skip).limit(limit);
+        const listNews = await News.find().skip(skip).limit(limit).populate("author", "name");
         const total = await News.countDocuments();
 
-        listNews.forEach((n, i) => (listNews[i] = n.transform()));
+        listNews.forEach((n, i) => {
+            listNews[i] = n.transform();
+            listNews[i].author = listNews[i].author.transform();
+        });
 
         return res.status(200).json({ listNews, total });
     } catch (error) {
@@ -20,12 +24,13 @@ const getNews = async (req, res) => {
 };
 
 const createNews = async (req, res) => {
-    const { title, content, author } = req.body;
+    const { title, content, author, image } = req.body;
     const errors = {};
 
     if (typeof title != "string") errors.title = "title is invalid";
     if (typeof content != "string") errors.content = "content is invalid";
-    if (typeof author != "string" || !ObjectId.isValid(author)) errors.author = "author is invalid";
+    if (!isURL(image + "")) errors.image = "image is not URL";
+    if (typeof author != "string" || !ObjectId.isValid(author + "")) errors.author = "author is invalid";
     if (Object.keys(errors).length) return res.status(400).json(errors);
 
     try {
@@ -33,6 +38,7 @@ const createNews = async (req, res) => {
             title,
             author,
             content,
+            image,
         });
 
         await news.save();
@@ -43,4 +49,42 @@ const createNews = async (req, res) => {
     }
 };
 
-module.exports = { getNews, createNews };
+const updateNews = async (req, res) => {
+    const { newsId } = req.params;
+    const { title, content, author, image } = req.body;
+    const errors = {};
+
+    if (typeof title != "string") errors.title = "title is invalid";
+    if (typeof content != "string") errors.content = "content is invalid";
+    if (!isURL(image + "")) errors.image = "image is not URL";
+    if (typeof author != "string" || !ObjectId.isValid(author + "")) errors.author = "author is invalid";
+    if (Object.keys(errors).length) return res.status(400).json(errors);
+
+    try {
+        await News.updateOne({ _id: newsId }, { title, content, author, image });
+
+        return res.status(200).json({ isSuccess: true });
+    } catch (error) {
+        return res.status(500).json({ ...error, isSuccess: false });
+    }
+};
+
+const changePublicStatus = async (req, res) => {
+    const { isPublic } = req.query;
+    const { newsId } = req.params;
+    const errors = {};
+
+    if (typeof isPublic != "boolean") errors.isPublic = "isPublic is invalid";
+    if (!ObjectId.isValid(newsId + "")) errors.newsId = "newsId is invadlid";
+    if (Object.keys(errors).length) return res.status(400).json(errors);
+
+    try {
+        await News.updateOne({ _id: newsId }, { isPublic });
+
+        return res.status(200).json({ isSuccess: true });
+    } catch (error) {
+        return res.status(500).json({ ...error, isSuccess: false });
+    }
+};
+
+module.exports = { getNews, createNews, updateNews, changePublicStatus };

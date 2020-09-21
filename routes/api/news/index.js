@@ -5,6 +5,8 @@ const { uploadSingle } = require("../../../middlewares/upload");
 
 router.get("/", newsController.getNews);
 router.post("/", authenticate, authorize(["admin"]), newsController.createNews);
-router.post("/upload-image", uploadSingle("image"));
+router.post("/upload-image", authenticate, authorize(["admin"]), uploadSingle("image"));
+router.put("/:newsId", authenticate, authorize(["admin"]), newsController.updateNews);
+router.put("change-public-status/:newsId", authenticate, authorize(["admin"]), newsController.changePublicStatus);
 
 module.exports = router;

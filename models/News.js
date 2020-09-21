@@ -14,6 +14,15 @@ const NewsSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        image: {
+            type: String,
+            required: true,
+        },
+        isPublic: {
+            type: String,
+            required: true,
+            default: false,
+        },
     },
     { timestamps: true }
 );
