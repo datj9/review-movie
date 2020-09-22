@@ -25,10 +25,12 @@ export async function getStaticProps() {
 
         return {
             props: { movies: JSON.stringify(movies) },
+            revalidate: 1,
         };
     } catch (error) {
         return {
             props: { movies: JSON.stringify([]) },
+            revalidate: 1,
         };
     }
 }

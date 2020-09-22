@@ -3,8 +3,11 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import connectDB from "../../setup/connectDB";
 import { ObjectId } from "mongodb";
+import { useRouter } from "next/router";
 
 function Movie(props) {
+    const { isFallback } = useRouter();
+
     const { _id: id, name, runningTime, trailer, description, releaseDate, filmDirectors, actors } = JSON.parse(
         props.movie
     );
@@ -17,6 +20,8 @@ function Movie(props) {
     const handleFinishLoadingTrailer = () => {
         setLoadingIframeTrailer(false);
     };
+
+    if (isFallback) return <div>Loading ....</div>;
 
     return (
         <div className='px-3 py-5'>
@@ -135,14 +140,17 @@ function Movie(props) {
 export async function getStaticPaths() {
     const db = await connectDB();
     // Call an external API endpoint to get posts
-    const movies = await db.collection("movies").find().toArray();
+    const movies = await db
+        .collection("movies")
+        .find({}, { sort: { createdAt: -1 } })
+        .toArray();
 
     // Get the paths we want to pre-render based on posts
     const paths = movies.map((movie) => `/movies/${movie._id}`);
 
     // We'll pre-render only these paths at build time.
     // { fallback: false } means other routes should 404.
-    return { paths, fallback: false };
+    return { paths, fallback: true };
 }
 export async function getStaticProps({ params: { movieId } }) {
     const db = await connectDB();
@@ -152,11 +160,11 @@ export async function getStaticProps({ params: { movieId } }) {
 
         return {
             props: { movie: JSON.stringify(movie) },
-            revalidate: 20 * 60, // seconds
+            revalidate: 1, // seconds
         };
     } catch (error) {
         return {
-            props: { movie: JSON.stringify({}) },
+            props: { movie: JSON.stringify({}), revalidate: 1 },
         };
     }
 }
