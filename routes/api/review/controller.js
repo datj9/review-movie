@@ -48,10 +48,11 @@ const getReviewsByUserId = async (req, res) => {
     if (!ObjectId.isValid(userId)) return res.status(400).json({ error: "userId is invalid" });
 
     try {
-        const reviews = await Review.find({ user: userId }).populate("movie");
+        const reviews = await Review.find({ user: userId }).populate("movie", "name image");
 
         reviews.forEach((rev, i) => {
             reviews[i] = rev.transform();
+            reviews[i].movie = rev.movie.transform();
         });
 
         return res.status(200).json(reviews);
