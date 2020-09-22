@@ -34,11 +34,7 @@ const getNewsById = async (req, res) => {
 
         if (!news) return res.status(404).json({ error: "News not found" });
 
-        news.author.id = news.author._id;
-        delete news.author._id;
-        delete news.author.__v;
-
-        return res.status(200).json(news);
+        return res.status(200).json({ ...news.transform(), author: news.author.transform() });
     } catch (error) {
         return res.status(500).json(error);
     }

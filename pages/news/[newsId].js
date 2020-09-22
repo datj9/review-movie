@@ -25,8 +25,8 @@ function NewsDetail(props) {
                         : dayjs(news.createdAt).fromNow()}
                 </span>
                 <span>{news.author.name}</span>
-                <div className='news-content'>{parse(news.content)}</div>
             </div>
+            <div className='news-content'>{parse(news.content)}</div>
             <style>
                 {`
                     .time-and-author {

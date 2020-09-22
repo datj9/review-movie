@@ -1,6 +1,12 @@
 import Link from "next/link";
 import dayjs from "dayjs";
 import connectDB from "../../setup/connectDB";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/vi";
+
+dayjs.locale("vi");
+dayjs.extend(relativeTime);
 
 export default function News(props) {
     const newsList = JSON.parse(props.newsList);
