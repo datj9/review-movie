@@ -67,7 +67,8 @@ export async function getStaticProps() {
             .toArray();
 
         return {
-            props: { newsList: JSON.stringify(newsList), revalidate: 1 },
+            props: { newsList: JSON.stringify(newsList) },
+            revalidate: 1
         };
     } catch (error) {
         return {
