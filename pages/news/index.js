@@ -1,5 +1,4 @@
 import Link from "next/link";
-import dayjs from "dayjs";
 import connectDB from "../../setup/connectDB";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
