@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import "dayjs/locale/vi";
+import ReviewItem from "../components/ReviewItem";
 
 dayjs.locale("vi");
 dayjs.extend(relativeTime);
@@ -25,7 +26,7 @@ function Reviews(props) {
     const { mid: movieId, tid: theaterId } = router.query;
     const writeReviewBtnRef = useRef();
     const modalRef = useRef();
-    const { isSuccess, isLoading } = useSelector((state) => state.review);
+    const { isLoading } = useSelector((state) => state.review);
     const [modalOpen, setModalOpen] = useState(false);
     const [text, setText] = useState("");
     const [rating, setRating] = useState(0);
@@ -310,38 +311,12 @@ function Reviews(props) {
                         ) : (
                             <div className='reviews-list'>
                                 {reviewsList.map((review) => (
-                                    <div key={review.id} className='review-item mb-4 py-2 px-4'>
-                                        <div className='header-review-item is-flex'>
-                                            <div className='avatar mr-2 is-flex'>
-                                                {review.user.image ? (
-                                                    <span className='is-block'>
-                                                        <img src={review.user.image} />
-                                                    </span>
-                                                ) : (
-                                                    <span className='name-icon is-flex has-text-white'>Đ</span>
-                                                )}
-                                            </div>
-                                            <div className='name-and-time is-flex'>
-                                                <span className='has-text-black'>{review.user.name}</span>
-                                                <span className='has-text-black'>
-                                                    {Date.now() - new Date(review.createdAt).getTime() >=
-                                                    3 * 24 * 60 * 60 * 1000
-                                                        ? dayjs(review.createdAt).format("kk:mm DD/MM/YYYY")
-                                                        : dayjs(review.createdAt).fromNow()}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            {[1, 2, 3, 4, 5].map((grade) =>
-                                                grade <= review.rating ? (
-                                                    <Star key={grade} htmlColor='yellow' />
-                                                ) : (
-                                                    <StarBorderOutlined key={grade} htmlColor='yellow' />
-                                                )
-                                            )}
-                                        </div>
-                                        <div className='review-text has-text-black ml-1'>{review.text}</div>
-                                    </div>
+                                    <ReviewItem
+                                        review={review}
+                                        name={review.user.name}
+                                        displayAvatar={true}
+                                        key={review.id}
+                                    />
                                 ))}
                                 {total > 10 ? (
                                     <nav className='pagination' role='navigation' aria-label='pagination'>
@@ -425,35 +400,7 @@ function Reviews(props) {
                     .movie-info {
                         flex-direction: column;
                     }
-                    .review-item {
-                        border: 1px solid #e8e8e8;
-                        border-radius: 3px;
-                    }
-                    .review-text {
-                        white-space: pre-wrap;
-                    }
-                    .header-review-item {
-                        justify-content: flex-start;
-                    }
-                    .avatar {
-                        width: 2.5rem;
-                        height: 2.5rem;
-                        border-radius: 50%;
-                    }
-                    .avatar img {
-                        border-radius: 50%;
-                    }
-                    .name-icon {
-                        width: 100%;
-                        height: 100%;
-                        justify-content: center;
-                        align-items: center;
-                        background: green;
-                        border-radius: 50%;
-                    }
-                    .name-and-time {
-                        flex-direction: column;
-                    }
+
                     @media only screen and (min-width: 576px) {
                         .movie-info {
                             flex-direction: row;

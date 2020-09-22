@@ -8,10 +8,12 @@ import { withAuthServerSideProps, withAuth } from "../../HOC/withAuth";
 import { CLEAN_UP } from "../../redux/user/action-types";
 import Person from "@material-ui/icons/Person";
 import ExitToApp from "@material-ui/icons/ExitToApp";
+import Schedule from "@material-ui/icons/Schedule";
 
 function MyAccount({ user }) {
     const router = useRouter();
-    const { isLoading: isLoggingOut, isSuccess } = useSelector((state) => state.user.client);
+    const { pathname } = router;
+    const { isSuccess } = useSelector((state) => state.user.client);
     const dispatch = useDispatch();
     const handleLogout = () => {
         dispatch(logout());
@@ -42,7 +44,11 @@ function MyAccount({ user }) {
                 <li className='mb-3'>
                     <div className='is-flex'>
                         <span className='is-block mr-3 avatar-wp'>
-                            <img src={user.image} />
+                            {user.image ? (
+                                <img src={user.image} />
+                            ) : (
+                                <span className='name-icon is-flex has-text-white'>{user.name.slice(0, 1)}</span>
+                            )}
                         </span>
                         <span className='user-name'>{user.name}</span>
                     </div>
@@ -54,6 +60,16 @@ function MyAccount({ user }) {
                                 <Person />
                             </span>
                             <span>Thông tin tài khoản</span>
+                        </a>
+                    </Link>
+                </li>
+                <li className='mb-3'>
+                    <Link href={pathname + "/my-reviews"}>
+                        <a className='is-flex has-text-grey-dark'>
+                            <span className='mr-3'>
+                                <Schedule />
+                            </span>
+                            <span>Đánh giá gần đây</span>
                         </a>
                     </Link>
                 </li>
@@ -74,8 +90,16 @@ function MyAccount({ user }) {
                         width: 2.5rem;
                         height: 2.5rem;
                     }
-                    .avatar-wp img {
+                    .avatar-wp {
                         border-radius: 50%;
+                        overflow: hidden;
+                    }
+                    .name-icon {
+                        background: green;
+                        width: 100%;
+                        height: 100%;
+                        justify-content: center;
+                        align-items: center;
                     }
                     .user-name {
                         align-self: center;

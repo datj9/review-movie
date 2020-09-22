@@ -42,6 +42,25 @@ const getReviews = async (req, res) => {
     }
 };
 
+const getReviewsByUserId = async (req, res) => {
+    const { id: userId } = req.user;
+
+    if (!ObjectId.isValid(userId)) return res.status(400).json({ error: "userId is invalid" });
+
+    try {
+        const reviews = await Review.find({ user: userId }).populate("movie");
+
+        reviews.forEach((rev, i) => {
+            reviews[i] = rev.transform();
+            reviews[i].movie = rev[i].movie.transform();
+        });
+
+        return res.status(200).json(reviews);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+};
+
 const createReview = async (req, res) => {
     const { text, rating, movieId, theaterId } = req.body;
     const { id: userId } = req.user;
@@ -84,4 +103,4 @@ const createReview = async (req, res) => {
     }
 };
 
-module.exports = { getReviews, createReview };
+module.exports = { getReviews, createReview, getReviewsByUserId };

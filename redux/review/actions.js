@@ -18,3 +18,18 @@ export const createReview = (review) => async (dispatch) => {
         dispatch(createReviewSuccess(data));
     }
 };
+
+export const getMyReviews = () => async (dispatch) => {
+    dispatch({
+        type: actionTypes.GET_MY_REVIEW_START,
+    });
+
+    const { data, ok } = await api.get("my-reviews");
+
+    if (ok) {
+        dispatch({
+            type: actionTypes.GET_MY_REVIEW_SUCCESS,
+            payload: data,
+        });
+    }
+};

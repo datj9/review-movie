@@ -7,8 +7,6 @@ import {
     PersonOutlined,
     MovieFilter,
     MovieFilterOutlined,
-    LocationOn,
-    LocationOnOutlined,
     RateReview,
     RateReviewOutlined,
 } from "@material-ui/icons";
@@ -28,17 +26,12 @@ function BottomNavigation(props) {
             href: "/",
         },
         {
-            name: "Rạp chiếu",
-            filledIcon: <LocationOn htmlColor='#f69314' />,
-            outlinedIcon: <LocationOnOutlined htmlColor='#676767' />,
-            href: "/",
-        },
-        {
-            name: "Đánh giá",
+            name: "Tin tức",
             filledIcon: <RateReview htmlColor='#f69314' />,
             outlinedIcon: <RateReviewOutlined htmlColor='#676767' />,
-            href: "/",
+            href: "/news",
         },
+
         {
             name: "Tài khoản",
             filledIcon: <Person htmlColor='#f69314' />,
@@ -55,18 +48,18 @@ function BottomNavigation(props) {
     useEffect(() => {
         const { pathname } = router;
         const regExpHomeTab = new RegExp("^/$|^/movies");
-        const regExpTheatersTab = new RegExp("^/theaters");
+        const regExpNewsTab = new RegExp("^/news");
         const regExpAccountTab = new RegExp("^/login|^/register|^/my-account|^/forgot-password");
 
         switch (true) {
             case regExpHomeTab.test(pathname):
                 setTabActive(0);
                 break;
-            case regExpTheatersTab.test(pathname):
+            case regExpNewsTab.test(pathname):
                 setTabActive(1);
                 break;
             case regExpAccountTab.test(pathname):
-                setTabActive(3);
+                setTabActive(2);
                 break;
             default:
                 break;
