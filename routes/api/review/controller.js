@@ -52,7 +52,6 @@ const getReviewsByUserId = async (req, res) => {
 
         reviews.forEach((rev, i) => {
             reviews[i] = rev.transform();
-            reviews[i].movie = rev[i].movie.transform();
         });
 
         return res.status(200).json(reviews);
