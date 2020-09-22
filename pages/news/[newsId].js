@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb";
 import dayjs from "dayjs";
 
 function NewsDetail(props) {
-    const news = JSON.parse(props.news);
+    const news = props.news ? JSON.parse(props.news) : {};
     const { isFallback } = useRouter();
 
     if (isFallback) return <div>Loading ....</div>;
