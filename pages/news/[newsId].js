@@ -46,7 +46,7 @@ export async function getStaticProps({ params: { newsId } }) {
 
         news.author = author;
 
-        return { props: { news: JSON.stringify(news) } };
+        return { props: { news: JSON.stringify(news) }, revalidate: 1 };
     } catch (error) {
         return { props: { news: JSON.stringify({}) }, revalidate: 1, };
     }
