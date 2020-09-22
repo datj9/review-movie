@@ -8,9 +8,9 @@ import { useRouter } from "next/router";
 function Movie(props) {
     const { isFallback } = useRouter();
 
-    const { _id: id, name, runningTime, trailer, description, releaseDate, filmDirectors, actors } = JSON.parse(
-        props.movie
-    );
+    const { _id: id, name, runningTime, trailer, description, releaseDate, filmDirectors, actors } = props.movie
+        ? JSON.parse(props.movie)
+        : {};
     const [loadingIframeTrailer, setLoadingIframeTrailer] = useState(true);
     const tabsList = [
         { name: "Thông tin phim", href: `/movies/${id}` },

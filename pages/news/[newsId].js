@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import parse from "html-react-parser";
 import connectDB from "../../setup/connectDB";
 import { ObjectId } from "mongodb";
 import dayjs from "dayjs";
@@ -24,6 +25,7 @@ function NewsDetail(props) {
                         : dayjs(news.createdAt).fromNow()}
                 </span>
                 <span>{news.author.name}</span>
+                <div className='news-content'>{parse(news.content)}</div>
             </div>
             <style>
                 {`
