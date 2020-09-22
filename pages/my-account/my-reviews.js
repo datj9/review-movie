@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReviewItem from "../../components/ReviewItem";
 import { getMyReviews } from "../../redux/review/actions";
+import { withAuth, withAuthServerSideProps } from "../../HOC/withAuth";
 
-export default function MyReviews() {
+function MyReviews() {
     const dispatch = useDispatch();
     const { reviewsList, loaded } = useSelector((state) => state.review);
 
@@ -23,3 +24,7 @@ export default function MyReviews() {
         </div>
     );
 }
+
+export const getServerSideProps = withAuthServerSideProps();
+
+export default withAuth(MyReviews);

@@ -121,4 +121,4 @@ const deleteNewsById = async (req, res) => {
     }
 };
 
-module.exports = { getNews, createNews, updateNews, changePublicStatus, deleteNewsById };
+module.exports = { getNews, getNewsById, createNews, updateNews, changePublicStatus, deleteNewsById };

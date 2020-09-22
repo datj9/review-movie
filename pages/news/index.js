@@ -37,6 +37,11 @@ export default function News(props) {
                         border-radius: 1rem;
                         overflow: hidden;
                     }
+                    .news-title {
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        white-space: nowrap;
+                    }
                     .news-img-wp {
                         width: 100%;
                     }
