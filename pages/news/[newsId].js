@@ -3,7 +3,7 @@ import connectDB from "../../setup/connectDB";
 import { ObjectId } from "mongodb";
 import dayjs from "dayjs";
 
-export default function NewsDetail(props) {
+function NewsDetail(props) {
     const news = JSON.parse(props.news);
     const { isFallback } = useRouter();
 
@@ -48,6 +48,8 @@ export async function getStaticProps({ params: { newsId } }) {
 
         return { props: { news: JSON.stringify(news) } };
     } catch (error) {
-        return { props: { news: JSON.stringify({}) } };
+        return { props: { news: JSON.stringify({}) }, revalidate: 1, };
     }
 }
+
+export default NewsDetail;
