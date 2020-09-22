@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb";
 import dayjs from "dayjs";
 
 export default function NewsDetail(props) {
-  /*  const news = JSON.parse(props.news);
+    const news = JSON.parse(props.news);
     const { isFallback } = useRouter();
 
     if (isFallback) return <div>Loading ....</div>;
@@ -23,8 +23,7 @@ export default function NewsDetail(props) {
                 `}
             </style>
         </div>
-    );*/
-    return <div>News</div>
+    );
 }
 
 export async function getStaticPaths() {
