@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import connectDB from "../../setup/connectDB";
 import { ObjectId } from "mongodb";
@@ -8,9 +8,16 @@ import { useRouter } from "next/router";
 function Movie(props) {
     const { isFallback } = useRouter();
 
-    const { _id: id, name, runningTime, trailer, description, releaseDate, filmDirectors, actors } = props.movie
-        ? JSON.parse(props.movie)
-        : {};
+    const {
+        _id: id,
+        name,
+        runningTime,
+        trailer,
+        description,
+        releaseDate,
+        filmDirectors,
+        actors,
+    } = props.movie ? JSON.parse(props.movie) : {};
     const [loadingIframeTrailer, setLoadingIframeTrailer] = useState(true);
     const tabsList = [
         { name: "Thông tin phim", href: `/movies/${id}` },
@@ -32,7 +39,10 @@ function Movie(props) {
             <div className='tabs'>
                 <ul className='tabs-list'>
                     {tabsList.map(({ name, href }, i) => (
-                        <li key={i} className={i === 0 ? "is-active" : "has-text-black"}>
+                        <li
+                            key={i}
+                            className={i === 0 ? "is-active" : "has-text-black"}
+                        >
                             <a href={href}>{name}</a>
                         </li>
                     ))}
@@ -41,22 +51,31 @@ function Movie(props) {
 
             <div id='info' className='tab-content py-3 mb-6'>
                 <div className='basic-info mb-3'>
-                    <h1 className='has-text-centered has-text-weight-bold has-text-black'>{name}</h1>
+                    <h1 className='has-text-centered has-text-weight-bold has-text-black'>
+                        {name}
+                    </h1>
                     <p>{description}</p>
                     {releaseDate ? (
                         <p>
-                            <span className='has-text-weight-semibold has-text-black'>Thời gian công chiếu</span>:{" "}
-                            {dayjs(releaseDate).format("DD/MM/YYYY")}
+                            <span className='has-text-weight-semibold has-text-black'>
+                                Thời gian công chiếu
+                            </span>
+                            : {dayjs(releaseDate).format("DD/MM/YYYY")}
                         </p>
                     ) : null}
                     {runningTime ? (
                         <p>
-                            <span className='has-text-weight-semibold has-text-black'>Thời lượng</span>: {runningTime}{" "}
-                            phút
+                            <span className='has-text-weight-semibold has-text-black'>
+                                Thời lượng
+                            </span>
+                            : {runningTime} phút
                         </p>
                     ) : null}
                     <p>
-                        <span className='has-text-weight-semibold has-text-black'>Đạo diễn</span>:{" "}
+                        <span className='has-text-weight-semibold has-text-black'>
+                            Đạo diễn
+                        </span>
+                        :{" "}
                         {filmDirectors?.map((director, i) => (
                             <span key={i}>
                                 {director}
@@ -65,7 +84,10 @@ function Movie(props) {
                         ))}
                     </p>
                     <p>
-                        <span className='has-text-weight-semibold has-text-black'>Diễn viên</span>:{" "}
+                        <span className='has-text-weight-semibold has-text-black'>
+                            Diễn viên
+                        </span>
+                        :{" "}
                         {actors?.map((actor, i) => (
                             <span key={i}>
                                 {actor}
@@ -77,9 +99,14 @@ function Movie(props) {
                 {trailer ? (
                     <div className='ytb-video'>
                         {loadingIframeTrailer ? (
-                            <div className='has-text-centered has-text-black'>Đang tải trailer...</div>
+                            <div className='has-text-centered has-text-black'>
+                                Đang tải trailer...
+                            </div>
                         ) : null}
-                        <iframe onLoad={handleFinishLoadingTrailer} src={trailer} />
+                        <iframe
+                            onLoad={handleFinishLoadingTrailer}
+                            src={trailer}
+                        />
                     </div>
                 ) : null}
                 <div className='moveek-link-wp'>
@@ -90,10 +117,6 @@ function Movie(props) {
             </div>
 
             <style jsx>{`
-                iframe {
-                    width: 100%;
-                    height: 12rem;
-                }
                 .tabs-list,
                 .tabs li:not(.is-active) a:hover,
                 .tabs li:not(.is-active) a {
@@ -113,11 +136,14 @@ function Movie(props) {
                     height: 14rem;
                 }
                 .ytb-video iframe {
+                    width: 100%;
+                    height: 14rem;
                     position: absolute;
                     left: 0;
                     top: 0;
                     z-index: 2;
                 }
+
                 .moveek-link-wp {
                     display: flex;
                     justify-content: flex-end;
@@ -130,6 +156,18 @@ function Movie(props) {
                     100% {
                         opacity: 1;
                         transfrom: translateY(0);
+                    }
+                }
+
+                @media only screen and (min-width: 768px) {
+                    .ytb-video iframe {
+                        height: 20rem;
+                    }
+                }
+
+                @media only screen and (min-width: 1024px) {
+                    .ytb-video iframe {
+                        height: 25rem;
                     }
                 }
             `}</style>
@@ -156,7 +194,9 @@ export async function getStaticProps({ params: { movieId } }) {
     const db = await connectDB();
 
     try {
-        const movie = await db.collection("movies").findOne({ _id: ObjectId(movieId) });
+        const movie = await db
+            .collection("movies")
+            .findOne({ _id: ObjectId(movieId) });
 
         return {
             props: { movie: JSON.stringify(movie) },

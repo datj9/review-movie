@@ -4,8 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { withAuthServerSideProps, withAuth } from "../HOC/withAuth";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/user/actions";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
+import FacebookIcon from "@material-ui/icons/Facebook";
 import { useRouter } from "next/dist/client/router";
 import { CLEAN_UP } from "../redux/user/action-types";
 import { BulletList } from "react-content-loader";
@@ -14,7 +13,9 @@ function Login(props) {
     const emailRef = useRef();
     const passwordRef = useRef();
     const dispatch = useDispatch();
-    const { errors, loginType, isSuccess } = useSelector((state) => state.user.client);
+    const { errors, loginType, isSuccess } = useSelector(
+        (state) => state.user.client
+    );
     const [emailErrMsg, setEmailErrMsg] = useState("");
     const [passwordErrMsg, setPasswordErrMsg] = useState("");
     const router = useRouter();
@@ -61,7 +62,10 @@ function Login(props) {
     const isAuthenticated = Object.keys(props.user).length > 0;
 
     if (isAuthenticated) {
-        const windowWidth = typeof document !== "undefined" ? document.documentElement.clientWidth : 0;
+        const windowWidth =
+            typeof document !== "undefined"
+                ? document.documentElement.clientWidth
+                : 0;
 
         if (windowWidth >= 992) {
             return null;
@@ -77,7 +81,9 @@ function Login(props) {
     return (
         <div className='login pt-5 pb-6 px-0 mb-5 has-background-white'>
             <Head>
-                <title>Đánh Giá Phim - Đăng Nhập để Đánh Giá Phim yêu thích</title>
+                <title>
+                    Đánh Giá Phim - Đăng Nhập để Đánh Giá Phim yêu thích
+                </title>
                 <link rel='icon' href='/favicon.ico' />
             </Head>
             <div className='title px-4'>Đăng Nhập vào Tài Khoản Của Bạn</div>
@@ -97,9 +103,14 @@ function Login(props) {
                                 {loginType !== "gg" ? (
                                     <>
                                         <span className='google-icon-wp'>
-                                            <img alt='google-icon' src='/google-icon.svg' />
+                                            <img
+                                                alt='google-icon'
+                                                src='/google-icon.svg'
+                                            />
                                         </span>
-                                        <span className='ml-3 d-inline-block has-text-black'>Đăng Nhập với Google</span>
+                                        <span className='ml-3 d-inline-block has-text-black'>
+                                            Đăng Nhập với Google
+                                        </span>
                                     </>
                                 ) : null}
                             </a>
@@ -116,8 +127,10 @@ function Login(props) {
                             <a className='fb-link has-text-white'>
                                 {loginType !== "fb" ? (
                                     <>
-                                        <FontAwesomeIcon style={{ height: "1.25rem" }} icon={faFacebookF} />
-                                        <span className='ml-3 d-inline-block'>Đăng Nhập với Facebook</span>
+                                        <FacebookIcon />
+                                        <span className='ml-3 d-inline-block'>
+                                            Đăng Nhập với Facebook
+                                        </span>
                                     </>
                                 ) : null}
                             </a>
@@ -139,7 +152,11 @@ function Login(props) {
                                 placeholder='Địa chỉ email'
                             />
                         </div>
-                        {emailErrMsg ? <p className='has-text-danger mt-1'>{emailErrMsg}</p> : null}
+                        {emailErrMsg ? (
+                            <p className='has-text-danger mt-1'>
+                                {emailErrMsg}
+                            </p>
+                        ) : null}
                     </div>
                     <div className='field mb-3'>
                         <label className='label'>Mật khẩu</label>
@@ -151,7 +168,11 @@ function Login(props) {
                                 placeholder='Mật khẩu'
                             />
                         </div>
-                        {passwordErrMsg ? <p className='has-text-danger mt-1'>{passwordErrMsg}</p> : null}
+                        {passwordErrMsg ? (
+                            <p className='has-text-danger mt-1'>
+                                {passwordErrMsg}
+                            </p>
+                        ) : null}
                     </div>
                     <button
                         disabled={loginType === "local"}

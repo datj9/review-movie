@@ -3,7 +3,10 @@ import { useEffect, useRef } from "react";
 function elementInViewport(el) {
     const rect = el.getBoundingClientRect();
 
-    return rect.top + 30 <= (window.innerHeight || document.documentElement.clientHeight);
+    return (
+        rect.top + 30 <=
+        (window.innerHeight || document.documentElement.clientHeight)
+    );
 }
 
 export default function VerticalLazyImage({ src, alt }) {
@@ -30,5 +33,21 @@ export default function VerticalLazyImage({ src, alt }) {
             window.removeEventListener("scroll", handleScroll);
         };
     });
-    return <img ref={imgRef} src={"https://dummyimage.com/200x300/fff/fff.jpg"} alt={alt} />;
+    return (
+        <>
+            <img
+                ref={imgRef}
+                src={"https://dummyimage.com/200x300/fff/fff.jpg"}
+                alt={alt}
+            />
+            <style jsx>
+                {`
+                    img {
+                        width: 100%;
+                        height: auto;
+                    }
+                `}
+            </style>
+        </>
+    );
 }

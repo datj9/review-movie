@@ -5,7 +5,9 @@ import Person from "@material-ui/icons/Person";
 
 export default function Header(props) {
     const isAuthenticatedFromServer = Object.keys(props.user).length;
-    const { isAuthenticated: isAuthenticatedFromClient } = useSelector((state) => state.user.server);
+    const { isAuthenticated: isAuthenticatedFromClient } = useSelector(
+        (state) => state.user.server
+    );
     const [navOpen, setNavOpen] = useState(false);
     const [windowWidth, setWindowWidth] = useState(0);
     const { currentUser } = useSelector((state) => state.user.server);
@@ -20,7 +22,10 @@ export default function Header(props) {
         setNavOpen((navOpen) => !navOpen);
     };
     const handleClick = (e) => {
-        if (!navRef.current?.contains(e.target) && !hamburgerBtnRef.current?.contains(e.target)) {
+        if (
+            !navRef.current?.contains(e.target) &&
+            !hamburgerBtnRef.current?.contains(e.target)
+        ) {
             closeNav();
         }
     };
@@ -41,7 +46,11 @@ export default function Header(props) {
                 <span
                     ref={hamburgerBtnRef}
                     role='button'
-                    className={navOpen ? "navbar-burger burger is-active" : "navbar-burger burger"}
+                    className={
+                        navOpen
+                            ? "navbar-burger burger is-active"
+                            : "navbar-burger burger"
+                    }
                     aria-label='menu'
                     aria-expanded='false'
                     data-target='navbarBasicExample'
@@ -53,13 +62,32 @@ export default function Header(props) {
                 </span>
             </div>
 
-            <div ref={navRef} id='navbarBasicExample' className={navOpen ? "navbar-menu is-active" : "navbar-menu"}>
+            <div
+                ref={navRef}
+                id='navbarBasicExample'
+                className={navOpen ? "navbar-menu is-active" : "navbar-menu"}
+            >
                 <div className='navbar-start'>
-                    <div className='navbar-item has-dropdown is-hoverable'>
+                    {/* <div className='navbar-item has-dropdown is-hoverable'>
                         {windowWidth < 1024 ? <input id='checkMovie' type='checkbox' /> : null}
                         <label htmlFor='checkMovie' className='navbar-link'>
                             Phim
                         </label>
+                        <div className='navbar-dropdown'>
+                            <Link href='/now-showing'>
+                                <a onClick={closeNav} className='navbar-item'>
+                                    Phim Đang Chiếu
+                                </a>
+                            </Link>
+                            <Link href='/comming-soon'>
+                                <a onClick={closeNav} className='navbar-item'>
+                                    Phim Sắp Chiếu
+                                </a>
+                            </Link>
+                        </div>
+                    </div> */}
+                    <div className='navbar-item has-dropdown is-hoverable'>
+                        <a className='navbar-link'>Phim</a>
                         <div className='navbar-dropdown'>
                             <Link href='/now-showing'>
                                 <a onClick={closeNav} className='navbar-item'>
@@ -92,36 +120,20 @@ export default function Header(props) {
                 </div>
                 <div className='navbar-end'>
                     <div className='navbar-item'>
-                        <Link href={isAuthenticatedFromClient || isAuthenticatedFromServer ? "/my-account" : "/login"}>
+                        <Link
+                            href={
+                                isAuthenticatedFromClient ||
+                                isAuthenticatedFromServer
+                                    ? "/my-account"
+                                    : "/login"
+                            }
+                        >
                             <a>
                                 <Person />
                             </a>
                         </Link>
                     </div>
                 </div>
-                {/* <div className='navbar-end'>
-                    {isAuthenticated ? (
-                        <div className='navbar-item'>
-                            <button
-                                onClick={handleLogout}
-                                type='button'
-                                className={`button is-primary is-outlined ${isLoggingOut ? "is-loading" : ""}`}
-                            >
-                                Đăng xuất
-                            </button>
-                        </div>
-                    ) : (
-                        <div className='navbar-item'>
-                            <div className='buttons'>
-                                <Link href='/login'>
-                                    <a onClick={closeNav} className='button is-primary is-fullwidth'>
-                                        Đăng nhập
-                                    </a>
-                                </Link>
-                            </div>
-                        </div>
-                    )}
-                </div> */}
             </div>
             <style jsx>
                 {`
@@ -146,14 +158,8 @@ export default function Header(props) {
                     .navbar-dropdown {
                         display: none;
                     }
-                    #checkMovie {
-                        display: none;
-                    }
-                    #checkMovie:checked ~ .navbar-dropdown {
+                    .is-hoverable:hover .navbar-dropdown {
                         display: block;
-                    }
-                    #checkMovie:checked ~ .navbar-link::after {
-                        transform: rotate(135deg);
                     }
                     .navbar-link::after {
                         transition: transform 0.2s;

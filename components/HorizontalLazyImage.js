@@ -3,7 +3,9 @@ import { useEffect, useRef } from "react";
 function elementInViewport(el) {
     const rect = el.getBoundingClientRect();
 
-    return rect.left + 20 <= (window.innerWidth || document.documentElement.clientWidth);
+    return (
+        rect.left <= (window.innerWidth || document.documentElement.clientWidth)
+    );
 }
 
 export default function HorizontalLazyImage({ listIndex, src, alt }) {
@@ -23,12 +25,32 @@ export default function HorizontalLazyImage({ listIndex, src, alt }) {
     };
 
     useEffect(() => {
-        document.getElementsByClassName("list-movies")[listIndex].addEventListener("scroll", handleScroll);
+        document
+            .getElementsByClassName("list-movies")
+            [listIndex].addEventListener("scroll", handleScroll);
         handleScroll();
 
         return () => {
-            document.getElementsByClassName("list-movies")[listIndex].removeEventListener("scroll", handleScroll);
+            document
+                .getElementsByClassName("list-movies")
+                [listIndex].removeEventListener("scroll", handleScroll);
         };
     });
-    return <img ref={imgRef} src={"https://dummyimage.com/200x300/fff/fff.jpg"} alt={alt} />;
+    return (
+        <>
+            <img
+                ref={imgRef}
+                src={"https://dummyimage.com/200x300/fff/fff.jpg"}
+                alt={alt}
+            />
+            <style jsx>
+                {`
+                    img {
+                        width: 100%;
+                        height: auto;
+                    }
+                `}
+            </style>
+        </>
+    );
 }
