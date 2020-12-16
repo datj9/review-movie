@@ -52,7 +52,7 @@ function Home(props) {
     };
 
     const scrollLeft = (listIndex) => {
-        let scrolled = 0;
+        let scrolled = 0
 
         if (listIndex === 0) {
             const setIntervalToLeft = setInterval(() => {
